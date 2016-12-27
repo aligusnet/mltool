@@ -1,0 +1,69 @@
+name:                mltool
+version:             0.1.0.0
+synopsis:            Machine Learning Toolbox
+description:         Please see README.md
+homepage:            https://github.com/alexander-ignatyev/mltool
+license:             BSD3
+license-file:        LICENSE
+author:              Alexander Ignatyev
+maintainer:          ignatyev.alexander@gmail.com
+copyright:           Alexander Ignatyev
+category:            math
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     Types
+                     , MachineLearning
+                     , MachineLearning.Regression
+                     , MachineLearning.Regression.Model
+                     , MachineLearning.Regression.LeastSquares
+                     , MachineLearning.Regression.Logistic
+                     , MachineLearning.Regression.GradientDescent
+  build-depends:       base >= 4.7 && < 5
+                     , vector
+                     , hmatrix
+                     , hmatrix-gsl
+                     , hmatrix-gsl-stats
+  default-language:    Haskell2010
+
+executable linreg
+  hs-source-dirs:      samples/linear_regression
+  main-is:             Main.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , vector
+                     , hmatrix
+                     , mltool
+  default-language:    Haskell2010
+
+executable logreg
+  hs-source-dirs:      samples/logistic_regression
+  main-is:             Main.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , vector
+                     , hmatrix
+                     , mltool
+  default-language:    Haskell2010
+
+test-suite mltool-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Main.hs
+  build-depends:       base
+                     , mltool
+                     , hmatrix
+                     , test-framework
+                     , test-framework-hunit
+                     , test-framework-quickcheck2
+                     , HUnit
+                     , QuickCheck > 2.0
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/alexander-ignatyev/mltool
