@@ -1,17 +1,14 @@
 module Main where
 
 import qualified Types as T
-import qualified Data.Vector.Storable as V
 import qualified Numeric.LinearAlgebra as LA
 import qualified MachineLearning as ML
-import qualified MachineLearning.Regression as MLR
+import qualified MachineLearning.Classification as MLC
 
 
 calcAccuracy :: T.Matrix -> T.Vector -> T.Vector -> T.R
-calcAccuracy x y theta =
-  let yPredict = V.map (\r -> if r >= 0.5 then 1 else 0) (MLR.hypothesis MLR.Logistic x theta)
-      diff = abs(y - yPredict)
-  in (1 - (V.sum diff) / (fromIntegral $ V.length diff)) * 100
+calcAccuracy x y theta = MLC.calcAccuracy x y yPredicted
+  where yPredicted = MLC.predictBinary x theta
 
 main = do
   -- Step 1. Data loading.
@@ -25,16 +22,16 @@ main = do
 
   -- Step 4. Learning
       zeroTheta = LA.konst 0 (LA.cols x1)
-      (thetaBFGS, optPathBFGS) = MLR.minimize (MLR.BFGS2 0.1 0.1) MLR.Logistic 0.0001 1500 1 x1 y zeroTheta
+      (theta, _) = MLC.learnBinary 0.0001 1500 1 x1 y zeroTheta
 
   -- Step 5. Prediction and checking accuracy
-      accuracyBFGS = calcAccuracy x1 y thetaBFGS
+      accuracy = calcAccuracy x1 y theta
 
   -- Step 6. Printing results.
   putStrLn "\n=== Logistic Regression Sample Application ===\n"
 
   putStrLn ""
-  putStrLn $ "Theta (BFGS):             " ++ (show thetaBFGS)
+  putStrLn $ "Theta:             " ++ (show theta)
   
   putStrLn ""
-  putStrLn $ "Accuracy on training set data (BFGS): " ++ show accuracyBFGS
+  putStrLn $ "Accuracy on training set data (%): " ++ show (accuracy*100)
