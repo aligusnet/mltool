@@ -15,6 +15,7 @@ module MachineLearning.Regression
   , module Logistic
   , MinimizeMethod(..)
   , minimize
+  , checkGradient
 )
 
 where
@@ -24,6 +25,9 @@ import MachineLearning.Regression.Model as Model
 import MachineLearning.Regression.LeastSquares as LeastSquares
 import MachineLearning.Regression.Logistic as Logistic
 import qualified MachineLearning.Regression.GradientDescent as GD
+import qualified Data.Vector.Storable as V
+import qualified Numeric.LinearAlgebra as LA
+
 
 import qualified Numeric.GSL.Minimization as Min
 
@@ -60,4 +64,21 @@ minimizeVD method firstStepSize tol model epsilon niters lambda x y initialTheta
   = Min.minimizeVD method epsilon niters firstStepSize tol costf gradientf initialTheta
   where costf = Model.cost model lambda x y
         gradientf = Model.gradient model lambda x y
-        
+
+-- | Gradient checking function.
+-- Approximates the derivates of the Model's cost function
+-- and calculates derivatives using the Model's gradient functions.
+-- Returns norn_2 between 2 derivatives.
+-- Takes model, lambda, X, y, theta and epsilon (used to approximate derivatives, 1e-4 is a good value).
+checkGradient :: Model a => a -> R -> Matrix -> Vector -> Vector -> R -> R
+checkGradient model lambda x y theta eps = LA.norm_2 $ grad1 - grad2
+  where theta_m = LA.asColumn theta
+        eps_v = V.replicate (V.length theta) eps
+        eps_m = LA.diag eps_v
+        theta_m1 = theta_m + eps_m
+        theta_m2 = theta_m - eps_m
+        cost1 = LA.vector $ map (cost model lambda x y) $ LA.toColumns theta_m1
+        cost2 = LA.vector $ map (cost model lambda x y) $ LA.toColumns theta_m2
+        grad1 = (cost1 - cost2) / (LA.scalar $ 2*eps)
+        grad2 = gradient model lambda x y theta
+

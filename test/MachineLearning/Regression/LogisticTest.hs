@@ -15,6 +15,7 @@ import MachineLearning.Regression.DataSets (dataset2)
 
 import qualified Numeric.LinearAlgebra as LA
 import qualified MachineLearning as ML
+import MachineLearning.Regression (checkGradient)
 import MachineLearning.Regression.Model
 import MachineLearning.Regression.Logistic
 
@@ -23,6 +24,8 @@ import MachineLearning.Regression.Logistic
 x1 = ML.addColumnOfOnes $ ML.mapFeatures 6 x
 onesTheta :: LA.Vector LA.R
 onesTheta = LA.konst 1 (LA.cols x1)
+zeroTheta :: LA.Vector LA.R
+zeroTheta = LA.konst 0 (LA.cols x1)
 
 tests = [ testGroup "sigmoid" [
             testCase "zero" $ assertApproxEqual "" 1e-10 0.5 (sigmoid 0)
@@ -38,6 +41,12 @@ tests = [ testGroup "sigmoid" [
               , testCase "gradient, lambda = 0" $ assertVector 1e-5 gradient_l0 (gradient Logistic 0 x1 y onesTheta)
               , testCase "gradient, lambda = 1" $ assertVector 1e-5 gradient_l1 (gradient Logistic 1 x1 y onesTheta)
               , testCase "gradient, lambda = 1000" $ assertVector 1e-5 gradient_l1000 (gradient Logistic 1000 x1 y onesTheta)
+              ]
+          , testGroup "gradient checking" [
+              testCase "non-zero theta, non-zero lambda" $ assertBool "" $ (checkGradient Logistic 2 x1 y onesTheta 1e-4) < 1
+              , testCase "zero theta, non-zero lambda" $ assertBool "" $ (checkGradient Logistic 2 x1 y zeroTheta 1e-4) < 1
+              , testCase "non-zero theta, zero lambda" $ assertBool "" $ (checkGradient Logistic 0 x1 y onesTheta 1e-4) < 1
+              , testCase "zero theta, zero lambda" $ assertBool "" $ (checkGradient Logistic 0 x1 y zeroTheta 1e-4) < 1
               ]
         ]
 
