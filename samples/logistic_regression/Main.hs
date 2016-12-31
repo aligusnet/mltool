@@ -7,7 +7,7 @@ import qualified MachineLearning.Classification as MLC
 
 
 calcAccuracy :: T.Matrix -> T.Vector -> T.Vector -> T.R
-calcAccuracy x y theta = MLC.calcAccuracy x y yPredicted
+calcAccuracy x y theta = MLC.calcAccuracy y yPredicted
   where yPredicted = MLC.predictBinary x theta
 
 main = do

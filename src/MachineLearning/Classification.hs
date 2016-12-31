@@ -51,11 +51,11 @@ predict x theta = MLR.hypothesis MLR.Logistic x theta
 
 
 -- | Calculates accuracy of Classification predictions.
--- Takes matrix X, vector expected y and vector predicted y.
+-- Takes vector expected y and vector predicted y.
 -- Returns number from 0 to 1, the closer to 1 the better accuracy.
 -- Suitable for both Classification Types: Binary and Multiclass.
-calcAccuracy :: Matrix -> Vector -> Vector -> R
-calcAccuracy x yExpected yPredicted = (1 - (V.sum discrepancy) / (fromIntegral $ V.length discrepancy))
+calcAccuracy :: Vector -> Vector -> R
+calcAccuracy yExpected yPredicted = (1 - (V.sum discrepancy) / (fromIntegral $ V.length discrepancy))
   where discrepancy = V.zipWith f yExpected yPredicted
         f y1 y2 = if round y1 == round y2 then 0 else 1
 

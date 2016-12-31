@@ -9,7 +9,7 @@ processFeatures :: T.Matrix -> T.Matrix
 processFeatures = ML.addColumnOfOnes . (ML.mapFeatures 2)
 
 calcAccuracy :: T.Matrix -> T.Vector -> [T.Vector] -> Double
-calcAccuracy x y thetas = MLC.calcAccuracy x y yPredicted
+calcAccuracy x y thetas = MLC.calcAccuracy y yPredicted
   where yPredicted = MLC.predictMulti x thetas
 
 main = do
