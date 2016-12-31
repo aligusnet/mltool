@@ -12,6 +12,7 @@ module MachineLearning.Regression.Logistic
 (
   LogisticModel(..)
   , sigmoid
+  , sigmoidGradient
 )
 
 where
@@ -25,7 +26,16 @@ import MachineLearning.Regression.Model
 data LogisticModel = Logistic
 
 
+-- | Calculates sigmoid
+sigmoid :: Floating a => a -> a
 sigmoid z = 1 / (1+exp(-z))
+
+
+-- | Calculates derivatives of sigmoid
+sigmoidGradient :: Floating a => a -> a
+sigmoidGradient z = s * (1-s)
+  where s = sigmoid z
+
 
 instance Model LogisticModel where
   hypothesis _ x theta = sigmoid (x #> theta)

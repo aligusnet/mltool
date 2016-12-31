@@ -34,6 +34,15 @@ tests = [ testGroup "sigmoid" [
             , testCase "quite big positive value" $ assertApproxEqual "" 1e-2 1 (sigmoid 100)
             , testCase "quite big negative value" $ assertApproxEqual "" 1e-2 0 (sigmoid $ -100)
             ]
+          , testGroup "sigmoidGradient" [
+              testCase "zero" $ assertApproxEqual "" 1e-10 0.25 (sigmoidGradient 0)
+              , testCase "big positive value" $ assertApproxEqual "" 1e-10 0 (sigmoidGradient 10e10)
+              , testCase "big negative value" $ assertApproxEqual "" 1e-10 0 (sigmoidGradient $ -10e10) 
+              , testCase "quite big positive value" $ assertApproxEqual "" 1e-2 0 (sigmoidGradient 100)
+              , testCase "quite big negative value" $ assertApproxEqual "" 1e-2 0 (sigmoidGradient $ -100)
+              , testCase "small positive value" $ assertApproxEqual "" 1e-2 0.2 (sigmoidGradient 1)
+              , testCase "small negative value" $ assertApproxEqual "" 1e-2 0.2 (sigmoidGradient $ -1) 
+              ]
           , testGroup "model" [
               testCase "cost, lambda = 0" $ assertApproxEqual "" 1e-5 2.020442 (cost Logistic 0 x1 y onesTheta)
               , testCase "cost, lambda = 1" $ assertApproxEqual "" 1e-5 2.134848 (cost Logistic 1 x1 y onesTheta)
