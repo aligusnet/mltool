@@ -24,7 +24,7 @@ main = do
       x1 = processFeatures x
       initialTheta = LA.konst 0 (LA.cols x1)
   -- Step 3. Learning.
-      (thetas, _) = MLC.learnMulti 0.001 30 30 x1 ys initialTheta
+      (thetas, _) = MLC.learnMulti (MLC.BFGS2 0.1 0.1) 0.001 30 30 x1 ys initialTheta
   -- Step 4. Prediction and checking accuracy
       accuracyTrain = calcAccuracy x1 y thetas
       accuracyTest = calcAccuracy (processFeatures xTest) yTest thetas

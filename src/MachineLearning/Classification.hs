@@ -11,7 +11,8 @@ Binary and Multiclass Classification.
 
 module MachineLearning.Classification
 (
-  predictBinary
+  MLR.MinimizeMethod(..)
+  , predictBinary
   , predictMulti
   , calcAccuracy
   , processOutputMulti
@@ -70,24 +71,26 @@ processOutputMulti numLabels y = map f [0 .. numLabels-1]
 
 
 -- | Learns Binary Classification.
-learnBinary :: R                 -- ^ epsilon, desired precision of the solution;
-            -> Int               -- ^ maximum number of iterations allowed;
-            -> R                 -- ^ regularization parameter lambda;
-            -> Matrix            -- ^ matrix X;
-            -> Vector            -- ^ binary vector y;
-            -> Vector            -- ^ initial Theta;
-            -> (Vector, Matrix)  -- ^ solution vector and optimization path.
-learnBinary eps numIters lambda x y initialTheta = MLR.minimize (MLR.BFGS2 0.1 0.1) MLR.Logistic eps numIters lambda x y initialTheta
+learnBinary :: MLR.MinimizeMethod -- ^ (e.g. BFGS2 0.1 0.1)
+            -> R                  -- ^ epsilon, desired precision of the solution;
+            -> Int                -- ^ maximum number of iterations allowed;
+            -> R                  -- ^ regularization parameter lambda;
+            -> Matrix             -- ^ matrix X;
+            -> Vector             -- ^ binary vector y;
+            -> Vector             -- ^ initial Theta;
+            -> (Vector, Matrix)   -- ^ solution vector and optimization path.
+learnBinary mm eps numIters lambda x y initialTheta = MLR.minimize mm MLR.Logistic eps numIters lambda x y initialTheta
 
 
 -- | Learns Multiclass Classification
-learnMulti :: R                 -- ^ epsilon, desired precision of the solution;
-           -> Int               -- ^ maximum number of iterations allowed;
-           -> R                 -- ^ regularization parameter lambda;
-           -> Matrix            -- ^ matrix X;
-           -> [Vector]          -- ^ list binary vector's y (one for every class, see `processOutputMulti` function);
-           -> Vector            -- ^ initial theta;
+learnMulti :: MLR.MinimizeMethod -- ^ (e.g. BFGS2 0.1 0.1)
+           -> R                  -- ^ epsilon, desired precision of the solution;
+           -> Int                -- ^ maximum number of iterations allowed;
+           -> R                  -- ^ regularization parameter lambda;
+           -> Matrix             -- ^ matrix X;
+           -> [Vector]           -- ^ list binary vector's y (one for every class, see `processOutputMulti` function);
+           -> Vector             -- ^ initial theta;
            -> ([Vector], [Matrix])  -- ^ solution vector and optimization path.
-learnMulti eps numIters lambda x ys initialTheta =
-  let minimize y = MLR.minimize (MLR.BFGS2 0.1 0.1) MLR.Logistic eps numIters lambda x y initialTheta
+learnMulti mm eps numIters lambda x ys initialTheta =
+  let minimize y = MLR.minimize mm MLR.Logistic eps numIters lambda x y initialTheta
   in unzip $ map minimize ys
