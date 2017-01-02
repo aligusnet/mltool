@@ -25,11 +25,14 @@ library
                      , MachineLearning.Classification
                      , MachineLearning.NeuralNetwork
                      , MachineLearning.PCA
+                     , MachineLearning.TerminalProgress
   build-depends:       base >= 4.7 && < 5
                      , vector
                      , hmatrix
                      , hmatrix-gsl
                      , hmatrix-gsl-stats
+                     , ascii-progress
+                     , deepseq
   default-language:    Haskell2010
 
 executable linreg
