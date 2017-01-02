@@ -1,5 +1,19 @@
 ## Machine Learning Toolbox
 
+### Supported Methods and Problems
+
+#### Supervised Learning
+
+* Linear Regression using Least Squares approach (Regression problem);
+
+* Logistic Regression (Classification problem);
+
+* Neural Networks (Classification problem).
+
+#### Unsupervised Learning
+
+* Principal Component Analysis (Dimensionality reduction problem).
+
 ### Build documentation
 
     stack haddock
