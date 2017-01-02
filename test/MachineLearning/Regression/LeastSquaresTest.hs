@@ -31,9 +31,9 @@ tests = [ testGroup "model" [
             testCase "cost, lambda = 0"      $ assertApproxEqual "" 1e-5 1.6190245331702874e12 (cost LeastSquares 0 x1 y initialTheta)
             , testCase "cost, lambda = 1"    $ assertApproxEqual "" 1e-5 1.619024554446883e12 (cost LeastSquares 1 x1 y initialTheta)
             , testCase "cost, lambda = 1000" $ assertApproxEqual "" 1e-5 1.619045809766032e12 (cost LeastSquares 1000 x1 y initialTheta)
-            , testCase "gradient, lambda = 0" $ assertVector 1e-5 gradient_l0 (gradient LeastSquares 0 x1 y initialTheta)
-            , testCase "gradient, lambda = 1" $ assertVector 1e-5 gradient_l1 (gradient LeastSquares 1 x1 y initialTheta)
-            , testCase "gradient, lambda = 1000" $ assertVector 1e-5 gradient_l1000 (gradient LeastSquares 1000 x1 y initialTheta)
+            , testCase "gradient, lambda = 0" $ assertVector "" 1e-5 gradient_l0 (gradient LeastSquares 0 x1 y initialTheta)
+            , testCase "gradient, lambda = 1" $ assertVector "" 1e-5 gradient_l1 (gradient LeastSquares 1 x1 y initialTheta)
+            , testCase "gradient, lambda = 1000" $ assertVector "" 1e-5 gradient_l1000 (gradient LeastSquares 1000 x1 y initialTheta)
             ]
           , testGroup "gradient checking" [
               testCase "non-zero theta, non-zero lambda" $ assertBool "" $ (checkGradient LeastSquares 2 x1 y initialTheta 1e-4) < 10

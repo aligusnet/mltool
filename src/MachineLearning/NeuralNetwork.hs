@@ -18,7 +18,7 @@ module MachineLearning.NeuralNetwork
   , predictMulti
   , MLC.calcAccuracy
 
-  -- * exported for testing purposes
+  -- * exported for testing purposes only
   , flatten
   , unflatten
   , getThetaSizes

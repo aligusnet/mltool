@@ -59,7 +59,8 @@ meanStddev x =
   let cols = LA.toColumns x
       means = map Stat.mean cols
       stddevs = zipWith (\m col -> Stat.stddev_m m col) means cols
-  in (LA.row means, LA.row stddevs)
+      stddevs' = map (\s -> if s < 2 then 1 else s) stddevs
+  in (LA.row means, LA.row stddevs')
 
 
 featureNormalization (means, stddevs) x = (x - means) / stddevs

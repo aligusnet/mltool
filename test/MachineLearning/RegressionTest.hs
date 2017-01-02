@@ -39,9 +39,9 @@ eps = 0.0001
 
 
 tests = [ testGroup "minimize" [
-            testCase "Gradient Descent" $ assertVector 0.01 yExpected (hypothesis LeastSquares xPredict1 thetaGD)
-            , testCase "BFGS" $ assertVector 0.01 yExpected (hypothesis LeastSquares xPredict1 thetaBFGS)
-            , testCase "Conjugate Gradient FR" $ assertVector 0.01 yExpected (hypothesis LeastSquares xPredict1 thetaCGFR)
-            , testCase "Conjugate Gradient PR" $ assertVector 0.01 yExpected (hypothesis LeastSquares xPredict1 thetaCGPR)
+            testCase "Gradient Descent" $ assertVector "" 0.01 yExpected (hypothesis LeastSquares xPredict1 thetaGD)
+            , testCase "BFGS" $ assertVector "" 0.01 yExpected (hypothesis LeastSquares xPredict1 thetaBFGS)
+            , testCase "Conjugate Gradient FR" $ assertVector "" 0.01 yExpected (hypothesis LeastSquares xPredict1 thetaCGFR)
+            , testCase "Conjugate Gradient PR" $ assertVector "" 0.01 yExpected (hypothesis LeastSquares xPredict1 thetaCGPR)
             ]
         ]
