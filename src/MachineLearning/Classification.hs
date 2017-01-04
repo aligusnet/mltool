@@ -89,8 +89,8 @@ learnMulti :: MLR.MinimizeMethod -- ^ (e.g. BFGS2 0.1 0.1)
            -> R                  -- ^ regularization parameter lambda;
            -> Matrix             -- ^ matrix X;
            -> [Vector]           -- ^ list binary vector's y (one for every class, see `processOutputMulti` function);
-           -> Vector             -- ^ initial theta;
+           -> [Vector]           -- ^ initial theta;
            -> ([Vector], [Matrix])  -- ^ solution vector and optimization path.
-learnMulti mm eps numIters lambda x ys initialTheta =
-  let minimize y = MLR.minimize mm MLR.Logistic eps numIters lambda x y initialTheta
-  in unzip $ map minimize ys
+learnMulti mm eps numIters lambda x ys initialThetaList =
+  let minimize = MLR.minimize mm MLR.Logistic eps numIters lambda x
+  in unzip $ zipWith minimize ys initialThetaList

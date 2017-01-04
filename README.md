@@ -4,6 +4,8 @@
 
 #### Supervised Learning
 
+* Normal Equation (Regression problem);
+
 * Linear Regression using Least Squares approach (Regression problem);
 
 * Logistic Regression (Classification problem);

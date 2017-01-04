@@ -57,8 +57,9 @@ main = do
       x' = processFeatures x
       (reduceDims, reducedDimensions, x1) = PCA.getDimReducer x' 10
       initialTheta = LA.konst 0 (LA.cols x1)
+      initialThetaList = replicate (length ys) initialTheta
   -- Step 3. Learning.
-      (thetaList, optPath) = MLC.learnMulti (MLC.BFGS2 0.1 0.5) 0.0001 30 30 x1 ys initialTheta
+      (thetaList, optPath) = MLC.learnMulti (MLC.BFGS2 0.1 0.5) 0.0001 30 30 x1 ys initialThetaList
   -- Step 4. Prediction and checking accuracy
       accuracyTrain = calcAccuracy x1 y thetaList
       accuracyTest = calcAccuracy (reduceDims $ processFeatures xTest) yTest thetaList
