@@ -29,8 +29,9 @@ main = do
   -- Step 3. Dimensionality Reduction using PCA.
       (reduceDims, reducedDimensions, x1) = PCA.getDimReducer_rv x' 0.99999
       initialTheta = LA.konst 0 (LA.cols x1)
+      initialThetas = replicate (length ys) initialTheta
   -- Step 4. Learning.
-      (thetas, optPath) = MLC.learnMulti (MLC.BFGS2 0.1 0.5) 0.0001 30 30 x1 ys initialTheta
+      (thetas, optPath) = MLC.learnMulti (MLC.BFGS2 0.1 0.5) 0.0001 30 30 x1 ys initialThetas
   -- Step 5. Prediction and checking accuracy
       accuracyTrain = calcAccuracy x1 y thetas
       accuracyTest = calcAccuracy (reduceDims $ processFeatures xTest) yTest thetas

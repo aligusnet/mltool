@@ -25,7 +25,7 @@ main = do
   let x1 = ML.addColumnOfOnes x
 
   -- Step 4. Learn the Neural Network.
-  (thetaNN, optPath) <- TP.learnWithProgressBar (MLR.minimize (MLR.BFGS2 0.1 0.7) model 1e-7 5 5 x1 y) initTheta 20
+  (thetaNN, optPath) <- TP.learnWithProgressBar (MLR.minimize (MLR.BFGS2 0.03 0.7) model 1e-7 5 5 x1 y) initTheta 20
 
   -- Step 5. Making predictions and checking accuracy on training and test sets.
   let accuracyTrain = NN.calcAccuracy y (NN.predictMulti nnt x1 thetaNN)
