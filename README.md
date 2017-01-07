@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Alexander-Ignatyev/mltool.svg?branch=master)](https://travis-ci.org/Alexander-Ignatyev/mltool)
 [![Coverage Status](https://coveralls.io/repos/github/Alexander-Ignatyev/mltool/badge.svg)](https://coveralls.io/github/Alexander-Ignatyev/mltool)
-[![Documentation](docs.svg)](https://alexander-ignatyev.github.io/mltool-docs/doc/index.html)
+[![Documentation](https://img.shields.io/badge/mltool-documentation-blue.svg)](https://alexander-ignatyev.github.io/mltool-docs/doc/index.html)
 
 ### Supported Methods and Problems
 
