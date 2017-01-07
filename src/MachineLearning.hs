@@ -67,7 +67,6 @@ featureNormalization (means, stddevs) x = (x - means) / stddevs
 
 -- | Maps the features into all polynomial terms of X up to the degree-th power
 mapFeatures :: Int -> Matrix -> Matrix
-mapFeatures 0 _ = LA.matrix 0 []
 mapFeatures 1 x = x
 mapFeatures degree x = LA.fromColumns $ cols ++ (foldl' (\l d -> (terms d) ++ l) [] [degree, degree-1 .. 2])
   where cols = LA.toColumns x
