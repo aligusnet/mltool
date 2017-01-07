@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Alexander-Ignatyev/mltool.svg?branch=master)](https://travis-ci.org/Alexander-Ignatyev/mltool)
 [![Coverage Status](https://coveralls.io/repos/github/Alexander-Ignatyev/mltool/badge.svg)](https://coveralls.io/github/Alexander-Ignatyev/mltool)
+[![Documentation](docs.svg)](https://alexander-ignatyev.github.io/mltool-docs/doc/index.html)
 
 ### Supported Methods and Problems
 
@@ -18,11 +19,6 @@
 #### Unsupervised Learning
 
 * Principal Component Analysis (Dimensionality reduction problem).
-
-### Documentation
-
-Please read the documentation here: [mltool docs](https://alexander-ignatyev.github.io/mltool-docs/doc/index.html).
-
 
 ### Build the project
 
