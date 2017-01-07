@@ -1,5 +1,8 @@
 ## Machine Learning Toolbox
 
+[![Build Status](https://travis-ci.org/Alexander-Ignatyev/mltool.svg?branch=master)](https://travis-ci.org/Alexander-Ignatyev/mltool)
+[![Coverage Status](https://coveralls.io/repos/github/Alexander-Ignatyev/mltool/badge.svg)](https://coveralls.io/github/Alexander-Ignatyev/mltool)
+
 ### Supported Methods and Problems
 
 #### Supervised Learning
@@ -16,9 +19,10 @@
 
 * Principal Component Analysis (Dimensionality reduction problem).
 
-### Build documentation
+### Documentation
 
-    stack haddock
+Please read the documentation here: [mltool docs](https://alexander-ignatyev.github.io/mltool-docs/doc/index.html).
+
 
 ### Build the project
 
