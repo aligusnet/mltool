@@ -101,6 +101,7 @@ test-suite mltool-test
   main-is:             Main.hs
   build-depends:       base
                      , mltool
+                     , vector
                      , hmatrix
                      , test-framework
                      , test-framework-hunit
