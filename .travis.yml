@@ -6,14 +6,14 @@ addons:
   apt:
     packages:
     - libgmp-dev
-    - libblas-dev
+    - libgsl0-dev
     - liblapack-dev
-    - libgsl-dev
+    - libatlas-base-dev
 
 env:
   matrix:
   - ARGS="--resolver lts-6.17" GHCVER=7.10.3 PUBLISH_DOCS=false
-  - ARGS="--resolver lts-7.0" GHCVER=8.0.1 PUBLISH_DOCS=true
+  - ARGS="--resolver lts-7.0" GHCVER=8.0.14 PUBLISH_DOCS=true
   global:
   - SHCVER=0.0.4.0
   - secure: xSPUHVRt2PnXb25vOUetaY9035xOCORi+XLL6WZ6EKew2cx0glaCf6/zleUPuURqmN3w4yYow31r/OhupZNlq4OWJRltWH8DfJMK6cO6qL/NyBw5SS0Bw+GtkmD0pLiKKqo8vvNdTQ970+aGBItVll7iFyjZ9rTqcH2bQdBgdOhkaW/7eQFqas7z4pJBebbsfO2dKqgyXZDlMc+77W9S3V1JVQijMuqIQoxlahxrvTJo25Q7NzFd0jyyemLWEA7+BX4VTG3H4yT/WZ+80Lair+GgGE5TQf6Cg+ziZdhrAv6CgNbYCC17Tr/gIN89RYazBQtuTa4kOlwNjRNfBTQH7tAjrQIvTojsb/Cmm/iVhjDZpHSqQzgCCgyfJ8OygN83leAC7vDgHmQezHbRjzvY+7vZK8gFnnVx7QdjSQU6n1pfrWaXpcxh0iEjZ/wWGFZlb7fJBl5dczUzJAOfweOC6Awd8gnkQnicRBf6BwQH6fxabj9is3ftpCpCiQSMgBq+HOBCL1Vgt4fnYpQqlMk8I2WdxF5reak8BNxypsxzNwLp+F/OgDSUkdyLAujJ98OXgMfnrTcuh4ZEVWjpZEwJcZHtxnXtf2x2pkIzajVBtMweaa7yPvDm0ICch3hN0iVpcOXSfdjFysE41V8W6XSrM/V/AuFkZaPChDHx2/tGf/s=
