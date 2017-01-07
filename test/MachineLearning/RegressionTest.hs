@@ -33,7 +33,7 @@ yExpected = hypothesis LeastSquares (ML.addColumnOfOnes xPredict) theta
 
 eps = 0.0001
 thetaNE = ML.normalEquation x1 y
-thetaNE_p = ML.normalEquation x1 y
+thetaNE_p = ML.normalEquation_p x1 y
 (thetaGD, _) = minimize (GradientDescent 0.01) LeastSquares eps 5000 0 x1 y zeroTheta
 (thetaCGFR, _) = minimize (ConjugateGradientFR 0.1 0.1) LeastSquares eps 1500 0 x1 y zeroTheta
 (thetaCGPR, _) = minimize (ConjugateGradientPR 0.1 0.1) LeastSquares eps 1500 0 x1 y zeroTheta
