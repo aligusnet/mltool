@@ -26,6 +26,7 @@ library
                      , MachineLearning.NeuralNetwork
                      , MachineLearning.PCA
                      , MachineLearning.TerminalProgress
+                     , MachineLearning.Random
   build-depends:       base >= 4.7 && < 5
                      , vector
                      , hmatrix
@@ -33,6 +34,8 @@ library
                      , hmatrix-gsl-stats
                      , ascii-progress
                      , deepseq
+                     , random
+                     , array
   default-language:    Haskell2010
 
 executable linreg
@@ -103,6 +106,7 @@ test-suite mltool-test
                      , mltool
                      , vector
                      , hmatrix
+                     , random
                      , test-framework
                      , test-framework-hunit
                      , test-framework-quickcheck2
