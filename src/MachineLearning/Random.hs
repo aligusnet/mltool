@@ -26,7 +26,8 @@ import qualified Data.Array.ST as A
 -- | Samples `n` (given as a second parameter) values from `list` (given as a third parameter).
 sample :: Rnd.RandomGen t => t -> Int -> [a] -> ([a], t)
 sample gen n xs =
-  let (rnds, gen') = genRandomListForSample gen n (length xs)
+  let rangeList = zip (repeat 0) [n..(length xs)-1]
+      (rnds, gen') = randomsInRanges rangeList gen
       (pre, post) = splitAt n xs
       ys = elems $ A.runSTArray $ do
         arr <- A.newListArray (0, n-1) pre
@@ -35,12 +36,12 @@ sample gen n xs =
   in (ys, gen')
 
 
--- | sample's helper function.
-genRandomListForSample :: (Rnd.RandomGen t, Num a, Enum a, Rnd.Random a) => t -> a -> a -> ([a], t)
-genRandomListForSample rndGen start finish = (reverse values, gen')
-  where (firstValue, gen) = Rnd.randomR (0, start) rndGen
-        generateNext (values, gen) f =
-          let (value, gen') = Rnd.randomR (0, f) gen
-          in (value:values, gen')
-        (values, gen') = foldl' generateNext ([firstValue], gen) [start+1..finish-1]
+-- | Takes a list of ranges `(lo, hi)` and random generator `g`,
+-- returns a list of random values uniformly distributed in the list of closed intervals [(lo, hi)].
+randomsInRanges :: (Rnd.RandomGen t, Rnd.Random a) => [(a, a)] -> t -> ([a], t)
+randomsInRanges rangeList gen = (reverse values, gen')
+  where generateNext (values, g) interval =
+          let (value, g') = Rnd.randomR interval g
+          in (value:values, g')
+        (values, gen') = foldl' generateNext ([], gen) rangeList
 
