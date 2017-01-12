@@ -19,8 +19,9 @@ where
 import Control.Monad (when, zipWithM_)
 import Data.List (foldl')
 import qualified System.Random as Rnd
-import Data.Array (elems)
-import qualified Data.Array.ST as A
+import qualified Control.Monad.ST as ST
+import qualified Data.Vector as V
+import qualified Data.Vector.Mutable as MV
 
 
 -- | Samples `n` (given as a second parameter) values from `list` (given as a third parameter).
@@ -29,10 +30,10 @@ sample gen n xs =
   let rangeList = zip (repeat 0) [n..(length xs)-1]
       (rnds, gen') = randomsInRanges rangeList gen
       (pre, post) = splitAt n xs
-      ys = elems $ A.runSTArray $ do
-        arr <- A.newListArray (0, n-1) pre
-        zipWithM_ (\a r -> when (r < n) $ A.writeArray arr r a) post rnds
-        return arr
+      ys = V.toList $ ST.runST $ do
+        mv <- V.unsafeThaw $ V.fromList pre
+        zipWithM_ (\a r -> when (r < n) $ MV.write mv r a) post rnds
+        V.unsafeFreeze mv
   in (ys, gen')
 
 
