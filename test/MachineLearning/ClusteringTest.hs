@@ -40,7 +40,6 @@ x2 = (7><5) [ 1.1, 2, 3, 4, 5
 testKmeans x k expectedK = do
   let gen = Rnd.mkStdGen 10171
       (clusters, !gen') = kmeans 10 x k gen
-  print clusters
   assertEqual "number of clusters" expectedK (V.length clusters)
 
 
