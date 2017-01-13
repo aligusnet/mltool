@@ -13,8 +13,9 @@ import Test.HUnit.Plus
 
 import MachineLearning.Random
 
-import Data.List (nub)
+import Data.List (nub, sort)
 import Control.Monad (foldM_)
+import qualified Data.Vector as V
 import qualified System.Random as Rnd
 
 sampleTest = do
@@ -22,14 +23,15 @@ sampleTest = do
   foldM_ sampleTestIter gen [1..25]
 
 sampleTestIter gen i =
-  let xs = [1..100]
+  let xs = V.fromList [1..100]
       n = 10 + i
       (ys, gen') = sample gen n xs
   in do
-    assertEqual "length" n (length ys)
-    assertBool "maximum" $ (maximum ys) <= (maximum xs)
-    assertBool "minimum" $ (minimum ys) >= (minimum xs)
-    assertEqual "uniqness of elements" n (length $ nub ys) 
+    assertEqual "uniqness" (V.length xs) (length . nub $ V.toList xs) 
+    assertEqual "length" n (V.length ys)
+    assertBool "maximum" $ (V.maximum ys) <= (V.maximum xs)
+    assertBool "minimum" $ (V.minimum ys) >= (V.minimum xs)
+    assertEqual "uniqness of elements" n (length . nub $ V.toList ys) 
     return gen'
 
 tests = [ testCase "sample" $ sampleTest

@@ -12,37 +12,38 @@ Randon generation uitility functions.
 module MachineLearning.Random
 (
   sample
+  , sampleM
 )
 
 where
 
-import Control.Monad (when, zipWithM_)
-import Data.List (foldl')
-import qualified System.Random as Rnd
+import Control.Monad (when)
+import System.Random (RandomGen)
 import qualified Control.Monad.ST as ST
 import qualified Data.Vector as V
 import qualified Data.Vector.Mutable as MV
+import qualified Control.Monad.Random as RndM
 
 
 -- | Samples `n` (given as a second parameter) values from `list` (given as a third parameter).
-sample :: Rnd.RandomGen t => t -> Int -> [a] -> ([a], t)
-sample gen n xs =
-  let rangeList = zip (repeat 0) [n..(length xs)-1]
-      (rnds, gen') = randomsInRanges rangeList gen
-      (pre, post) = splitAt n xs
-      ys = V.toList $ ST.runST $ do
-        mv <- V.unsafeThaw $ V.fromList pre
-        zipWithM_ (\a r -> when (r < n) $ MV.write mv r a) post rnds
+sample :: (RandomGen g, Show a) => g -> Int -> V.Vector a -> (V.Vector a, g)
+sample gen n xs = RndM.runRand (sampleM n xs) gen
+
+
+-- | Samples `n` (given as a second parameter) values from `list` (given as a third parameter) inside RandomMonad.
+sampleM :: (RandomGen g, Show a) => Int -> V.Vector a -> RndM.Rand g (V.Vector a)
+sampleM n xs = do  -- Random Monad starts
+  let rangeList = V.fromList $ zip (repeat 0) [n..(length xs)-1]
+  rnds <- randomsInRangesM rangeList
+  let (pre, post) = V.splitAt n xs
+  let ys = ST.runST $ do  -- ST Monad starts
+        mv <- V.thaw pre
+        V.zipWithM_ (\val r -> when (r < n) $ MV.write mv (mod r n) val) post rnds
         V.unsafeFreeze mv
-  in (ys, gen')
+  return ys
+  
 
-
--- | Takes a list of ranges `(lo, hi)` and random generator `g`,
+-- | Takes a list of ranges `(lo, hi)`,
 -- returns a list of random values uniformly distributed in the list of closed intervals [(lo, hi)].
-randomsInRanges :: (Rnd.RandomGen t, Rnd.Random a) => [(a, a)] -> t -> ([a], t)
-randomsInRanges rangeList gen = (reverse values, gen')
-  where generateNext (values, g) interval =
-          let (value, g') = Rnd.randomR interval g
-          in (value:values, g')
-        (values, gen') = foldl' generateNext ([], gen) rangeList
-
+randomsInRangesM :: (RndM.RandomGen g, RndM.Random a) => V.Vector (a, a) -> RndM.Rand g (V.Vector a)
+randomsInRangesM rangeList = mapM RndM.getRandomR rangeList
