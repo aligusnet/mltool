@@ -35,6 +35,7 @@ library
                      , ascii-progress
                      , deepseq
                      , random
+                     , MonadRandom
   default-language:    Haskell2010
 
 executable linreg
