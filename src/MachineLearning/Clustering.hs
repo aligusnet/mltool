@@ -122,10 +122,10 @@ kmeans nIters x k gen = RndM.runRand (kmeansM nIters x k) gen
 -- | Clusters data using K-Means Algorithm inside Random Monad.
 -- Runs K-Means algorithm `N` times, returns the clustering with smaller cost.
 kmeansM :: Rnd.RandomGen g =>
-           Int ->                     -- ^ number of K-Means Algorithm runs (`N`);
-           Matrix ->                  -- ^ data to cluster;
-           Int ->                     -- ^ desired number of clusters (`K`);
-           RndM.Rand g (V.Vector Cluster)  -- ^ list of clusters inside Random Monad.
+           Int                     -- ^ number of K-Means Algorithm runs (`N`);
+           -> Matrix                  -- ^ data to cluster;
+           -> Int                     -- ^ desired number of clusters (`K`);
+           -> RndM.Rand g (V.Vector Cluster)  -- ^ list of clusters inside Random Monad.
 kmeansM nIters x k = fst <$>
     (minimumBy (\(_, j1) (_, j2) -> compare j1 j2)) <$>
     forM [1..nIters] (kmeansIterM samples k)
