@@ -25,6 +25,7 @@ x1 = ML.addColumnOfOnes x
 nnt = makeTopology (LA.cols x) 1 [10]
 model = NeuralNetwork nnt
 
+gradientCheckingEps = 10
 
 thetaSizeTest = do
   thetas <- initializeThetaList nnt
@@ -36,7 +37,7 @@ thetaSizeTest = do
 checkGradientTest lambda = do
   thetas <- initializeTheta nnt
   let diff = checkGradient model lambda x1 y thetas 1e-2
-  assertApproxEqual (show thetas) 2 0 diff
+  assertApproxEqual (show thetas) gradientCheckingEps 0 diff
 
 
 flattenTest = do
@@ -54,8 +55,8 @@ tests = [ testGroup "thetaInitialization" [
             testCase "sizes" thetaSizeTest
           ]
         , testGroup "gradient checking" [
-            testCase "non-zero theta, non-zero lambda" $ assertApproxEqual "" 1 0 (checkGradient model 2 x1 y onesTheta 1e-3)
-            , testCase "non-zero theta, zero lambda" $ assertApproxEqual "" 1 0 (checkGradient model 0 x1 y onesTheta 1e-3)
+            testCase "non-zero theta, non-zero lambda" $ assertApproxEqual "" gradientCheckingEps 0 (checkGradient model 2 x1 y onesTheta 1e-3)
+            , testCase "non-zero theta, zero lambda" $ assertApproxEqual "" gradientCheckingEps 0 (checkGradient model 0 x1 y onesTheta 1e-3)
             , testCase "rand theta, non-zero lambda" $ checkGradientTest 2
             , testCase "rand theta, zero lambda" $ checkGradientTest 0
               ]
