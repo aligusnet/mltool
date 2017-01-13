@@ -13,7 +13,7 @@ import Test.HUnit.Plus
 
 import MachineLearning.Random
 
-import Data.List (nub, sort)
+import Data.List (nub)
 import Control.Monad (foldM_)
 import qualified Data.Vector as V
 import qualified System.Random as Rnd
