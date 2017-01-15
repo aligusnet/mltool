@@ -57,7 +57,7 @@ zeroThetam = replicate (length ym) zeroTheta
 
 
 isInDescendingOrder :: V.Vector Double -> Bool
-isInDescendingOrder lst = V.and . snd . V.unzip $ V.scanl (\(prev, _) current -> (current, prev-current > (-0.0001))) (1/0, True) lst
+isInDescendingOrder lst = V.and . snd . V.unzip $ V.scanl (\(prev, _) current -> (current, prev-current > (-0.001))) (1/0, True) lst
 
 testOptPath optPath = do
   let js = V.convert $ (LA.toColumns optPath) !! 1
@@ -98,8 +98,7 @@ testsMulti = [
       , testCase "BFGS" $ assertVector "" 0.01 yExpected (predictMulti xPredict1 thetaBFGSm)
       ]
   , testGroup "optPath" [
-      testCase "Gradient Descent" $ mapM_ testOptPath optPathGDm
-      , testCase "Conjugate Gradient FR" $ mapM_ testOptPath optPathCGFRm
+      testCase "Conjugate Gradient FR" $ mapM_ testOptPath optPathCGFRm
       , testCase "Conjugate Gradient PR" $ mapM_ testOptPath optPathCGPRm
       , testCase "BFGS" $ mapM_ testOptPath optPathBFGSm
       ]
