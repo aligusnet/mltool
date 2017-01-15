@@ -16,7 +16,7 @@ import Types
 import qualified Data.Vector as V
 import qualified Numeric.LinearAlgebra as LA
 import Numeric.LinearAlgebra ((><))
-import qualified System.Random as Rnd
+import qualified Control.Monad.Random as RndM
 import MachineLearning.Clustering
 
 x1 :: Matrix
@@ -38,8 +38,8 @@ x2 = (7><5) [ 1.1, 2, 3, 4, 5
             , 0.5, 2, 3, 4, 5]
 
 testKmeans x k expectedK = do
-  let gen = Rnd.mkStdGen 10171
-      (clusters, !gen') = kmeans 10 x k gen
+  let gen = RndM.mkStdGen 10171
+      clusters = RndM.evalRand (kmeans 10 x k) gen
   assertEqual "number of clusters" expectedK (V.length clusters)
 
 
