@@ -19,7 +19,7 @@ module MachineLearning.NeuralNetwork
   , initializeThetaM
   , MLC.calcAccuracy
 
-  -- * exported for testing purposes only
+  -- * Exported for testing purposes only.
   , flatten
   , unflatten
   , getThetaSizes

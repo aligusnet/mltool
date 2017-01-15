@@ -50,7 +50,7 @@ eps = 0.0001
 -- Multi
 ym = processOutputMulti 2 y
 zeroThetam = replicate (length ym) zeroTheta
-(thetaGDm, optPathGDm) = learnMulti (GradientDescent 0.01) eps 250 0.5 x1 ym zeroThetam
+(thetaGDm, optPathGDm) = learnMulti (GradientDescent 0.001) eps 200 0.5 x1 ym zeroThetam
 (thetaCGFRm, optPathCGFRm) = learnMulti (ConjugateGradientFR 0.1 0.1) eps 50 0.5 x1 ym zeroThetam
 (thetaCGPRm, optPathCGPRm) = learnMulti (ConjugateGradientPR 0.1 0.1) eps 50 0.5 x1 ym zeroThetam
 (thetaBFGSm, optPathBFGSm) = learnMulti (BFGS2 0.1 0.1) eps 50 0.5 x1 ym zeroThetam
@@ -98,7 +98,8 @@ testsMulti = [
       , testCase "BFGS" $ assertVector "" 0.01 yExpected (predictMulti xPredict1 thetaBFGSm)
       ]
   , testGroup "optPath" [
-      testCase "Conjugate Gradient FR" $ mapM_ testOptPath optPathCGFRm
+      testCase "Gradient Descent" $ mapM_ testOptPath optPathGDm
+      , testCase "Conjugate Gradient FR" $ mapM_ testOptPath optPathCGFRm
       , testCase "Conjugate Gradient PR" $ mapM_ testOptPath optPathCGPRm
       , testCase "BFGS" $ mapM_ testOptPath optPathBFGSm
       ]
