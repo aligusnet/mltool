@@ -38,13 +38,13 @@ sigmoidGradient z = s * (1-s)
 
 
 instance Model LogisticModel where
-  hypothesis _ x theta = sigmoid (x #> theta)
+  hypothesis Logistic x theta = sigmoid (x #> theta)
 
   cost m lambda x y theta =
     let h = hypothesis m x theta
         nFeatures = V.length theta
         nExamples = fromIntegral $ LA.rows x
-        jPositive = log(h) <.> (-y)
+        jPositive = log h <.> (-y)
         jNegative = log(1-h) <.> (1-y)
         thetaReg = V.slice 1 (nFeatures-1) theta
         regTerm = (thetaReg <.> thetaReg) * lambda * 0.5
