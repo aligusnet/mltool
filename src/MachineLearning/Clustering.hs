@@ -21,7 +21,6 @@ import Types (R, Vector, Matrix)
 import Data.List (sortOn, groupBy, minimumBy)
 import Control.Applicative ((<$>))
 import Control.Monad (forM)
-import qualified System.Random as Rnd
 import qualified Control.Monad.Random as RndM
 import qualified Data.Vector as V
 import qualified Numeric.LinearAlgebra as LA
@@ -98,7 +97,7 @@ kmeansIter samples k initialCentroids =
 
 
 -- | Run K-Means algorithm once inside Random Monad.
-kmeansIterM :: Rnd.RandomGen g =>
+kmeansIterM :: RndM.RandomGen g =>
                V.Vector Vector  -- ^ list of samples;
                -> Int           -- ^ number of clusters (`K`);
                -> Int           -- ^ iteration number;
@@ -108,25 +107,14 @@ kmeansIterM samples k _ = do
   return (kmeansIter samples k centroids)
 
 
--- | Clusters data using K-Means Algorithm.
--- Runs K-Means algorithm `N` times, returns the clustering with smaller cost.
-kmeans :: Rnd.RandomGen g =>
-          Int                         -- ^ number of K-Means Algorithm runs (`N`);
-          -> Matrix                   -- ^ data to cluster;
-          -> Int                      -- ^ desired number of clusters (`K`);
-          -> g                        -- ^ randome generator;
-          -> (V.Vector Cluster, g)    -- ^ list of clusters.
-kmeans nIters x k gen = RndM.runRand (kmeansM nIters x k) gen
-
-
 -- | Clusters data using K-Means Algorithm inside Random Monad.
 -- Runs K-Means algorithm `N` times, returns the clustering with smaller cost.
-kmeansM :: Rnd.RandomGen g =>
+kmeans :: RndM.RandomGen g =>
            Int                     -- ^ number of K-Means Algorithm runs (`N`);
            -> Matrix                  -- ^ data to cluster;
            -> Int                     -- ^ desired number of clusters (`K`);
            -> RndM.Rand g (V.Vector Cluster)  -- ^ list of clusters inside Random Monad.
-kmeansM nIters x k = fst <$>
+kmeans nIters x k = fst <$>
     (minimumBy (\(_, j1) (_, j2) -> compare j1 j2)) <$>
     forM [1..nIters] (kmeansIterM samples k)
   where samples = V.fromList $ LA.toRows x
