@@ -20,6 +20,8 @@
 
 * Principal Component Analysis (Dimensionality reduction problem).
 
+* K-Means (Clustering).
+
 ### Build the project
 
     stack build
@@ -35,6 +37,7 @@ Please run sample app from root dir (because paths to training data sets are har
     stack exec digits-pca  # Apply PCA dimensionaly reduction to digits sample app
     stack exec nn          # Neural Network Sample App
                            # (Recognition of Handwritten Digits)
+    stack kmeans           # Clustering Sample App
 
 ### Run unit tests
 
