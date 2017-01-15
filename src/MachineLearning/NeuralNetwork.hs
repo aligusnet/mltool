@@ -17,7 +17,6 @@ module MachineLearning.NeuralNetwork
   , initializeTheta
   , initializeThetaIO
   , initializeThetaM
-  , predictMulti
   , MLC.calcAccuracy
 
   -- * exported for testing purposes only
@@ -66,9 +65,10 @@ numberOutputs (Topology nnt) = last nnt
 newtype NeuralNetworkModel = NeuralNetwork Topology
 
 instance Model NeuralNetworkModel where
-  hypothesis (NeuralNetwork topology) x theta =
-    let thetaList = unflatten topology theta
-    in LA.flatten $ calcLastActivation x thetaList
+  hypothesis (NeuralNetwork topology) x theta = predictions'
+    where thetaList = unflatten topology theta
+          predictions = LA.toRows $ (calcLastActivation x thetaList) LA.?? (LA.All, LA.Drop 1)
+          predictions' = LA.vector $ map (fromIntegral . LA.maxIndex) predictions
 
   cost (NeuralNetwork topology) lambda x y theta = 
     let ys = LA.fromColumns $ MLC.processOutputMulti (numberOutputs topology) y
@@ -140,15 +140,6 @@ getThetaSizes (Topology nn) = zipWith (\r c -> (r, c+1)) (tail nn) nn
 -- | Calculates last layer of activation units
 calcLastActivation :: Matrix -> [Matrix] -> Matrix
 calcLastActivation x thetaList = head . fst $ propagateForward x thetaList
-
-
--- | Calculate output for given input matrix (X) and list of weight vector (theta).
--- Returns vector of predicted class indices (assuming class indices starts at 0).
-predictMulti :: Topology -> Matrix -> Vector -> Vector
-predictMulti topology x theta = predictions'
-  where thetaList = unflatten topology theta
-        predictions = LA.toRows $ (calcLastActivation x thetaList) LA.?? (LA.All, LA.Drop 1)
-        predictions' = LA.vector $ map (fromIntegral . LA.maxIndex) predictions
 
 
 -- | Calculats activations and z, returns them in reverse order.
