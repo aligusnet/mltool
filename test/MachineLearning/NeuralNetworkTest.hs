@@ -13,6 +13,7 @@ import Test.HUnit.Plus
 
 import MachineLearning.Regression.DataSets (dataset2)
 
+import qualified Control.Monad.Random as RndM
 import qualified Numeric.LinearAlgebra as LA
 import qualified MachineLearning as ML
 import MachineLearning.Regression (checkGradient)
@@ -27,32 +28,34 @@ model = NeuralNetwork nnt
 
 gradientCheckingEps = 10
 
+
 thetaSizeTest = do
-  thetas <- initializeThetaList nnt
+  thetas <- RndM.evalRandIO $ initializeThetaListM nnt
   let sizesActual = map LA.size thetas
       sizesExpected = getThetaSizes nnt
   assertEqual "theta sizes" sizesExpected sizesActual
 
 
 checkGradientTest lambda = do
-  thetas <- initializeTheta nnt
-  let diff = checkGradient model lambda x1 y thetas 1e-2
+  let thetas = initializeTheta 1511197 nnt
+      diff = checkGradient model lambda x1 y thetas 1e-2
   assertApproxEqual (show thetas) gradientCheckingEps 0 diff
 
 
 flattenTest = do
-  thetas <- initializeThetaList nnt
-  let thetas' = unflatten nnt $ flatten thetas
-      norm = LA.norm_2 . LA.vector $ zipWith (\t1 t2 -> LA.norm_2 (t1-t2)) thetas thetas'
+  theta <- initializeThetaIO nnt
+  let theta' = flatten $ unflatten nnt theta
+      norm = LA.norm_2 (theta - theta')
   assertApproxEqual "flatten" 1e-10 0 norm
 
 
 nn_thetaSize = sum $ map (\(c, r) -> c*r) $ getThetaSizes nnt
 onesTheta :: LA.Vector LA.R
-onesTheta = LA.konst 0.1 (nn_thetaSize)
+onesTheta = LA.konst 0.01 (nn_thetaSize)
 
 tests = [ testGroup "thetaInitialization" [
             testCase "sizes" thetaSizeTest
+            , testCase "theta total size" $ assertEqual "" nn_thetaSize (getThetaTotalSize nnt)
           ]
         , testGroup "gradient checking" [
             testCase "non-zero theta, non-zero lambda" $ assertApproxEqual "" gradientCheckingEps 0 (checkGradient model 2 x1 y onesTheta 1e-3)
