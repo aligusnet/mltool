@@ -15,6 +15,8 @@ module MachineLearning.NeuralNetwork
   , Topology
   , makeTopology
   , initializeTheta
+  , initializeThetaIO
+  , initializeThetaM
   , predictMulti
   , MLC.calcAccuracy
 
@@ -22,7 +24,8 @@ module MachineLearning.NeuralNetwork
   , flatten
   , unflatten
   , getThetaSizes
-  , initializeThetaList
+  , getThetaTotalSize
+  , initializeThetaListM
 )
 
 where
@@ -32,11 +35,14 @@ import Control.Monad (zipWithM)
 import qualified Data.Vector.Storable as V
 import qualified Numeric.LinearAlgebra as LA
 import Numeric.LinearAlgebra ((<>), (|||))
+import System.Random (RandomGen)
+import qualified Control.Monad.Random as RndM
 import Types (R, Vector, Matrix)
 import qualified MachineLearning as ML
 import qualified MachineLearning.Regression.Logistic as LR
 import qualified MachineLearning.Classification as MLC
 import MachineLearning.Regression.Model (Model(..))
+import MachineLearning.Random
 
 
 -- | Neural network topology has at least 2 elements: numver of input and number of outputs.
@@ -93,19 +99,37 @@ unflatten topology v =
 
 -- | Create and initialize weights vector with random values
 -- for given neural network topology.
-initializeTheta :: Topology -> IO Vector
-initializeTheta topology = pure flatten <*> initializeThetaList topology
+-- Takes a seed to initialize generator of random numbers as a first parameter.
+initializeTheta :: Int -> Topology -> Vector
+initializeTheta seed topology = RndM.evalRand (initializeThetaM topology) gen
+  where gen = RndM.mkStdGen seed
+
+
+-- | Create and initialize weights vector with random values
+-- for given neural network topology inside IO Monad.
+initializeThetaIO :: Topology -> IO Vector
+initializeThetaIO = RndM.evalRandIO . initializeThetaM
+
+
+-- | Create and initialize weights vector with random values
+-- for given neural network topology inside RandomMonad.
+initializeThetaM :: RandomGen g => Topology -> RndM.Rand g Vector
+initializeThetaM topology = flatten <$> initializeThetaListM topology
 
 
 -- | Create and initialize list of weights matrices with random values
 -- for given neural network topology.
-initializeThetaList :: Topology -> IO [Matrix]
-initializeThetaList (Topology nn) = zipWithM initTheta (tail nn) nn
+initializeThetaListM :: RandomGen g => Topology -> RndM.Rand g [Matrix]
+initializeThetaListM (Topology nn) = zipWithM initTheta (tail nn) nn
   where initTheta r c = do
-          let eps = LA.scalar $ calcEps r c
-          m <- LA.rand r (c+1)
-          return $ 2*eps*m - eps
+          let eps = calcEps r c
+          getRandomRMatrixM r (c+1) (-eps, eps)
         calcEps r c = (sqrt 6) / (sqrt . fromIntegral $ r + c)
+
+
+-- | Return sum of dimensions of weight matrices for given neural network topology.
+getThetaTotalSize :: Topology -> Int
+getThetaTotalSize topology = sum $ map (\(c, r) -> c*r) $ getThetaSizes topology
 
 
 -- | Returns dimensions of weight matrices for given neural network topology

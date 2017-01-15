@@ -18,11 +18,10 @@ main = do
   -- Step 2. Initialize Neural Network.
   let nnt = NN.makeTopology (LA.cols x) 10 [100, 100]
       model = NN.NeuralNetwork nnt
-
   -- Step 3. Initialize theta with randon values.
-  initTheta <- NN.initializeTheta nnt
+      initTheta = NN.initializeTheta 5191711 nnt
 
-  let x1 = ML.addColumnOfOnes x
+      x1 = ML.addColumnOfOnes x
 
   -- Step 4. Learn the Neural Network.
   (thetaNN, optPath) <- TP.learnWithProgressBar (MLR.minimize (MLR.BFGS2 0.03 0.7) model 1e-7 5 5 x1 y) initTheta 20

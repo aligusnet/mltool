@@ -120,6 +120,7 @@ test-suite mltool-test
                      , vector
                      , hmatrix
                      , random
+                     , MonadRandom
                      , test-framework
                      , test-framework-hunit
                      , test-framework-quickcheck2
