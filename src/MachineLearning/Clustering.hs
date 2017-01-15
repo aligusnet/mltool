@@ -13,6 +13,9 @@ module MachineLearning.Clustering
 (
   Cluster(..)
   , kmeans
+    
+  -- * Exported for testing purposes only.
+  , kmeansIterM
 )
 
 where
@@ -83,17 +86,17 @@ buildClusterList samples clusterIndicesList = V.fromList $ fmap getClusterSample
 kmeansIter :: V.Vector Vector           -- ^ list of samples;
               -> Int                    -- ^ number of clusters (`K`);
               -> V.Vector Vector        -- ^ list of initial centroids;
-              -> (V.Vector Cluster, R)  -- ^ (list of clusters, cost value).
+              -> (V.Vector Cluster, [R])  -- ^ (list of clusters, cost values).
 kmeansIter samples k initialCentroids =
-  let iter centroids =
+  let iter centroids js =
         let clusterIndicesList = fmap (nearestCentroidIndex centroids) samples
             clusters = buildClusterList samples clusterIndicesList
             centroids' = moveCentroids clusters
             j = calcCost clusters centroids'
             diff = sum . fmap LA.norm_2 $ V.zipWith (-) centroids centroids'
-        in if diff < 0.001 then (clusters, j)
-           else iter centroids'
-  in iter initialCentroids
+        in if diff < 0.001 then (clusters, j:js)
+           else iter centroids' (j:js)
+  in iter initialCentroids []
 
 
 -- | Run K-Means algorithm once inside Random Monad.
@@ -101,7 +104,7 @@ kmeansIterM :: RndM.RandomGen g =>
                V.Vector Vector  -- ^ list of samples;
                -> Int           -- ^ number of clusters (`K`);
                -> Int           -- ^ iteration number;
-               -> RndM.Rand g (V.Vector Cluster, R)  -- ^ (list of clusters, cost value) inside Random Monad.
+               -> RndM.Rand g (V.Vector Cluster, [R])  -- ^ (list of clusters, cost values) inside Random Monad.
 kmeansIterM samples k _ = do
   centroids <- sampleM k samples
   return (kmeansIter samples k centroids)
@@ -115,6 +118,6 @@ kmeans :: RndM.RandomGen g =>
            -> Int                     -- ^ desired number of clusters (`K`);
            -> RndM.Rand g (V.Vector Cluster)  -- ^ list of clusters inside Random Monad.
 kmeans nIters x k = fst <$>
-    (minimumBy (\(_, j1) (_, j2) -> compare j1 j2)) <$>
+    (minimumBy (\(_, js1) (_, js2) -> compare (head js1) (head js2))) <$>
     forM [1..nIters] (kmeansIterM samples k)
   where samples = V.fromList $ LA.toRows x
