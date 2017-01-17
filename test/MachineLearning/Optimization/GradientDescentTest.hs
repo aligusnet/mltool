@@ -1,4 +1,4 @@
-module MachineLearning.Regression.GradientDescentTest
+module MachineLearning.Optimization.GradientDescentTest
 (
   tests
 )
@@ -15,10 +15,10 @@ import qualified Data.Vector.Storable as V
 import qualified Numeric.LinearAlgebra as LA
 
 import qualified MachineLearning as ML
-import MachineLearning.Regression.LeastSquares (LeastSquaresModel(..))
-import MachineLearning.Regression.GradientDescent
+import MachineLearning.LeastSquaresModel (LeastSquaresModel(..))
+import MachineLearning.Optimization.GradientDescent
 
-import MachineLearning.Regression.DataSets (dataset1)
+import MachineLearning.DataSets (dataset1)
 
 (x, y) = ML.splitToXY dataset1
 

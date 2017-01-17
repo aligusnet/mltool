@@ -1,4 +1,4 @@
-module MachineLearning.Regression.DataSets
+module MachineLearning.DataSets
 (
   dataset1
   , dataset2

@@ -1,11 +1,11 @@
 module Main where
 
 import qualified Numeric.LinearAlgebra as LA
-import qualified Types as T
+import qualified MachineLearning.Types as T
 import qualified MachineLearning as ML
 import qualified MachineLearning.Classification as MLC
 import qualified MachineLearning.PCA as PCA
-import qualified MachineLearning.Regression.Logistic as LR
+import qualified MachineLearning.LogisticModel as LM
 
 processFeatures :: T.Matrix -> T.Matrix
 processFeatures = ML.addColumnOfOnes . (ML.mapFeatures 2)
@@ -16,18 +16,18 @@ calcAccuracy x y thetas = MLC.calcAccuracy y yPredicted
 
 printOptPath x optPath =
   let thetas = optPath LA.?? (LA.All, LA.Drop 2)
-      thetas_norm = LA.col $ map (LA.norm_2) $ LA.toRows . log $ 1 - LR.sigmoid (thetas LA.<> LA.tr x)
+      thetas_norm = LA.col $ map (LA.norm_2) $ LA.toRows . log $ 1 - LM.sigmoid (thetas LA.<> LA.tr x)
   in LA.disp 3 $ (optPath LA.?? (LA.All, LA.Take 2)) LA.||| thetas_norm
 
 printInfinities x thetaList =
   let thetas = LA.fromColumns thetaList
       y :: T.Matrix
-      y = log $ 1-LR.sigmoid (x LA.<> thetas)
+      y = log $ 1-LM.sigmoid (x LA.<> thetas)
       inf = 1/0
       xList = LA.toRows x
       x' = LA.fromRows $ map (\(xi, _) -> xList !! xi) $ LA.find (<=(-inf)) y
       z = x' LA.<> thetas
-      h = LR.sigmoid z
+      h = LM.sigmoid z
       h' = 1 - h
       logh = log h
       logh' = log h'

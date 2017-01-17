@@ -15,19 +15,20 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Types
-                     , MachineLearning
+  exposed-modules:     MachineLearning
+                     , MachineLearning.Optimization
+                     , MachineLearning.Optimization.GradientDescent
                      , MachineLearning.Regression
-                     , MachineLearning.Regression.Model
-                     , MachineLearning.Regression.LeastSquares
-                     , MachineLearning.Regression.Logistic
-                     , MachineLearning.Regression.GradientDescent
+                     , MachineLearning.Model
+                     , MachineLearning.LeastSquaresModel
+                     , MachineLearning.LogisticModel
                      , MachineLearning.Classification
                      , MachineLearning.NeuralNetwork
                      , MachineLearning.PCA
                      , MachineLearning.Clustering
                      , MachineLearning.TerminalProgress
                      , MachineLearning.Random
+                     , MachineLearning.Types
   build-depends:       base >= 4.7 && < 5
                      , vector
                      , hmatrix

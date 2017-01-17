@@ -1,4 +1,4 @@
-module MachineLearning.Regression.LeastSquaresTest
+module MachineLearning.LeastSquaresModelTest
 (
   tests
 )
@@ -11,13 +11,13 @@ import Test.HUnit
 import Test.HUnit.Approx
 import Test.HUnit.Plus
 
-import MachineLearning.Regression.DataSets (dataset1)
+import MachineLearning.DataSets (dataset1)
 
 import qualified Numeric.LinearAlgebra as LA
 import qualified MachineLearning as ML
-import MachineLearning.Regression (checkGradient)
-import MachineLearning.Regression.Model
-import MachineLearning.Regression.LeastSquares
+import MachineLearning.Optimization (checkGradient)
+import MachineLearning.Model
+import MachineLearning.LeastSquaresModel
 
 (x, y) = ML.splitToXY dataset1
 

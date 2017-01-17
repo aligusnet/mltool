@@ -24,7 +24,7 @@ import qualified Numeric.LinearAlgebra as LA
 import Numeric.LinearAlgebra ((<>), (??))
 import qualified MachineLearning as ML
 
-import Types (R, Vector, Matrix)
+import MachineLearning.Types (R, Vector, Matrix)
 
 
 -- | Computes "covariance matrix".

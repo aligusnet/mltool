@@ -1,6 +1,6 @@
 {-|
-Module: MachineLearning.Regression.LeastSquares
-Description: Least Squares
+Module: MachineLearning.LeastSquaresModel
+Description: Least Squares Model
 Copyright: (c) Alexander Ignatyev, 2016
 License: BSD-3
 Stability: experimental
@@ -8,7 +8,7 @@ Portability: POSIX
 
 -}
 
-module MachineLearning.Regression.LeastSquares
+module MachineLearning.LeastSquaresModel
 (
   LeastSquaresModel(..)
 )
@@ -20,7 +20,7 @@ import Numeric.LinearAlgebra((<>), (#>), (<.>))
 import qualified Numeric.LinearAlgebra.Data as LAD
 import qualified Data.Vector.Storable as V
 
-import MachineLearning.Regression.Model
+import MachineLearning.Model
 
 data LeastSquaresModel = LeastSquares
 

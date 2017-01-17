@@ -11,11 +11,11 @@ import Test.HUnit
 import Test.HUnit.Approx
 import Test.HUnit.Plus
 
-import Types
+import MachineLearning.Types
 import qualified Data.Vector as V
 import qualified Numeric.LinearAlgebra as LA
 
-import MachineLearning.Regression.DataSets (dataset2)
+import MachineLearning.DataSets (dataset2)
 
 import qualified MachineLearning as ML
 import MachineLearning.Classification

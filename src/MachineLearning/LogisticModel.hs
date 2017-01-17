@@ -1,5 +1,5 @@
 {-|
-Module: MachineLearning.Regression.Logistic
+Module: MachineLearning.LogisticModel
 Description: Logistic Regression Model
 Copyright: (c) Alexander Ignatyev, 2016
 License: BSD-3
@@ -8,9 +8,10 @@ Portability: POSIX
 
 -}
 
-module MachineLearning.Regression.Logistic
+module MachineLearning.LogisticModel
 (
-  LogisticModel(..)
+  module MachineLearning.Model
+  , LogisticModel(..)
   , sigmoid
   , sigmoidGradient
 )
@@ -21,7 +22,7 @@ import qualified Numeric.LinearAlgebra as LA
 import Numeric.LinearAlgebra((<>), (#>), (<.>))
 import qualified Data.Vector.Storable as V
 
-import MachineLearning.Regression.Model
+import MachineLearning.Model
 
 data LogisticModel = Logistic
 

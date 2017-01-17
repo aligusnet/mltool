@@ -11,12 +11,13 @@ import Test.HUnit
 import Test.HUnit.Approx
 import Test.HUnit.Plus
 
-import MachineLearning.Regression.DataSets (dataset2)
+import MachineLearning.DataSets (dataset2)
 
 import qualified Control.Monad.Random as RndM
 import qualified Numeric.LinearAlgebra as LA
 import qualified MachineLearning as ML
-import qualified MachineLearning.Regression as MLR
+import qualified MachineLearning.Optimization as Opt
+import MachineLearning.Model
 import MachineLearning.NeuralNetwork
 
 (x, y) = ML.splitToXY dataset2
@@ -37,7 +38,7 @@ thetaSizeTest = do
 
 checkGradientTest lambda = do
   let thetas = initializeTheta 1511197 nnt
-      diff = MLR.checkGradient model lambda x1 y thetas 0.005
+      diff = Opt.checkGradient model lambda x1 y thetas 0.005
   assertApproxEqual (show thetas) gradientCheckingEps 0 diff
 
 
@@ -63,8 +64,8 @@ learnTest minMethod =
       model = NeuralNetwork nnt
       xPredict1 = ML.addColumnOfOnes $ ML.mapFeatures 2 xPredict
       initTheta = initializeTheta 5191711 nnt
-      (theta, _) = MLR.minimize minMethod model 1e-7 50 1 x1 y initTheta
-      yPredicted = MLR.hypothesis model xPredict1 theta
+      (theta, _) = Opt.minimize minMethod model 1e-7 50 1 x1 y initTheta
+      yPredicted = hypothesis model xPredict1 theta
   in do
     assertVector "" 0.01 yExpected yPredicted
 
@@ -80,6 +81,6 @@ tests = [ testGroup "thetaInitialization" [
             testCase "flatten" flattenTest
             ]
         , testGroup "learn" [
-            testCase "BFGS" $ learnTest (MLR.BFGS2 0.03 0.7)
+            testCase "BFGS" $ learnTest (Opt.BFGS2 0.03 0.7)
             ]
         ]

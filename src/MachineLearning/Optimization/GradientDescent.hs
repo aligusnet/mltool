@@ -1,5 +1,5 @@
 {-|
-Module: MachineLearning.Regression.GradientDescent
+Module: MachineLearning.Optimization.GradientDescent
 Description: Gradient Descent
 Copyright: (c) Alexander Ignatyev, 2016
 License: BSD-3
@@ -8,18 +8,18 @@ Portability: POSIX
 
 -}
 
-module MachineLearning.Regression.GradientDescent
+module MachineLearning.Optimization.GradientDescent
 (
   gradientDescent
 )
 
 where
 
-import Types
+import MachineLearning.Types (R, Vector, Matrix)
 import qualified Data.Vector.Storable as V
 import qualified Numeric.LinearAlgebra as LA
 
-import qualified MachineLearning.Regression.Model as Model
+import qualified MachineLearning.Model as Model
 
 -- | Gradient Descent method implementation. See "MachineLearning.Regression" for usage details.
 gradientDescent :: Model.Model a => R-> a -> R -> Int -> R -> Matrix -> Vector -> Vector -> (Vector, Matrix)

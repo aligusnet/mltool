@@ -1,5 +1,5 @@
 {-|
-Module: MachineLearning.Regression.Model
+Module: MachineLearning.Model
 Description: Regression Model
 Copyright: (c) Alexander Ignatyev, 2016
 License: BSD-3
@@ -10,14 +10,14 @@ Regression Model type class.
 
 -}
 
-module MachineLearning.Regression.Model
+module MachineLearning.Model
 (
   Model(..)
 )
 
 where
 
-import Types
+import MachineLearning.Types (R, Vector, Matrix)
 
 class Model a where
   -- | Hypothesis function.

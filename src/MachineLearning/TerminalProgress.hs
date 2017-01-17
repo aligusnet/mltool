@@ -18,7 +18,7 @@ module MachineLearning.TerminalProgress
 where
 
 import Data.List (transpose)
-import Types (Vector, Matrix)
+import MachineLearning.Types (Vector, Matrix)
 import Control.Monad (foldM, mapAndUnzipM)
 import Control.DeepSeq (deepseq)
 import qualified System.Console.AsciiProgress as AP
