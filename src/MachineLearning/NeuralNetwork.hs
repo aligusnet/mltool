@@ -11,7 +11,8 @@ Simple Neural Networks.
 
 module MachineLearning.NeuralNetwork
 (
-  NeuralNetworkModel(..)
+    Model(..)
+  , NeuralNetworkModel(..)
   , Topology
   , makeTopology
   , initializeTheta
@@ -36,11 +37,11 @@ import qualified Numeric.LinearAlgebra as LA
 import Numeric.LinearAlgebra ((<>), (|||))
 import System.Random (RandomGen)
 import qualified Control.Monad.Random as RndM
-import Types (R, Vector, Matrix)
+import MachineLearning.Types (R, Vector, Matrix)
 import qualified MachineLearning as ML
-import qualified MachineLearning.Regression.Logistic as LR
+import qualified MachineLearning.LogisticModel as LM
 import qualified MachineLearning.Classification as MLC
-import MachineLearning.Regression.Model (Model(..))
+import MachineLearning.Model (Model(..))
 import MachineLearning.Random
 
 
@@ -148,7 +149,7 @@ propagateForward x thetaList = foldl' f ([x], []) thetaList
   where f :: ([Matrix], [Matrix]) -> Matrix -> ([Matrix], [Matrix])
         f (al, zl) theta =
           let z = (head al) <> LA.tr theta
-              a = ML.addColumnOfOnes $ LR.sigmoid z
+              a = ML.addColumnOfOnes $ LM.sigmoid z
           in (a:al, z:zl)
 
 
@@ -171,5 +172,5 @@ propagateBackward lambda activationList zList thetaList y = reverse gradientList
         deltaList :: [Matrix]
         deltaList = foldl' f [deltaLast] $ zip (tail zList) thetaList'
         f :: [Matrix] -> (Matrix, Matrix) -> [Matrix]
-        f dList (z, theta) = ((head dList <> theta) * (LR.sigmoidGradient z)) : dList
+        f dList (z, theta) = ((head dList <> theta) * (LM.sigmoidGradient z)) : dList
         gradientList = zipWith3 (\d a t-> ((LA.tr d <> a) + ((0 ||| t) * (LA.scalar lambda))) / m) (reverse deltaList) (tail activationList) thetaList'

@@ -28,7 +28,7 @@ import qualified Data.Vector.Storable as SV
 import Numeric.LinearAlgebra ((><))
 import qualified Data.Vector.Mutable as MV
 import qualified Control.Monad.Random as RndM
-import Types (R, Vector, Matrix)
+import MachineLearning.Types (R, Vector, Matrix)
 
 
 -- | Samples `n` (given as a second parameter) values from `list` (given as a third parameter).

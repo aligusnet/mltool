@@ -1,6 +1,6 @@
 module Main where
 
-import qualified Types as T
+import qualified MachineLearning.Types as T
 import qualified Numeric.LinearAlgebra as LA
 import qualified MachineLearning as ML
 import qualified MachineLearning.Classification as MLC

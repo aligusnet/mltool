@@ -2,7 +2,7 @@ module Main where
 
 import qualified Numeric.LinearAlgebra as LA
 import qualified MachineLearning as ML
-import qualified MachineLearning.Regression as MLR
+import qualified MachineLearning.Optimization as Opt
 import qualified MachineLearning.NeuralNetwork as NN
 import qualified MachineLearning.TerminalProgress as TP
 
@@ -24,11 +24,11 @@ main = do
       x1 = ML.addColumnOfOnes x
 
   -- Step 4. Learn the Neural Network.
-  (thetaNN, optPath) <- TP.learnWithProgressBar (MLR.minimize (MLR.BFGS2 0.03 0.7) model 1e-7 5 5 x1 y) initTheta 20
+  (thetaNN, optPath) <- TP.learnWithProgressBar (Opt.minimize (Opt.BFGS2 0.03 0.7) model 1e-7 5 5 x1 y) initTheta 20
 
   -- Step 5. Making predictions and checking accuracy on training and test sets.
-  let accuracyTrain = NN.calcAccuracy y (MLR.hypothesis model x1 thetaNN)
-      accuracyTest = NN.calcAccuracy yTest (MLR.hypothesis model (ML.addColumnOfOnes xTest) thetaNN)
+  let accuracyTrain = NN.calcAccuracy y (NN.hypothesis model x1 thetaNN)
+      accuracyTest = NN.calcAccuracy yTest (NN.hypothesis model (ML.addColumnOfOnes xTest) thetaNN)
 
   -- Step 6. Printing results.
 

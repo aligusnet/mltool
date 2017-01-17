@@ -22,7 +22,7 @@ module MachineLearning
 
 where
 
-import Types
+import MachineLearning.Types (Vector, Matrix)
 import qualified Numeric.LinearAlgebra as LA
 import Numeric.LinearAlgebra((<>), (#>), (|||), (??))
 import qualified Numeric.GSL.Statistics as Stat

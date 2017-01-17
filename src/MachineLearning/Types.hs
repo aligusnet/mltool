@@ -1,5 +1,5 @@
 {-|
-Module: Types
+Module: MachineLearning.Types
 Description: Common Types
 Copyright: (c) Alexander Ignatyev, 2016
 License: BSD-3
@@ -9,7 +9,7 @@ Portability: POSIX
 Common type definitions used in all modules.
 -}
 
-module Types
+module MachineLearning.Types
 (
     R
   , Vector

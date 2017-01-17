@@ -13,7 +13,7 @@ import Test.HUnit.Plus
 
 import qualified Numeric.LinearAlgebra as LA
 
-import MachineLearning.Regression.DataSets (dataset1)
+import MachineLearning.DataSets (dataset1)
 
 import qualified MachineLearning as ML
 import MachineLearning.Regression

@@ -11,7 +11,9 @@ Binary and Multiclass Classification.
 
 module MachineLearning.Classification
 (
-  MLR.MinimizeMethod(..)
+    Opt.MinimizeMethod(..)
+  , module Log
+  , module Model
   , predictBinary
   , predictMulti
   , calcAccuracy
@@ -22,8 +24,10 @@ module MachineLearning.Classification
 
 where
 
-import Types
-import qualified MachineLearning.Regression as MLR
+import MachineLearning.Types (R, Vector, Matrix)
+import qualified MachineLearning.Optimization as Opt
+import qualified MachineLearning.LogisticModel as Log
+import qualified MachineLearning.Model as Model
 import qualified Data.Vector.Storable as V
 import qualified Numeric.LinearAlgebra as LA
 
@@ -48,7 +52,7 @@ predictMulti x thetas = predictions'
 -- Takes a matrix of features X and a vector theta.
 -- Returns probability of positive class.
 predict :: Matrix -> Vector -> Vector
-predict x theta = MLR.hypothesis MLR.Logistic x theta
+predict x theta = Model.hypothesis Log.Logistic x theta
 
 
 -- | Calculates accuracy of Classification predictions.
@@ -71,7 +75,7 @@ processOutputMulti numLabels y = map f [0 .. numLabels-1]
 
 
 -- | Learns Binary Classification.
-learnBinary :: MLR.MinimizeMethod -- ^ (e.g. BFGS2 0.1 0.1)
+learnBinary :: Opt.MinimizeMethod -- ^ (e.g. BFGS2 0.1 0.1)
             -> R                  -- ^ epsilon, desired precision of the solution;
             -> Int                -- ^ maximum number of iterations allowed;
             -> R                  -- ^ regularization parameter lambda;
@@ -79,11 +83,11 @@ learnBinary :: MLR.MinimizeMethod -- ^ (e.g. BFGS2 0.1 0.1)
             -> Vector             -- ^ binary vector y;
             -> Vector             -- ^ initial Theta;
             -> (Vector, Matrix)   -- ^ solution vector and optimization path.
-learnBinary mm eps numIters lambda x y initialTheta = MLR.minimize mm MLR.Logistic eps numIters lambda x y initialTheta
+learnBinary mm eps numIters lambda x y initialTheta = Opt.minimize mm Log.Logistic eps numIters lambda x y initialTheta
 
 
 -- | Learns Multiclass Classification
-learnMulti :: MLR.MinimizeMethod -- ^ (e.g. BFGS2 0.1 0.1)
+learnMulti :: Opt.MinimizeMethod -- ^ (e.g. BFGS2 0.1 0.1)
            -> R                  -- ^ epsilon, desired precision of the solution;
            -> Int                -- ^ maximum number of iterations allowed;
            -> R                  -- ^ regularization parameter lambda;
@@ -92,5 +96,5 @@ learnMulti :: MLR.MinimizeMethod -- ^ (e.g. BFGS2 0.1 0.1)
            -> [Vector]           -- ^ initial theta;
            -> ([Vector], [Matrix])  -- ^ solution vector and optimization path.
 learnMulti mm eps numIters lambda x ys initialThetaList =
-  let minimize = MLR.minimize mm MLR.Logistic eps numIters lambda x
+  let minimize = Opt.minimize mm Log.Logistic eps numIters lambda x
   in unzip $ zipWith minimize ys initialThetaList

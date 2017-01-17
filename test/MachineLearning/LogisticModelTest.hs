@@ -1,4 +1,4 @@
-module MachineLearning.Regression.LogisticTest
+module MachineLearning.LogisticModelTest
 (
   tests
 )
@@ -11,13 +11,13 @@ import Test.HUnit
 import Test.HUnit.Approx
 import Test.HUnit.Plus
 
-import MachineLearning.Regression.DataSets (dataset2)
+import MachineLearning.DataSets (dataset2)
 
 import qualified Numeric.LinearAlgebra as LA
 import qualified MachineLearning as ML
 import MachineLearning.Regression (checkGradient)
-import MachineLearning.Regression.Model
-import MachineLearning.Regression.Logistic
+import MachineLearning.Model
+import MachineLearning.LogisticModel
 
 (x, y) = ML.splitToXY dataset2
 

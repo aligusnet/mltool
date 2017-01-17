@@ -20,7 +20,7 @@ module MachineLearning.Clustering
 
 where
 
-import Types (R, Vector, Matrix)
+import MachineLearning.Types (R, Vector, Matrix)
 import Data.List (sortOn, groupBy, minimumBy)
 import Control.Applicative ((<$>))
 import Control.Monad (forM)
