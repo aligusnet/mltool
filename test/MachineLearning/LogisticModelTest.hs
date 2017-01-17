@@ -15,7 +15,7 @@ import MachineLearning.DataSets (dataset2)
 
 import qualified Numeric.LinearAlgebra as LA
 import qualified MachineLearning as ML
-import MachineLearning.Regression (checkGradient)
+import MachineLearning.Optimization (checkGradient)
 import MachineLearning.Model
 import MachineLearning.LogisticModel
 

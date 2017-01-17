@@ -9,9 +9,10 @@ Portability: POSIX
 
 module MachineLearning.Regression
 (
-  module Model
-  , module LeastSquares
-  , module Optimization
+  Model.Model(..)
+  , LeastSquares.LeastSquaresModel(..)
+  , Optimization.MinimizeMethod(..)
+  , Optimization.minimize
 )
 
 where
