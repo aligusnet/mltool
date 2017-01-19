@@ -45,8 +45,9 @@ instance Model LogisticModel where
     let h = hypothesis m x theta
         nFeatures = V.length theta
         nExamples = fromIntegral $ LA.rows x
-        jPositive = log h <.> (-y)
-        jNegative = log(1-h) <.> (1-y)
+        tau = 1e-7
+        jPositive = log(tau + h) <.> (-y)
+        jNegative = log((1 + tau) - h) <.> (1-y)
         thetaReg = V.slice 1 (nFeatures-1) theta
         regTerm = (thetaReg <.> thetaReg) * lambda * 0.5
     in (jPositive - jNegative + regTerm) / nExamples

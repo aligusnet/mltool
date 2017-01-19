@@ -27,7 +27,7 @@ onesTheta = LA.konst 1 (LA.cols x1)
 zeroTheta :: LA.Vector LA.R
 zeroTheta = LA.konst 0 (LA.cols x1)
 
-gradientCheckingEps = 10
+gradientCheckingEps = 1e-3
 
 tests = [ testGroup "sigmoid" [
             testCase "zero" $ assertApproxEqual "" 1e-10 0.5 (sigmoid 0)
@@ -46,9 +46,9 @@ tests = [ testGroup "sigmoid" [
               , testCase "small negative value" $ assertApproxEqual "" 1e-2 0.2 (sigmoidGradient $ -1) 
               ]
           , testGroup "model" [
-              testCase "cost, lambda = 0" $ assertApproxEqual "" 1e-5 2.020442 (cost Logistic 0 x1 y onesTheta)
-              , testCase "cost, lambda = 1" $ assertApproxEqual "" 1e-5 2.134848 (cost Logistic 1 x1 y onesTheta)
-              , testCase "cost, lambda = 1000" $ assertApproxEqual "" 1e-5 116.427221 (cost Logistic 1000 x1 y onesTheta)
+              testCase "cost, lambda = 0" $ assertApproxEqual "" 1e-3 2.020 (cost Logistic 0 x1 y onesTheta)
+              , testCase "cost, lambda = 1" $ assertApproxEqual "" 1e-3 2.135 (cost Logistic 1 x1 y onesTheta)
+              , testCase "cost, lambda = 1000" $ assertApproxEqual "" 1e-3 116.427 (cost Logistic 1000 x1 y onesTheta)
               , testCase "gradient, lambda = 0" $ assertVector "" 1e-5 gradient_l0 (gradient Logistic 0 x1 y onesTheta)
               , testCase "gradient, lambda = 1" $ assertVector "" 1e-5 gradient_l1 (gradient Logistic 1 x1 y onesTheta)
               , testCase "gradient, lambda = 1000" $ assertVector "" 1e-5 gradient_l1000 (gradient Logistic 1000 x1 y onesTheta)

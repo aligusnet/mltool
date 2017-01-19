@@ -26,7 +26,7 @@ x1 = ML.addColumnOfOnes x
 nnt = makeTopology (LA.cols x) 2 [10]
 model = NeuralNetwork nnt
 
-gradientCheckingEps = 100
+gradientCheckingEps = 0.1
 
 
 thetaSizeTest = do
@@ -76,6 +76,7 @@ tests = [ testGroup "thetaInitialization" [
           ]
         , testGroup "gradient checking" [
             testCase "non-zero lambda" $ checkGradientTest 2
+            , testCase "zero lambda" $ checkGradientTest 0
               ]
         , testGroup "flatten" [
             testCase "flatten" flattenTest
