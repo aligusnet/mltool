@@ -27,7 +27,6 @@ main = do
       initialTheta = LA.konst 0 (LA.cols x1)
       initialThetas = replicate (length ys) initialTheta
   -- Step 3. Learning.
-  --let (thetas, optPath) = MLC.learnMulti (MLC.BFGS2 0.1 0.1) 0.001 30 30 x1 ys initialThetas
   (thetas, optPath) <- TP.learnMultiWithProgressBar (MLC.learnBinary (MLC.BFGS2 0.01 0.1) 0.001 30 30 x1) ys initialThetas 1
 
   -- Step 4. Prediction and checking accuracy

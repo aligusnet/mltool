@@ -4,5 +4,5 @@
 
 Learning usually takes a number of seconds and gives the following results (depending on radnomly initialized initial theta):
 
-Accuracy on train set (%): 98.0 - 99.5
-Accuracy on test set (%): 94 - 97
+Accuracy on train set (%): 99.16
+Accuracy on test set (%): 96.49

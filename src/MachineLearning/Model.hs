@@ -20,11 +20,11 @@ where
 import MachineLearning.Types (R, Vector, Matrix)
 
 class Model a where
-  -- | Hypothesis function.
+  -- | Hypothesis function, a.k.a. score function (for lassifition problem)
   -- Takes X (m x n) and theta (n x 1), returns y (m x 1).
   hypothesis :: a -> Matrix -> Vector -> Vector
   
-  -- | Cost function J(Theta)
+  -- | Cost function J(Theta), a.k.a. loss function.
   -- It takes regularizarion parameter lambda, matrix X (m x n), vector y (m x 1) and vector theta (n x 1).
   cost :: a -> R -> Matrix -> Vector -> Vector -> R
 

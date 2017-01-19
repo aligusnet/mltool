@@ -155,8 +155,9 @@ propagateForward x thetaList = foldl' f ([x], []) thetaList
 
 -- | Used as helping procedure for Model.hypothesis
 calculateCost :: R -> Matrix -> [Matrix] -> Matrix -> R
-calculateCost lambda x thetaList y = (LA.sumElements $ (-y) * log(h) - (1-y) * log (1-h))/m + reg'
-  where h = (calcLastActivation x thetaList) LA.?? (LA.All, LA.Drop 1)
+calculateCost lambda x thetaList y = (LA.sumElements $ (-y) * log(tau + h) - (1-y) * log ((1+tau)-h))/m + reg'
+  where tau = 1e-7
+        h = (calcLastActivation x thetaList) LA.?? (LA.All, LA.Drop 1)
         m = fromIntegral $ LA.rows x
         reg = sum $ map (\t -> LA.norm_2 $ t LA.?? (LA.All, LA.Drop 1) ) thetaList
         reg' = reg * lambda * 0.5 / m
