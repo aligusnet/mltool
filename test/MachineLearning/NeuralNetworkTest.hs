@@ -22,7 +22,7 @@ import MachineLearning.NeuralNetwork
 
 (x, y) = ML.splitToXY dataset2
 
-x1 = ML.addColumnOfOnes x
+x1 = ML.addBiasDimension x
 nnt = makeTopology (LA.cols x) 2 [10]
 model = NeuralNetwork nnt
 
@@ -59,10 +59,10 @@ xPredict = LA.matrix 2 [ -0.5, 0.5
 yExpected = LA.vector [1, 1, 0, 0, 1]
 
 learnTest minMethod =
-  let x1 = ML.addColumnOfOnes $ ML.mapFeatures 2 x
+  let x1 = ML.addBiasDimension $ ML.mapFeatures 2 x
       nnt = makeTopology ((LA.cols x1) - 1) 2 [10]
       model = NeuralNetwork nnt
-      xPredict1 = ML.addColumnOfOnes $ ML.mapFeatures 2 xPredict
+      xPredict1 = ML.addBiasDimension $ ML.mapFeatures 2 xPredict
       initTheta = initializeTheta 5191711 nnt
       (theta, _) = Opt.minimize minMethod model 1e-7 50 1 x1 y initTheta
       yPredicted = hypothesis model xPredict1 theta

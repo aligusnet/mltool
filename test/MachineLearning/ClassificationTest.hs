@@ -23,7 +23,7 @@ import MachineLearning.Classification
 (x, y) = ML.splitToXY dataset2
 
 
-processX muSigma x = ML.addColumnOfOnes $ ML.featureNormalization muSigma $ ML.mapFeatures 6 x
+processX muSigma x = ML.addBiasDimension $ ML.featureNormalization muSigma $ ML.mapFeatures 6 x
 
 muSigma = ML.meanStddev (ML.mapFeatures 6 x)
 x1 = processX muSigma x

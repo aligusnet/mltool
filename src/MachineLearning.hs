@@ -11,9 +11,8 @@ Portability: POSIX
 
 module MachineLearning
 (
-  normalEquation
-  , normalEquation_p
-  , addColumnOfOnes
+  addBiasDimension
+  , removeBiasDimension
   , meanStddev
   , featureNormalization
   , mapFeatures
@@ -24,7 +23,7 @@ where
 
 import MachineLearning.Types (Vector, Matrix)
 import qualified Numeric.LinearAlgebra as LA
-import Numeric.LinearAlgebra((<>), (#>), (|||), (??))
+import Numeric.LinearAlgebra((|||), (??))
 import qualified Numeric.GSL.Statistics as Stat
 
 import Control.Monad (replicateM, mfilter, MonadPlus)
@@ -32,25 +31,14 @@ import Data.List (sort, group, foldl')
 import qualified Data.Vector as V
 
 
--- | Normal equation using inverse, does not require feature normalization
--- It takes X and y, returns theta.
-normalEquation :: Matrix -> Vector -> Vector
-normalEquation x y =
-  let trX = LA.tr x
-  in (LA.inv (trX <> x) <> trX) #> y
+-- | Add biad dimension to the future matrix
+addBiasDimension :: Matrix -> Matrix
+addBiasDimension x = 1 ||| x
 
 
--- | Normal equation using pseudo inverse, requires feature normalization
--- It takes X and y, returns theta.
-normalEquation_p :: Matrix -> Vector -> Vector
-normalEquation_p x y =
-  let trX = LA.tr x
-  in (LA.pinv (trX <> x) <> trX) #> y
-
-
--- | Add column of ones to feature matrix.
-addColumnOfOnes :: Matrix -> Matrix
-addColumnOfOnes x = 1 ||| x
+-- | Remove biad dimension
+removeBiasDimension :: Matrix -> Matrix
+removeBiasDimension x = x ?? (LA.All, LA.Drop 1)
 
 
 -- | Caclulates mean and stddev values of every feature.

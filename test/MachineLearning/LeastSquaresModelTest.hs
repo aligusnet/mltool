@@ -21,7 +21,7 @@ import MachineLearning.LeastSquaresModel
 
 (x, y) = ML.splitToXY dataset1
 
-x1 = ML.addColumnOfOnes x
+x1 = ML.addBiasDimension x
 initialTheta :: LA.Vector LA.R
 initialTheta = LA.konst 1000 (LA.cols x1)
 zeroTheta :: LA.Vector LA.R

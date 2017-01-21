@@ -18,7 +18,7 @@ main = do
   -- See Linear Regression sample app for dedails.
   
   -- Step 3. Feature mapping.
-      x1 = ML.addColumnOfOnes $ ML.mapFeatures 6 x
+      x1 = ML.addBiasDimension $ ML.mapFeatures 6 x
 
   -- Step 4. Learning
       zeroTheta = LA.konst 0 (LA.cols x1)
