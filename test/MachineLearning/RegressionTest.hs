@@ -22,18 +22,18 @@ import MachineLearning.Regression
 
 muSigma = ML.meanStddev x
 xNorm = ML.featureNormalization muSigma x
-x1 = ML.addColumnOfOnes xNorm
+x1 = ML.addBiasDimension xNorm
 zeroTheta = LA.konst 0 (LA.cols x1)
 
 xPredict = LA.matrix 2 [1650, 3]
-xPredict1 = ML.addColumnOfOnes $ ML.featureNormalization muSigma xPredict
+xPredict1 = ML.addBiasDimension $ ML.featureNormalization muSigma xPredict
 
-theta = ML.normalEquation (ML.addColumnOfOnes x) y
-yExpected = hypothesis LeastSquares (ML.addColumnOfOnes xPredict) theta
+theta = normalEquation (ML.addBiasDimension x) y
+yExpected = hypothesis LeastSquares (ML.addBiasDimension xPredict) theta
 
 eps = 0.0001
-thetaNE = ML.normalEquation x1 y
-thetaNE_p = ML.normalEquation_p x1 y
+thetaNE = normalEquation x1 y
+thetaNE_p = normalEquation_p x1 y
 (thetaGD, _) = minimize (GradientDescent 0.01) LeastSquares eps 5000 0 x1 y zeroTheta
 (thetaCGFR, _) = minimize (ConjugateGradientFR 0.1 0.1) LeastSquares eps 1500 0 x1 y zeroTheta
 (thetaCGPR, _) = minimize (ConjugateGradientPR 0.1 0.1) LeastSquares eps 1500 0 x1 y zeroTheta

@@ -68,7 +68,7 @@ newtype NeuralNetworkModel = NeuralNetwork Topology
 instance Model NeuralNetworkModel where
   hypothesis (NeuralNetwork topology) x theta = predictions'
     where thetaList = unflatten topology theta
-          predictions = LA.toRows $ (calcLastActivation x thetaList) LA.?? (LA.All, LA.Drop 1)
+          predictions = LA.toRows $ ML.removeBiasDimension (calcLastActivation x thetaList)
           predictions' = LA.vector $ map (fromIntegral . LA.maxIndex) predictions
 
   cost (NeuralNetwork topology) lambda x y theta = 
@@ -149,7 +149,7 @@ propagateForward x thetaList = foldl' f ([x], []) thetaList
   where f :: ([Matrix], [Matrix]) -> Matrix -> ([Matrix], [Matrix])
         f (al, zl) theta =
           let z = (head al) <> LA.tr theta
-              a = ML.addColumnOfOnes $ LM.sigmoid z
+              a = ML.addBiasDimension $ LM.sigmoid z
           in (a:al, z:zl)
 
 
@@ -157,9 +157,9 @@ propagateForward x thetaList = foldl' f ([x], []) thetaList
 calculateCost :: R -> Matrix -> [Matrix] -> Matrix -> R
 calculateCost lambda x thetaList y = (LA.sumElements $ (-y) * log(tau + h) - (1-y) * log ((1+tau)-h))/m + reg'
   where tau = 1e-7
-        h = (calcLastActivation x thetaList) LA.?? (LA.All, LA.Drop 1)
+        h = ML.removeBiasDimension (calcLastActivation x thetaList)
         m = fromIntegral $ LA.rows x
-        reg = sum $ map (\t -> LA.norm_2 $ t LA.?? (LA.All, LA.Drop 1) ) thetaList
+        reg = sum $ map (\t -> LA.norm_2 $ ML.removeBiasDimension t) thetaList
         reg' = reg * lambda * 0.5 / m
 
 
@@ -167,9 +167,9 @@ calculateCost lambda x thetaList y = (LA.sumElements $ (-y) * log(tau + h) - (1-
 propagateBackward :: R -> [Matrix] -> [Matrix] -> [Matrix] -> Matrix -> [Matrix]
 propagateBackward lambda activationList zList thetaList y = reverse gradientList
   where m = fromIntegral $ LA.rows y
-        thetaList' = reverse $ map (\t -> t LA.?? (LA.All, LA.Drop 1)) thetaList
+        thetaList' = reverse $ map ML.removeBiasDimension thetaList
         deltaLast :: Matrix
-        deltaLast = ((head activationList) LA.?? (LA.All, LA.Drop 1)) - y
+        deltaLast = (ML.removeBiasDimension (head activationList)) - y
         deltaList :: [Matrix]
         deltaList = foldl' f [deltaLast] $ zip (tail zList) thetaList'
         f :: [Matrix] -> (Matrix, Matrix) -> [Matrix]

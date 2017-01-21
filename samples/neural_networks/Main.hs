@@ -21,14 +21,14 @@ main = do
   -- Step 3. Initialize theta with randon values.
       initTheta = NN.initializeTheta 5191711 nnt
 
-      x1 = ML.addColumnOfOnes x
+      x1 = ML.addBiasDimension x
 
   -- Step 4. Learn the Neural Network.
   (thetaNN, optPath) <- TP.learnWithProgressBar (Opt.minimize (Opt.BFGS2 0.03 0.7) model 1e-7 5 5 x1 y) initTheta 20
 
   -- Step 5. Making predictions and checking accuracy on training and test sets.
   let accuracyTrain = NN.calcAccuracy y (NN.hypothesis model x1 thetaNN)
-      accuracyTest = NN.calcAccuracy yTest (NN.hypothesis model (ML.addColumnOfOnes xTest) thetaNN)
+      accuracyTest = NN.calcAccuracy yTest (NN.hypothesis model (ML.addBiasDimension xTest) thetaNN)
 
   -- Step 6. Printing results.
 

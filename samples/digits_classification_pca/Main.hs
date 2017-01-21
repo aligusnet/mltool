@@ -8,7 +8,7 @@ import qualified MachineLearning.PCA as PCA
 
 
 processFeatures :: T.Matrix -> T.Matrix
-processFeatures = ML.addColumnOfOnes . (ML.mapFeatures 2)
+processFeatures = ML.addBiasDimension . (ML.mapFeatures 2)
 
 
 calcAccuracy :: T.Matrix -> T.Vector -> [T.Vector] -> Double

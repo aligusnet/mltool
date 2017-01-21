@@ -24,7 +24,7 @@ import MachineLearning.DataSets (dataset1)
 
 muSigma = ML.meanStddev x
 xNorm = ML.featureNormalization muSigma x
-x1 = ML.addColumnOfOnes xNorm
+x1 = ML.addBiasDimension xNorm
 initialTheta = LA.konst 0 (LA.cols x1)
 lsExpectedTheta = LA.vector [340412.660, 110630.879, -8737.743]
 eps = 1e-3

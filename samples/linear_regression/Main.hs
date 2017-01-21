@@ -12,20 +12,20 @@ main = do
   -- Step 2. Feature Normalization
       muSigma = ML.meanStddev x
       xNorm = ML.featureNormalization muSigma x
-      x1 = ML.addColumnOfOnes xNorm
+      x1 = ML.addBiasDimension xNorm
 
   -- Step 3. Learning using 3 methods:
   -- NE: Normal Equation (exact solution)
   -- GD: Gradient Descent (basic iterative method)
   -- BFGS: BFGS (most advanced iterative method)
       zeroTheta = LA.konst 0 (LA.cols x1)
-      thetaNE = ML.normalEquation x1 y
+      thetaNE = MLR.normalEquation x1 y
       (thetaGD, optPathGD) = MLR.minimize (MLR.GradientDescent 0.01) MLR.LeastSquares 0.0001 5000 0 x1 y zeroTheta
       (thetaBFGS, optPathBFGS) = MLR.minimize (MLR.BFGS2 0.1 0.1)    MLR.LeastSquares 0.0001 1500 0 x1 y zeroTheta
 
   -- Step 4. Prediction
       xPredict = LA.matrix 2 [1650, 3]
-      xPredict1 = ML.addColumnOfOnes $ ML.featureNormalization muSigma xPredict
+      xPredict1 = ML.addBiasDimension $ ML.featureNormalization muSigma xPredict
       yPredictNE = MLR.hypothesis MLR.LeastSquares xPredict1 thetaNE
       yPredictGD = MLR.hypothesis MLR.LeastSquares xPredict1 thetaGD
       yPredictBFGS = MLR.hypothesis MLR.LeastSquares xPredict1 thetaBFGS

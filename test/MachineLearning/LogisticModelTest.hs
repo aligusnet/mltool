@@ -21,7 +21,7 @@ import MachineLearning.LogisticModel
 
 (x, y) = ML.splitToXY dataset2
 
-x1 = ML.addColumnOfOnes $ ML.mapFeatures 6 x
+x1 = ML.addBiasDimension $ ML.mapFeatures 6 x
 onesTheta :: LA.Vector LA.R
 onesTheta = LA.konst 1 (LA.cols x1)
 zeroTheta :: LA.Vector LA.R
