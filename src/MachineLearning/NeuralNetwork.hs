@@ -40,7 +40,7 @@ import qualified Control.Monad.Random as RndM
 import MachineLearning.Types (R, Vector, Matrix)
 import qualified MachineLearning as ML
 import qualified MachineLearning.LogisticModel as LM
-import qualified MachineLearning.Classification as MLC
+import qualified MachineLearning.Classification.Internal as MLC
 import MachineLearning.Model (Model(..))
 import MachineLearning.Random
 
@@ -72,12 +72,12 @@ instance Model NeuralNetworkModel where
           predictions' = LA.vector $ map (fromIntegral . LA.maxIndex) predictions
 
   cost (NeuralNetwork topology) lambda x y theta = 
-    let ys = LA.fromColumns $ MLC.processOutputMulti (numberOutputs topology) y
+    let ys = LA.fromColumns $ MLC.processOutputOneVsAll (numberOutputs topology) y
         thetaList = unflatten topology theta
     in calculateCost lambda x thetaList ys
 
   gradient (NeuralNetwork topology) lambda x y theta =
-    let ys = LA.fromColumns $ MLC.processOutputMulti (numberOutputs topology) y
+    let ys = LA.fromColumns $ MLC.processOutputOneVsAll (numberOutputs topology) y
         thetaList = unflatten topology theta
         (activationList, zList) = propagateForward x thetaList
         grad = flatten $ propagateBackward lambda activationList zList thetaList ys
