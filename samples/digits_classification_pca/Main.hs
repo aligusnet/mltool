@@ -3,7 +3,7 @@ module Main where
 import qualified Numeric.LinearAlgebra as LA
 import qualified MachineLearning.Types as T
 import qualified MachineLearning as ML
-import qualified MachineLearning.Classification as MLC
+import qualified MachineLearning.Classification.OneVsAll as OVA
 import qualified MachineLearning.PCA as PCA
 
 
@@ -12,8 +12,8 @@ processFeatures = ML.addBiasDimension . (ML.mapFeatures 2)
 
 
 calcAccuracy :: T.Matrix -> T.Vector -> [T.Vector] -> Double
-calcAccuracy x y thetas = MLC.calcAccuracy y yPredicted
-  where yPredicted = MLC.predictMulti x thetas
+calcAccuracy x y thetas = OVA.calcAccuracy y yPredicted
+  where yPredicted = OVA.predict x thetas
 
 
 main = do
@@ -24,14 +24,14 @@ main = do
   (xTest, yTest) <- pure ML.splitToXY <*> LA.loadMatrix "samples/digits_classification/optdigits.tes"
 
   -- Step 2. Outputs and features preprocessing.
-  let ys = MLC.processOutputMulti 10 y
+  let numLabels = 10
       x' = processFeatures x
   -- Step 3. Dimensionality Reduction using PCA.
       (reduceDims, reducedDimensions, x1) = PCA.getDimReducer_rv x' 0.99999
       initialTheta = LA.konst 0 (LA.cols x1)
-      initialThetas = replicate (length ys) initialTheta
+      initialThetas = replicate numLabels initialTheta
   -- Step 4. Learning.
-      (thetas, optPath) = MLC.learnMulti (MLC.BFGS2 0.1 0.5) 0.0001 30 30 x1 ys initialThetas
+      (thetas, optPath) = OVA.learn (OVA.BFGS2 0.1 0.5) 0.0001 30 30 numLabels x1 y initialThetas
   -- Step 5. Prediction and checking accuracy
       accuracyTrain = calcAccuracy x1 y thetas
       accuracyTest = calcAccuracy (reduceDims $ processFeatures xTest) yTest thetas

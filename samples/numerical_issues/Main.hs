@@ -3,7 +3,7 @@ module Main where
 import qualified Numeric.LinearAlgebra as LA
 import qualified MachineLearning.Types as T
 import qualified MachineLearning as ML
-import qualified MachineLearning.Classification as MLC
+import qualified MachineLearning.Classification.OneVsAll as OVA
 import qualified MachineLearning.PCA as PCA
 import qualified MachineLearning.LogisticModel as LM
 
@@ -11,8 +11,8 @@ processFeatures :: T.Matrix -> T.Matrix
 processFeatures = ML.addBiasDimension . (ML.mapFeatures 2)
 
 calcAccuracy :: T.Matrix -> T.Vector -> [T.Vector] -> Double
-calcAccuracy x y thetas = MLC.calcAccuracy y yPredicted
-  where yPredicted = MLC.predictMulti x thetas
+calcAccuracy x y thetas = OVA.calcAccuracy y yPredicted
+  where yPredicted = OVA.predict x thetas
 
 printOptPath x optPath =
   let thetas = optPath LA.?? (LA.All, LA.Drop 2)
@@ -53,13 +53,13 @@ main = do
   (xTest, yTest) <- pure ML.splitToXY <*> LA.loadMatrix "samples/digits_classification/optdigits.tes"
 
   -- Step 2. Outputs and features preprocessing.
-  let ys = MLC.processOutputMulti 10 y
+  let numLabels = 10
       x' = processFeatures x
       (reduceDims, reducedDimensions, x1) = PCA.getDimReducer x' 10
       initialTheta = LA.konst 0 (LA.cols x1)
-      initialThetaList = replicate (length ys) initialTheta
+      initialThetaList = replicate numLabels initialTheta
   -- Step 3. Learning.
-      (thetaList, optPath) = MLC.learnMulti (MLC.BFGS2 0.1 0.5) 0.0001 30 30 x1 ys initialThetaList
+      (thetaList, optPath) = OVA.learn (OVA.BFGS2 0.1 0.5) 0.0001 30 30 numLabels x1 y initialThetaList
   -- Step 4. Prediction and checking accuracy
       accuracyTrain = calcAccuracy x1 y thetaList
       accuracyTest = calcAccuracy (reduceDims $ processFeatures xTest) yTest thetaList

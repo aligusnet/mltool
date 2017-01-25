@@ -3,7 +3,8 @@ import Test.Framework (defaultMain, testGroup)
 
 import qualified MachineLearningTest as MachineLearning
 import qualified MachineLearning.RegressionTest as Regression
-import qualified MachineLearning.ClassificationTest as Classification
+import qualified MachineLearning.Classification.BinaryTest as Classification.Binary
+import qualified MachineLearning.Classification.OneVsAllTest as Classification.OneVsAll
 import qualified MachineLearning.LeastSquaresModelTest as LeastSquaresModel
 import qualified MachineLearning.LogisticModelTest as LogisticModel
 import qualified MachineLearning.Optimization.GradientDescentTest as GradientDescent
@@ -17,7 +18,8 @@ main = defaultMain tests
 tests = [
   testGroup "MachineLearning" MachineLearning.tests
   , testGroup "MachineLearning.Regression" Regression.tests
-  , testGroup "MachineLearning.Classification" Classification.tests
+  , testGroup "MachineLearning.Classification.Binary" Classification.Binary.tests
+  , testGroup "MachineLearning.Classification.OneVsAll" Classification.OneVsAll.tests
   , testGroup "MachineLearning.LeastSquaresModel" LeastSquaresModel.tests
   , testGroup "MachineLearning.LogisticModel" LogisticModel.tests
   , testGroup "MachineLearning.Optimization.GradientDescent" GradientDescent.tests

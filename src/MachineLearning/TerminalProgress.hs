@@ -12,13 +12,14 @@ Learn function with progress bar for terminal.
 module MachineLearning.TerminalProgress
 (
   learnWithProgressBar
-  , learnMultiWithProgressBar
+  , learnOneVsAllWithProgressBar
 )
 
 where
 
 import Data.List (transpose)
 import MachineLearning.Types (Vector, Matrix)
+import qualified MachineLearning.Classification.Internal as MLC
 import Control.Monad (foldM, mapAndUnzipM)
 import Control.DeepSeq (deepseq)
 import qualified System.Console.AsciiProgress as AP
@@ -27,7 +28,7 @@ import qualified Numeric.LinearAlgebra as LA
 
 -- | Learn the given function displaying progress bar in terminal.
 -- It takes function, initial theta and number of iterations to call the function.
--- It returns theta and optimization path (see "MachineLearning.Regression" for details).
+-- It returns theta and optimization path (see "MachineLearning.Optimization" for details).
 learnWithProgressBar :: (Vector -> (Vector, Matrix)) -> Vector -> Int -> IO (Vector, Matrix)
 learnWithProgressBar func initialTheta nIterations = AP.displayConsoleRegions $ do
   pg <- newProgressBar nIterations
@@ -37,9 +38,11 @@ learnWithProgressBar func initialTheta nIterations = AP.displayConsoleRegions $ 
 
 -- | Learn the given function displaying progress bar in terminal.
 -- It takes function, list of outputs and list of initial thetas and number of iterations to call the function.
--- It returns list of thetas and list of optimization paths (see "MachineLearning.Regression" for details).
-learnMultiWithProgressBar :: (Vector -> Vector -> (Vector, Matrix)) -> [Vector] -> [Vector] -> Int -> IO ([Vector], [Matrix])
-learnMultiWithProgressBar func ys initialThetaList nIterations = AP.displayConsoleRegions $ do
+-- It returns list of thetas and list of optimization paths (see "MachineLearning.Optimization" for details).
+learnOneVsAllWithProgressBar :: (Vector -> Vector -> (Vector, Matrix)) -> Vector -> [Vector] -> Int -> IO ([Vector], [Matrix])
+learnOneVsAllWithProgressBar func y initialThetaList nIterations = AP.displayConsoleRegions $ do
+    let numLabels = length initialThetaList
+        ys = MLC.processOutputOneVsAll numLabels y
     pg <- newProgressBar $ nIterations * (length ys)
     mapAndUnzipM (learnOneClass pg func nIterations) $ zip ys initialThetaList
 
