@@ -22,6 +22,7 @@ library
                      , MachineLearning.Model
                      , MachineLearning.LeastSquaresModel
                      , MachineLearning.LogisticModel
+                     , MachineLearning.MultiSvmModel
                      , MachineLearning.Classification.Binary
                      , MachineLearning.Classification.OneVsAll
                      , MachineLearning.NeuralNetwork
