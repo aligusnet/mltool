@@ -8,6 +8,7 @@ import qualified MachineLearning.Classification.OneVsAllTest as Classification.O
 import qualified MachineLearning.LeastSquaresModelTest as LeastSquaresModel
 import qualified MachineLearning.LogisticModelTest as LogisticModel
 import qualified MachineLearning.MultiSvmModelTest as MultiSvmModel
+import qualified MachineLearning.SoftmaxModelTest as SoftmaxModel
 import qualified MachineLearning.Optimization.GradientDescentTest as GradientDescent
 import qualified MachineLearning.NeuralNetworkTest as NeuralNetwork
 import qualified MachineLearning.PCATest as PCA
@@ -24,6 +25,7 @@ tests = [
   , testGroup "MachineLearning.LeastSquaresModel" LeastSquaresModel.tests
   , testGroup "MachineLearning.LogisticModel" LogisticModel.tests
   , testGroup "MachineLearning.MultiSvmModel" MultiSvmModel.tests
+  , testGroup "MachineLearning.SoftmaxModel" SoftmaxModel.tests
   , testGroup "MachineLearning.Optimization.GradientDescent" GradientDescent.tests
   , testGroup "MachineLearning.NeuralNetwork" NeuralNetwork.tests
   , testGroup "MachineLearning.PCA" PCA.tests
