@@ -66,12 +66,9 @@ remap m v = LA.remap cols rows m
   where cols = LA.asColumn $ V.fromList [0..(fromIntegral $ LA.rows m)-1]
         rows = LA.toInt $ LA.asColumn v
 
+
 reduceByRows :: (Vector -> R) -> Matrix -> Matrix
 reduceByRows f = LA.asColumn . LA.vector . map f . LA.toRows
-
-
-sumByRows :: Matrix -> Matrix
-sumByRows = reduceByRows V.sum
 
 
 calcScores :: Matrix -> Matrix -> Matrix
