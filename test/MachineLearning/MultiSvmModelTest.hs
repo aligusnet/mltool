@@ -51,10 +51,10 @@ gradientCheckingEps = 1e-3
 eps = 0.0001
 
 zeroTheta2 = LA.konst 0 (2 * LA.cols x2)
-(thetaGD, _) = minimize (GradientDescent 0.001) model eps 200 0.5 x2 y zeroTheta2
-(thetaCGFR, _) = minimize (ConjugateGradientFR 0.1 0.1) model eps 50 0.5 x2 y zeroTheta2
-(thetaCGPR, _) = minimize (ConjugateGradientPR 0.1 0.1) model eps 50 0.5 x2 y zeroTheta2
-(thetaBFGS, _) = minimize (BFGS2 0.1 0.1) model eps 50 0.5 x2 y zeroTheta2
+(thetaGD, _) = minimize (GradientDescent 0.001) model eps 150 0.5 x2 y zeroTheta2
+(thetaCGFR, _) = minimize (ConjugateGradientFR 0.1 0.1) model eps 30 0.5 x2 y zeroTheta2
+(thetaCGPR, _) = minimize (ConjugateGradientPR 0.1 0.1) model eps 30 0.5 x2 y zeroTheta2
+(thetaBFGS, _) = minimize (BFGS2 0.1 0.1) model eps 30 0.5 x2 y zeroTheta2
 
 
 tests = [  testGroup "gradient checking" [
