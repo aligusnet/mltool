@@ -38,7 +38,8 @@ thetaSizeTest = do
 
 checkGradientTest lambda = do
   let thetas = initializeTheta 1511197 nnt
-      diff = Opt.checkGradient model lambda x1 y thetas 0.005
+      diffs = take 5 $ map (\e -> Opt.checkGradient model lambda x1 y thetas e) [0.005, 0.0051 ..]
+      diff = minimum $ filter (not . isNaN) diffs
   assertApproxEqual (show thetas) gradientCheckingEps 0 diff
 
 
