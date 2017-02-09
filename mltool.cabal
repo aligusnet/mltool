@@ -18,6 +18,7 @@ library
   exposed-modules:     MachineLearning
                      , MachineLearning.Optimization
                      , MachineLearning.Optimization.GradientDescent
+                     , MachineLearning.Optimization.MinibatchGradientDescent
                      , MachineLearning.Regression
                      , MachineLearning.Model
                      , MachineLearning.LeastSquaresModel

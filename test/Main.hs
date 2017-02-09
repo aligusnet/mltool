@@ -10,6 +10,7 @@ import qualified MachineLearning.LogisticModelTest as LogisticModel
 import qualified MachineLearning.MultiSvmModelTest as MultiSvmModel
 import qualified MachineLearning.SoftmaxModelTest as SoftmaxModel
 import qualified MachineLearning.Optimization.GradientDescentTest as GradientDescent
+import qualified MachineLearning.Optimization.MinibatchGradientDescentTest as MinibatchGradientDescent
 import qualified MachineLearning.NeuralNetworkTest as NeuralNetwork
 import qualified MachineLearning.PCATest as PCA
 import qualified MachineLearning.ClusteringTest as Clustering
@@ -27,6 +28,7 @@ tests = [
   , testGroup "MachineLearning.MultiSvmModel" MultiSvmModel.tests
   , testGroup "MachineLearning.SoftmaxModel" SoftmaxModel.tests
   , testGroup "MachineLearning.Optimization.GradientDescent" GradientDescent.tests
+  , testGroup "MachineLearning.Optimization.MinibatchGradientDescent" MinibatchGradientDescent.tests
   , testGroup "MachineLearning.NeuralNetwork" NeuralNetwork.tests
   , testGroup "MachineLearning.PCA" PCA.tests
   , testGroup "MachineLearning.Clustering" Clustering.tests

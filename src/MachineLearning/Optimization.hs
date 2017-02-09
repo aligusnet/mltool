@@ -21,6 +21,7 @@ where
 import MachineLearning.Types (R, Vector, Matrix)
 import MachineLearning.Model as Model
 import qualified MachineLearning.Optimization.GradientDescent as GD
+import qualified MachineLearning.Optimization.MinibatchGradientDescent as MGD
 import qualified Data.Vector.Storable as V
 import qualified Numeric.LinearAlgebra as LA
 
@@ -28,6 +29,7 @@ import qualified Numeric.LinearAlgebra as LA
 import qualified Numeric.GSL.Minimization as Min
 
 data MinimizeMethod = GradientDescent R       -- ^ Gradient descent, takes alpha. Requires feature normalization.
+                    | MinibatchGradientDescent Int Int R  -- ^ Minibacth Gradietn Descent, takes seed, batch size and alpha
                     | ConjugateGradientFR R R -- ^ Fletcher-Reeves conjugate gradient algorithm,
                                               -- takes size of first trial step (0.1 is fine) and tol (0.1 is fine).
                     | ConjugateGradientPR R R -- ^ Polak-Ribiere conjugate gradient algorithm.
@@ -54,6 +56,7 @@ minimize (BFGS2 firstStepSize tol) = minimizeVD Min.VectorBFGS2 firstStepSize to
 minimize (ConjugateGradientFR firstStepSize tol) = minimizeVD Min.ConjugateFR firstStepSize tol
 minimize (ConjugateGradientPR firstStepSize tol) = minimizeVD Min.ConjugatePR firstStepSize tol
 minimize (GradientDescent alpha) = GD.gradientDescent alpha
+minimize (MinibatchGradientDescent seed batchSize alpha) = MGD.minibatchGradientDescent seed batchSize alpha
 
 
 minimizeVD method firstStepSize tol model epsilon niters lambda x y initialTheta
