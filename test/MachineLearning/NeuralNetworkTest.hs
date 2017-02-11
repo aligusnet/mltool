@@ -65,10 +65,11 @@ learnTest minMethod =
       model = NeuralNetwork nnt
       xPredict1 = ML.addBiasDimension $ ML.mapFeatures 2 xPredict
       initTheta = initializeTheta 5191711 nnt
-      (theta, _) = Opt.minimize minMethod model 1e-7 70 1 x1 y initTheta
+      (theta, optPath) = Opt.minimize minMethod model 1e-7 100 0.5 x1 y initTheta
       yPredicted = hypothesis model xPredict1 theta
+      js = (LA.toColumns optPath) !! 1
   in do
-    assertVector "" 0.01 yExpected yPredicted
+    assertVector (show js) 0.01 yExpected yPredicted
 
 
 tests = [ testGroup "thetaInitialization" [
@@ -83,6 +84,6 @@ tests = [ testGroup "thetaInitialization" [
             testCase "flatten" flattenTest
             ]
         , testGroup "learn" [
-            testCase "BFGS" $ learnTest (Opt.BFGS2 0.03 0.7)
+            testCase "BFGS" $ learnTest (Opt.BFGS2 0.01 0.7)
             ]
         ]
