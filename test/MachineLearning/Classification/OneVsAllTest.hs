@@ -40,11 +40,11 @@ xPredict = LA.matrix 2 [ -0.5, 0.5
 xPredict1 = processX muSigma xPredict
 yExpected = LA.vector [1, 1, 0, 0, 1, 0]
 
-eps = 0.0001
+eps = 0.000001
 
 
 zeroThetam = replicate 2 zeroTheta
-(thetaGDm, optPathGDm) = learn (GradientDescent 0.001) eps 150 1 2 x1 y zeroThetam
+(thetaGDm, optPathGDm) = learn (GradientDescent 0.0001) eps 150 1 2 x1 y zeroThetam
 (thetaCGFRm, optPathCGFRm) = learn (ConjugateGradientFR 0.1 0.1) eps 50 0.5 2 x1 y zeroThetam
 (thetaCGPRm, optPathCGPRm) = learn (ConjugateGradientPR 0.1 0.1) eps 50 0.5 2 x1 y zeroThetam
 (thetaBFGSm, optPathBFGSm) = learn (BFGS2 0.1 0.1) eps 50 0.5 2 x1 y zeroThetam

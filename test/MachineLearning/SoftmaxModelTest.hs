@@ -51,12 +51,14 @@ checkSoftmaxGradient theta eps = minimum . take 5 . filter (not . isNaN) $ map c
 gradientCheckingEps :: Double
 gradientCheckingEps = 3e-2
 
-eps = 0.0001
+eps = 0.000001
 
-zeroTheta2 = LA.konst 0 (2 * LA.cols x2)
-(thetaGD, _) = minimize (GradientDescent 0.001) model eps 150 0.5 x2 y zeroTheta2
-(thetaCGFR, _) = minimize (ConjugateGradientFR 0.1 0.1) model eps 30 0.5 x2 y zeroTheta2
-(thetaCGPR, _) = minimize (ConjugateGradientPR 0.1 0.1) model eps 30 0.5 x2 y zeroTheta2
+initialTheta = LA.konst 0.001 (2 * LA.cols x2)
+(thetaGD, optPathGD) = minimize (GradientDescent 0.0005) model eps 200 1 x2 y initialTheta
+(thetaCGFR, optPathCGFR) = minimize (ConjugateGradientFR 0.05 0.2) model eps 30 1 x2 y initialTheta
+(thetaCGPR, optPathCGPR) = minimize (ConjugateGradientPR 0.05 0.3) model eps 30 1 x2 y initialTheta
+
+showOptPath optPath = show $  (LA.toColumns optPath) !! 1
 
 
 tests = [  testGroup "gradient checking" [
@@ -66,9 +68,9 @@ tests = [  testGroup "gradient checking" [
               , testCase "zero theta, zero lambda" $ assertApproxEqual "" gradientCheckingEps 0 (checkSoftmaxGradient zeroTheta 1e-3)
               ]
         , testGroup "learn" [
-            testCase "Gradient Descent" $ assertVector "" 0.01 yExpected (hypothesis model xPredict2 thetaGD)
-            , testCase "Conjugate Gradient FR" $ assertVector "" 0.01 yExpected (hypothesis model xPredict2 thetaCGFR)
-            , testCase "Conjugate Gradient PR" $ assertVector "" 0.01 yExpected (hypothesis model xPredict2 thetaCGPR)
+            testCase "Gradient Descent" $ assertVector (showOptPath optPathGD) 0.01 yExpected (hypothesis model xPredict2 thetaGD)
+            , testCase "Conjugate Gradient FR" $ assertVector (showOptPath optPathCGFR) 0.01 yExpected (hypothesis model xPredict2 thetaCGFR)
+            , testCase "Conjugate Gradient PR" $ assertVector (showOptPath optPathCGPR) 0.01 yExpected (hypothesis model xPredict2 thetaCGPR)
             ]
         ]
 

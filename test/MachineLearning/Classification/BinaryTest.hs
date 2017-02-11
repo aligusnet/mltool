@@ -54,7 +54,7 @@ isInDescendingOrder lst = V.and . snd . V.unzip $ V.scanl (\(prev, _) current ->
 
 testOptPath optPath = do
   let js = V.convert $ (LA.toColumns optPath) !! 1
-  assertBool "non-increasing errors" $ isInDescendingOrder js
+  assertBool ("non-increasing errors: " ++ show js) $ isInDescendingOrder js
 
 testAccuracyBinary theta eps = do
   let yPredicted = predict x1 theta
