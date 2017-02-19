@@ -7,8 +7,8 @@ import qualified MachineLearning.Classification.BinaryTest as Classification.Bin
 import qualified MachineLearning.Classification.OneVsAllTest as Classification.OneVsAll
 import qualified MachineLearning.LeastSquaresModelTest as LeastSquaresModel
 import qualified MachineLearning.LogisticModelTest as LogisticModel
-import qualified MachineLearning.MultiSvmModelTest as MultiSvmModel
-import qualified MachineLearning.SoftmaxModelTest as SoftmaxModel
+import qualified MachineLearning.MultiSvmClassifierTest as MultiSvmClassifier
+import qualified MachineLearning.SoftmaxClassifierTest as SoftmaxClassifier
 import qualified MachineLearning.Optimization.GradientDescentTest as GradientDescent
 import qualified MachineLearning.Optimization.MinibatchGradientDescentTest as MinibatchGradientDescent
 import qualified MachineLearning.NeuralNetworkTest as NeuralNetwork
@@ -25,8 +25,8 @@ tests = [
   , testGroup "MachineLearning.Classification.OneVsAll" Classification.OneVsAll.tests
   , testGroup "MachineLearning.LeastSquaresModel" LeastSquaresModel.tests
   , testGroup "MachineLearning.LogisticModel" LogisticModel.tests
-  , testGroup "MachineLearning.MultiSvmModel" MultiSvmModel.tests
-  , testGroup "MachineLearning.SoftmaxModel" SoftmaxModel.tests
+  , testGroup "MachineLearning.MultiSvmClassifier" MultiSvmClassifier.tests
+  , testGroup "MachineLearning.SoftmaxClassifier" SoftmaxClassifier.tests
   , testGroup "MachineLearning.Optimization.GradientDescent" GradientDescent.tests
   , testGroup "MachineLearning.Optimization.MinibatchGradientDescent" MinibatchGradientDescent.tests
   , testGroup "MachineLearning.NeuralNetwork" NeuralNetwork.tests

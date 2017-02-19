@@ -23,10 +23,11 @@ library
                      , MachineLearning.Model
                      , MachineLearning.LeastSquaresModel
                      , MachineLearning.LogisticModel
-                     , MachineLearning.MultiSvmModel
-                     , MachineLearning.SoftmaxModel
+                     , MachineLearning.MultiSvmClassifier
+                     , MachineLearning.SoftmaxClassifier
                      , MachineLearning.Classification.Binary
                      , MachineLearning.Classification.OneVsAll
+                     , MachineLearning.Classification.MultiClass
                      , MachineLearning.NeuralNetwork
                      , MachineLearning.PCA
                      , MachineLearning.Clustering

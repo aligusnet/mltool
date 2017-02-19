@@ -1,4 +1,4 @@
-module MachineLearning.SoftmaxModelTest
+module MachineLearning.SoftmaxClassifierTest
 (
   tests
 )
@@ -16,11 +16,11 @@ import MachineLearning.DataSets (dataset2)
 import qualified Numeric.LinearAlgebra as LA
 import qualified MachineLearning as ML
 import MachineLearning.Optimization
-import MachineLearning.SoftmaxModel
+import MachineLearning.SoftmaxClassifier
 
 (x, y) = ML.splitToXY dataset2
 
-model = Softmax 2
+model = MultiClass (Softmax 2)
 
 x1 = ML.addBiasDimension x
 onesTheta :: LA.Vector LA.R

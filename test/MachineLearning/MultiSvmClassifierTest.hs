@@ -1,4 +1,4 @@
-module MachineLearning.MultiSvmModelTest
+module MachineLearning.MultiSvmClassifierTest
 (
   tests
 )
@@ -17,11 +17,11 @@ import qualified Numeric.LinearAlgebra as LA
 import qualified MachineLearning as ML
 import MachineLearning.Optimization
 import MachineLearning.Model
-import MachineLearning.MultiSvmModel
+import MachineLearning.MultiSvmClassifier
 
 (x, y) = ML.splitToXY dataset2
 
-model = MultiSvm 1 2
+model = MultiClass (MultiSvm 1 2)
 
 x1 = ML.addBiasDimension x
 onesTheta :: LA.Vector LA.R
