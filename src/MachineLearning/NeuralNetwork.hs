@@ -79,8 +79,8 @@ instance Model NeuralNetworkModel where
   gradient (NeuralNetwork topology) lambda x y theta =
     let ys = LA.fromColumns $ MLC.processOutputOneVsAll (numberOutputs topology) y
         thetaList = unflatten topology theta
-        (activationList, zList) = propagateForward x thetaList
-        grad = flatten $ propagateBackward lambda activationList zList thetaList ys
+        (scores, cacheList) = propagateForward x thetaList
+        grad = flatten $ propagateBackward lambda scores cacheList ys
     in grad
 
 
@@ -138,20 +138,6 @@ getThetaSizes :: Topology -> [(Int, Int)]
 getThetaSizes (Topology nn) = zipWith (\r c -> (r, c+1)) (tail nn) nn
 
 
--- | Calculates last layer of activation units
-calcLastActivation :: Matrix -> [Matrix] -> Matrix
-calcLastActivation x thetaList = head . fst $ propagateForward x thetaList
-
-
--- | Calculats activations and z, returns them in reverse order.
-propagateForward :: Matrix -> [Matrix] -> ([Matrix], [Matrix])
-propagateForward x thetaList = foldl' f ([x], []) thetaList
-  where f :: ([Matrix], [Matrix]) -> Matrix -> ([Matrix], [Matrix])
-        f (al, zl) theta =
-          let z = (head al) <> LA.tr theta
-              a = ML.addBiasDimension $ LM.sigmoid z
-          in (a:al, z:zl)
-
 
 -- | Used as helping procedure for Model.hypothesis
 calculateCost :: R -> Matrix -> [Matrix] -> Matrix -> R
@@ -163,15 +149,47 @@ calculateCost lambda x thetaList y = (LA.sumElements $ (-y) * log(tau + h) - (1-
         reg' = reg * lambda * 0.5 / m
 
 
+-- | Calculates last layer of activation units
+calcLastActivation :: Matrix -> [Matrix] -> Matrix
+calcLastActivation x thetaList = fst $ propagateForward x thetaList
+
+
+data Cache = Cache {
+  cacheZ :: Matrix
+  , cacheX :: Matrix
+  , cacheTheta :: Matrix
+  };
+
+
+propagateForward x thetaList = foldl' f (x, []) thetaList
+  where f :: (Matrix, [Cache]) -> Matrix -> (Matrix, [Cache])
+        f (a, cs) theta =
+          let (a', cache) = forward LM.sigmoid a theta
+          in (a', cache:cs)
+
+
 -- | Implements backward propagation algorithm.
-propagateBackward :: R -> [Matrix] -> [Matrix] -> [Matrix] -> Matrix -> [Matrix]
-propagateBackward lambda activationList zList thetaList y = reverse gradientList
-  where m = fromIntegral $ LA.rows y
-        thetaList' = reverse $ map ML.removeBiasDimension thetaList
-        deltaLast :: Matrix
-        deltaLast = (ML.removeBiasDimension (head activationList)) - y
-        deltaList :: [Matrix]
-        deltaList = foldl' f [deltaLast] $ zip (tail zList) thetaList'
-        f :: [Matrix] -> (Matrix, Matrix) -> [Matrix]
-        f dList (z, theta) = ((head dList <> theta) * (LM.sigmoidGradient z)) : dList
-        gradientList = zipWith3 (\d a t-> ((LA.tr d <> a) + ((0 ||| t) * (LA.scalar lambda))) / m) (reverse deltaList) (tail activationList) thetaList'
+propagateBackward lambda scores cs y = gradientList
+  where cache:cacheList = cs
+        m = fromIntegral $ LA.rows $ cacheX cache
+        delta = (ML.removeBiasDimension scores) - y
+        theta = ML.removeBiasDimension (cacheTheta cache)
+        da = delta <> theta
+        grad = ((LA.tr delta <> cacheX cache) + ((0 ||| theta) * (LA.scalar lambda))) / m
+        gradientList = snd $ foldl' f (da, [grad]) cacheList
+        f (da, grads) cache =
+          let (da', grad) = backward LM.sigmoidGradient lambda da cache
+          in (da', grad:grads)
+
+
+forward activation x theta = (a, Cache z x theta)
+  where z = x <> LA.tr theta
+        a = ML.addBiasDimension $ activation z
+
+
+backward activationGradient lambda da (Cache z x theta) = (da', grad)
+  where theta' = ML.removeBiasDimension theta
+        m = fromIntegral $ LA.rows x
+        delta = da * (activationGradient z)
+        grad = ((LA.tr delta <> x) + ((0 ||| theta') * (LA.scalar lambda))) / m
+        da' = delta <> theta'
