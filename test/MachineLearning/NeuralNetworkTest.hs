@@ -60,12 +60,13 @@ xPredict = LA.matrix 2 [ -0.5, 0.5
 yExpected = LA.vector [1, 1, 0, 0, 1]
 
 learnTest minMethod =
-  let x1 = ML.addBiasDimension $ ML.mapFeatures 2 x
+  let lambda = 0.5 / (fromIntegral $ LA.rows x)
+      x1 = ML.addBiasDimension $ ML.mapFeatures 2 x
       nnt = makeTopology ((LA.cols x1) - 1) 2 [10]
       model = NeuralNetwork nnt
       xPredict1 = ML.addBiasDimension $ ML.mapFeatures 2 xPredict
       initTheta = initializeTheta 5191711 nnt
-      (theta, optPath) = Opt.minimize minMethod model 1e-7 100 0.5 x1 y initTheta
+      (theta, optPath) = Opt.minimize minMethod model 1e-7 100 lambda x1 y initTheta
       yPredicted = hypothesis model xPredict1 theta
       js = (LA.toColumns optPath) !! 1
   in do
@@ -77,7 +78,7 @@ tests = [ testGroup "thetaInitialization" [
             , testCase "theta total size" $ assertEqual "" nn_thetaSize (getThetaTotalSize nnt)
           ]
         , testGroup "gradient checking" [
-            testCase "non-zero lambda" $ checkGradientTest 2
+            testCase "non-zero lambda" $ checkGradientTest 0.01
             , testCase "zero lambda" $ checkGradientTest 0
               ]
         , testGroup "flatten" [

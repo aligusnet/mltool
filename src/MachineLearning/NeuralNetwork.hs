@@ -48,17 +48,21 @@ import MachineLearning.Random
 -- | Neural network topology has at least 2 elements: numver of input and number of outputs.
 -- And sizes of hidden layers between 2 elements.
 -- Bias input must not be included.
-newtype Topology = Topology [Int]
+data Topology = Topology [Int] [Layer]
 
 
 -- | Creates toplogy. Takes number of inputs, number of outputs and list of hidden layers.
 makeTopology :: Int -> Int -> [Int] -> Topology
-makeTopology nInputs nOutputs hiddenLayers = Topology $ nInputs : (hiddenLayers ++ [nOutputs])
+makeTopology nInputs nOutputs hlUnits = Topology layerSizes layers
+  where hiddenLayers = map mkAffineSigmoidLayer hlUnits
+        outputLayer = mkSigmoidOutputLayer nOutputs
+        layers = hiddenLayers ++ [outputLayer]
+        layerSizes = nInputs : (hlUnits ++ [nOutputs])
 
 
 -- | Returns number of outputs of the given topology.
 numberOutputs :: Topology -> Int
-numberOutputs (Topology nnt) = last nnt
+numberOutputs (Topology nnt _) = last nnt
 
 
 -- | Neural Network Model.
@@ -68,21 +72,25 @@ newtype NeuralNetworkModel = NeuralNetwork Topology
 instance Model NeuralNetworkModel where
   hypothesis (NeuralNetwork topology) x theta = predictions'
     where thetaList = unflatten topology theta
-          predictions = LA.toRows $ ML.removeBiasDimension (calcLastActivation x thetaList)
+          predictions = LA.toRows $ calcScores topology x thetaList
           predictions' = LA.vector $ map (fromIntegral . LA.maxIndex) predictions
 
   cost (NeuralNetwork topology) lambda x y theta = 
     let ys = LA.fromColumns $ MLC.processOutputOneVsAll (numberOutputs topology) y
         thetaList = unflatten topology theta
-    in calculateCost lambda x thetaList ys
+        scores = calcScores topology x thetaList
+    in sigmoidLoss (L2 lambda) scores thetaList ys
 
   gradient (NeuralNetwork topology) lambda x y theta =
     let ys = LA.fromColumns $ MLC.processOutputOneVsAll (numberOutputs topology) y
         thetaList = unflatten topology theta
-        (scores, cacheList) = propagateForward x thetaList
-        grad = flatten $ propagateBackward lambda scores cacheList ys
+        (scores, cacheList) = propagateForward topology x thetaList
+        grad = flatten $ propagateBackward topology (L2 lambda) scores cacheList ys
     in grad
 
+
+
+calcScores topology x thetaList = ML.removeBiasDimension $ fst $ propagateForward topology x thetaList
 
 -- | Flatten list of matrices into vector.
 flatten :: [Matrix] -> Vector
@@ -121,7 +129,7 @@ initializeThetaM topology = flatten <$> initializeThetaListM topology
 -- | Create and initialize list of weights matrices with random values
 -- for given neural network topology.
 initializeThetaListM :: RandomGen g => Topology -> RndM.Rand g [Matrix]
-initializeThetaListM (Topology nn) = zipWithM initTheta (tail nn) nn
+initializeThetaListM (Topology nn _) = zipWithM initTheta (tail nn) nn
   where initTheta r c = do
           let eps = calcEps r c
           getRandomRMatrixM r (c+1) (-eps, eps)
@@ -135,23 +143,12 @@ getThetaTotalSize topology = sum $ map (\(c, r) -> c*r) $ getThetaSizes topology
 
 -- | Returns dimensions of weight matrices for given neural network topology
 getThetaSizes :: Topology -> [(Int, Int)]
-getThetaSizes (Topology nn) = zipWith (\r c -> (r, c+1)) (tail nn) nn
+getThetaSizes (Topology nn _) = zipWith (\r c -> (r, c+1)) (tail nn) nn
 
 
-
--- | Used as helping procedure for Model.hypothesis
-calculateCost :: R -> Matrix -> [Matrix] -> Matrix -> R
-calculateCost lambda x thetaList y = (LA.sumElements $ (-y) * log(tau + h) - (1-y) * log ((1+tau)-h))/m + reg'
-  where tau = 1e-7
-        h = ML.removeBiasDimension (calcLastActivation x thetaList)
-        m = fromIntegral $ LA.rows x
-        reg = sum $ map (\t -> LA.norm_2 $ ML.removeBiasDimension t) thetaList
-        reg' = reg * lambda * 0.5 / m
-
-
--- | Calculates last layer of activation units
-calcLastActivation :: Matrix -> [Matrix] -> Matrix
-calcLastActivation x thetaList = fst $ propagateForward x thetaList
+data Regularization = L2 Double
+forwardReg (L2 lambda) thetaList = 0.5 * lambda * (sum $ map (LA.norm_2 . ML.removeBiasDimension) thetaList)
+backwardReg (L2 lambda) theta = (0 ||| ML.removeBiasDimension theta) * (LA.scalar lambda)
 
 
 data Cache = Cache {
@@ -161,35 +158,70 @@ data Cache = Cache {
   };
 
 
-propagateForward x thetaList = foldl' f (x, []) thetaList
-  where f :: (Matrix, [Cache]) -> Matrix -> (Matrix, [Cache])
-        f (a, cs) theta =
-          let (a', cache) = forward LM.sigmoid a theta
+data Layer = Layer {
+  lUnits :: Int
+  , lForward :: Matrix -> Matrix -> Matrix
+  , lBackward :: Matrix -> Cache -> (Matrix, Matrix)
+  , lActivation :: Matrix -> Matrix
+  , lActivationGradient :: Matrix -> Matrix -> Matrix
+  }
+
+
+mkAffineSigmoidLayer units = Layer {
+  lUnits = units
+  , lForward = affineForward
+  , lActivation = LM.sigmoid
+  , lBackward = affineBackward
+  , lActivationGradient = \z da -> da * LM.sigmoidGradient z
+  }
+
+
+mkSigmoidOutputLayer units = Layer {
+  lUnits = units
+  , lForward = affineForward
+  , lActivation = LM.sigmoid
+  , lBackward = affineBackward
+  , lActivationGradient = \scores y -> ML.removeBiasDimension scores - y
+  }
+
+
+propagateForward (Topology _ layers) x thetaList = foldl' f (x, []) $ zip thetaList layers
+  where f (a, cs) (theta, hl) =
+          let (a', cache) = forwardPass hl a theta
           in (a', cache:cs)
 
 
+forwardPass layer a theta = (a', Cache z a theta)
+  where z = lForward layer a theta
+        a' = ML.addBiasDimension $ lActivation layer z
+
+
 -- | Implements backward propagation algorithm.
-propagateBackward lambda scores cs y = gradientList
-  where cache:cacheList = cs
-        m = fromIntegral $ LA.rows $ cacheX cache
-        delta = (ML.removeBiasDimension scores) - y
-        theta = ML.removeBiasDimension (cacheTheta cache)
-        da = delta <> theta
-        grad = ((LA.tr delta <> cacheX cache) + ((0 ||| theta) * (LA.scalar lambda))) / m
-        gradientList = snd $ foldl' f (da, [grad]) cacheList
-        f (da, grads) cache =
-          let (da', grad) = backward LM.sigmoidGradient lambda da cache
-          in (da', grad:grads)
+propagateBackward (Topology _ layers) reg scores (cache:cacheList) y = gradientList
+  where cache' = Cache scores (cacheX cache) (cacheTheta cache)
+        cacheList' = cache':cacheList
+        gradientList = snd $ foldl' f (y, []) $ zip cacheList' $ reverse layers
+        f (da, grads) (cache, hl) =
+          let (da', grad') = backwardPass hl reg da cache
+          in (da', grad':grads)
 
 
-forward activation x theta = (a, Cache z x theta)
-  where z = x <> LA.tr theta
-        a = ML.addBiasDimension $ activation z
+backwardPass layer reg da cache = (da', grad')
+  where delta = lActivationGradient layer (cacheZ cache) da
+        (da', grad) = lBackward layer delta cache
+        grad' = grad + (backwardReg reg (cacheTheta cache))
+
+affineForward x theta = x <> LA.tr theta
 
 
-backward activationGradient lambda da (Cache z x theta) = (da', grad)
+affineBackward delta (Cache _ x theta) = (da, grad)
   where theta' = ML.removeBiasDimension theta
         m = fromIntegral $ LA.rows x
-        delta = da * (activationGradient z)
-        grad = ((LA.tr delta <> x) + ((0 ||| theta') * (LA.scalar lambda))) / m
-        da' = delta <> theta'
+        grad = (LA.tr delta <> x)/m
+        da = delta <> theta'
+
+
+sigmoidLoss reg x thetaList y = (LA.sumElements $ (-y) * log(tau + x) - (1-y) * log ((1+tau)-x))/m + r
+  where tau = 1e-7
+        m = fromIntegral $ LA.rows x
+        r = forwardReg reg thetaList
