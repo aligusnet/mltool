@@ -6,6 +6,7 @@ import qualified MachineLearning.Optimization as Opt
 import qualified MachineLearning.NeuralNetwork as NN
 import qualified MachineLearning.TerminalProgress as TP
 
+
 main = do
   putStrLn "\n== Neural Networks (Digits Recognition) ==\n"
 
@@ -23,8 +24,10 @@ main = do
 
       x1 = ML.addBiasDimension x
 
+      lambda = 5 / (fromIntegral $ LA.rows x)
+
   -- Step 4. Learn the Neural Network.
-  (thetaNN, optPath) <- TP.learnWithProgressBar (Opt.minimize (Opt.BFGS2 0.03 0.7) model 1e-7 5 5 x1 y) initTheta 20
+  (thetaNN, optPath) <- TP.learnWithProgressBar (Opt.minimize (Opt.BFGS2 0.03 0.7) model 1e-7 5 lambda x1 y) initTheta 20
 
   -- Step 5. Making predictions and checking accuracy on training and test sets.
   let accuracyTrain = NN.calcAccuracy y (NN.hypothesis model x1 thetaNN)
