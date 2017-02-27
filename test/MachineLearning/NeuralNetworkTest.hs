@@ -28,14 +28,6 @@ model = NeuralNetwork nnt
 
 gradientCheckingEps = 0.1
 
-
-thetaSizeTest = do
-  thetas <- RndM.evalRandIO $ initializeThetaListM nnt
-  let sizesActual = map LA.size thetas
-      sizesExpected = getThetaSizes nnt
-  assertEqual "theta sizes" sizesExpected sizesActual
-
-
 checkGradientTest lambda = do
   let thetas = initializeTheta 1511197 nnt
       diffs = take 5 $ map (\e -> Opt.checkGradient model lambda x1 y thetas e) [0.005, 0.0051 ..]
@@ -48,8 +40,6 @@ flattenTest = do
   let theta' = flatten $ unflatten nnt theta
       norm = LA.norm_2 (theta - theta')
   assertApproxEqual "flatten" 1e-10 0 norm
-
-nn_thetaSize = sum $ map (\(c, r) -> c*r) $ getThetaSizes nnt
 
 
 xPredict = LA.matrix 2 [ -0.5, 0.5
@@ -73,11 +63,7 @@ learnTest minMethod =
     assertVector (show js) 0.01 yExpected yPredicted
 
 
-tests = [ testGroup "thetaInitialization" [
-            testCase "sizes" thetaSizeTest
-            , testCase "theta total size" $ assertEqual "" nn_thetaSize (getThetaTotalSize nnt)
-          ]
-        , testGroup "gradient checking" [
+tests = [ testGroup "gradient checking" [
             testCase "non-zero lambda" $ checkGradientTest 0.01
             , testCase "zero lambda" $ checkGradientTest 0
               ]
