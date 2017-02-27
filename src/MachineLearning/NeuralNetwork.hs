@@ -23,8 +23,6 @@ module MachineLearning.NeuralNetwork
   -- * Exported for testing purposes only.
   , flatten
   , unflatten
-  , getThetaSizes
-  , getThetaTotalSize
   , initializeThetaListM
 )
 
@@ -48,21 +46,22 @@ import MachineLearning.Random
 -- | Neural network topology has at least 2 elements: numver of input and number of outputs.
 -- And sizes of hidden layers between 2 elements.
 -- Bias input must not be included.
-data Topology = Topology [Int] [Layer]
+data Topology = Topology [(Int, Int)] [Layer]
 
 
 -- | Creates toplogy. Takes number of inputs, number of outputs and list of hidden layers.
 makeTopology :: Int -> Int -> [Int] -> Topology
-makeTopology nInputs nOutputs hlUnits = Topology layerSizes layers
-  where hiddenLayers = map mkAffineSigmoidLayer hlUnits
-        outputLayer = mkSigmoidOutputLayer nOutputs
+makeTopology nInputs nOutputs hlUnits = Topology sizes layers
+  where hiddenLayers = take (length hlUnits) $ repeat mkAffineSigmoidLayer
+        outputLayer = mkSigmoidOutputLayer
         layers = hiddenLayers ++ [outputLayer]
         layerSizes = nInputs : (hlUnits ++ [nOutputs])
+        sizes = getThetaSizes layerSizes
 
 
 -- | Returns number of outputs of the given topology.
 numberOutputs :: Topology -> Int
-numberOutputs (Topology nnt _) = last nnt
+numberOutputs (Topology nnt _) = fst $ last nnt
 
 
 -- | Neural Network Model.
@@ -99,9 +98,8 @@ flatten ms = V.concat $ map LA.flatten ms
 
 -- | Unflatten vector into list of matrices for given neural network topology.
 unflatten :: Topology -> Vector -> [Matrix]
-unflatten topology v =
-  let sizes = getThetaSizes topology
-      offsets = reverse $ foldl' (\os (r, c) -> (r*c + head os):os) [0] (init sizes)
+unflatten (Topology sizes _) v =
+  let offsets = reverse $ foldl' (\os (r, c) -> (r*c + head os):os) [0] (init sizes)
       ms = zipWith (\o (r, c) -> LA.reshape c $ V.slice o (r*c) v) offsets sizes
   in ms
 
@@ -129,21 +127,16 @@ initializeThetaM topology = flatten <$> initializeThetaListM topology
 -- | Create and initialize list of weights matrices with random values
 -- for given neural network topology.
 initializeThetaListM :: RandomGen g => Topology -> RndM.Rand g [Matrix]
-initializeThetaListM (Topology nn _) = zipWithM initTheta (tail nn) nn
-  where initTheta r c = do
+initializeThetaListM (Topology sizes _) = mapM initTheta sizes
+  where initTheta (r, c) = do
           let eps = calcEps r c
-          getRandomRMatrixM r (c+1) (-eps, eps)
-        calcEps r c = (sqrt 6) / (sqrt . fromIntegral $ r + c)
-
-
--- | Return sum of dimensions of weight matrices for given neural network topology.
-getThetaTotalSize :: Topology -> Int
-getThetaTotalSize topology = sum $ map (\(c, r) -> c*r) $ getThetaSizes topology
+          getRandomRMatrixM r c (-eps, eps)
+        calcEps r c = (sqrt 6) / (sqrt . fromIntegral $ r + c - 1)
 
 
 -- | Returns dimensions of weight matrices for given neural network topology
-getThetaSizes :: Topology -> [(Int, Int)]
-getThetaSizes (Topology nn _) = zipWith (\r c -> (r, c+1)) (tail nn) nn
+getThetaSizes :: [Int] -> [(Int, Int)]
+getThetaSizes nn = zipWith (\r c -> (r, c+1)) (tail nn) nn
 
 
 data Regularization = L2 Double
@@ -159,26 +152,23 @@ data Cache = Cache {
 
 
 data Layer = Layer {
-  lUnits :: Int
-  , lForward :: Matrix -> Matrix -> Matrix
+  lForward :: Matrix -> Matrix -> Matrix
   , lBackward :: Matrix -> Cache -> (Matrix, Matrix)
   , lActivation :: Matrix -> Matrix
   , lActivationGradient :: Matrix -> Matrix -> Matrix
   }
 
 
-mkAffineSigmoidLayer units = Layer {
-  lUnits = units
-  , lForward = affineForward
+mkAffineSigmoidLayer = Layer {
+  lForward = affineForward
   , lActivation = LM.sigmoid
   , lBackward = affineBackward
   , lActivationGradient = \z da -> da * LM.sigmoidGradient z
   }
 
 
-mkSigmoidOutputLayer units = Layer {
-  lUnits = units
-  , lForward = affineForward
+mkSigmoidOutputLayer = Layer {
+  lForward = affineForward
   , lActivation = LM.sigmoid
   , lBackward = affineBackward
   , lActivationGradient = \scores y -> ML.removeBiasDimension scores - y
