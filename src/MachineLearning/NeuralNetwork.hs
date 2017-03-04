@@ -29,7 +29,7 @@ module MachineLearning.NeuralNetwork
 where
 
 import Data.List (foldl')
-import Control.Monad (zipWithM)
+import Control.Monad (zipWithM, ap)
 import qualified Data.Vector.Storable as V
 import qualified Numeric.LinearAlgebra as LA
 import Numeric.LinearAlgebra ((<>), (|||))
@@ -87,20 +87,19 @@ instance Model NeuralNetworkModel where
         grad = flatten $ propagateBackward topology (L2 lambda) scores cacheList ys
     in grad
 
-
-
-calcScores topology x thetaList = ML.removeBiasDimension $ fst $ propagateForward topology x thetaList
+calcScores topology x thetaList = fst $ propagateForward topology x thetaList
 
 -- | Flatten list of matrices into vector.
-flatten :: [Matrix] -> Vector
-flatten ms = V.concat $ map LA.flatten ms
+flatten :: [(Matrix, Matrix)] -> Vector
+flatten ms = V.concat $ map LA.flatten $ listOfTuplesToList ms
 
 
 -- | Unflatten vector into list of matrices for given neural network topology.
-unflatten :: Topology -> Vector -> [Matrix]
+unflatten :: Topology -> Vector -> [(Matrix, Matrix)]
 unflatten (Topology sizes _) v =
-  let offsets = reverse $ foldl' (\os (r, c) -> (r*c + head os):os) [0] (init sizes)
-      ms = zipWith (\o (r, c) -> LA.reshape c $ V.slice o (r*c) v) offsets sizes
+  let offsets = reverse $ foldl' (\os (r, c) -> (r+r*c + head os):os) [0] (init sizes)
+      ms = zipWith (\o (r, c) -> (LA.reshape r (slice o r), LA.reshape c (slice (o+r) (r*c)))) offsets sizes
+      slice o n = V.slice o n v
   in ms
 
 
@@ -126,34 +125,38 @@ initializeThetaM topology = flatten <$> initializeThetaListM topology
 
 -- | Create and initialize list of weights matrices with random values
 -- for given neural network topology.
-initializeThetaListM :: RandomGen g => Topology -> RndM.Rand g [Matrix]
+initializeThetaListM :: RandomGen g => Topology -> RndM.Rand g [(Matrix, Matrix)]
 initializeThetaListM (Topology sizes _) = mapM initTheta sizes
   where initTheta (r, c) = do
-          let eps = calcEps r c
-          getRandomRMatrixM r c (-eps, eps)
-        calcEps r c = (sqrt 6) / (sqrt . fromIntegral $ r + c - 1)
+          let b :: Matrix
+              b = LA.konst 0 (r, 1)
+              eps = calcEps r c
+          sequenceTuple (return b, getRandomRMatrixM r c (-eps, eps))
+        calcEps r c = (sqrt 6) / (sqrt . fromIntegral $ r + c)
 
 
 -- | Returns dimensions of weight matrices for given neural network topology
 getThetaSizes :: [Int] -> [(Int, Int)]
-getThetaSizes nn = zipWith (\r c -> (r, c+1)) (tail nn) nn
+getThetaSizes nn = zipWith (\r c -> (r, c)) (tail nn) nn
 
 
 data Regularization = L2 Double
-forwardReg (L2 lambda) thetaList = 0.5 * lambda * (sum $ map (LA.norm_2 . ML.removeBiasDimension) thetaList)
-backwardReg (L2 lambda) theta = (0 ||| ML.removeBiasDimension theta) * (LA.scalar lambda)
+forwardReg (L2 lambda) thetaList = 0.5 * lambda * (sum $ map LA.norm_2 $ snd $ unzip thetaList)
+backwardReg :: Regularization -> Matrix -> Matrix
+backwardReg (L2 lambda) w = w * (LA.scalar lambda)
 
 
 data Cache = Cache {
   cacheZ :: Matrix
   , cacheX :: Matrix
-  , cacheTheta :: Matrix
+  , cacheB :: Matrix
+  , cacheW :: Matrix
   };
 
 
 data Layer = Layer {
-  lForward :: Matrix -> Matrix -> Matrix
-  , lBackward :: Matrix -> Cache -> (Matrix, Matrix)
+  lForward :: Matrix -> Matrix -> Matrix -> Matrix
+  , lBackward :: Matrix -> Cache -> (Matrix, Matrix, Matrix)
   , lActivation :: Matrix -> Matrix
   , lActivationGradient :: Matrix -> Matrix -> Matrix
   }
@@ -171,7 +174,7 @@ mkSigmoidOutputLayer = Layer {
   lForward = affineForward
   , lActivation = LM.sigmoid
   , lBackward = affineBackward
-  , lActivationGradient = \scores y -> ML.removeBiasDimension scores - y
+  , lActivationGradient = \scores y -> scores - y
   }
 
 
@@ -181,37 +184,49 @@ propagateForward (Topology _ layers) x thetaList = foldl' f (x, []) $ zip thetaL
           in (a', cache:cs)
 
 
-forwardPass layer a theta = (a', Cache z a theta)
-  where z = lForward layer a theta
-        a' = ML.addBiasDimension $ lActivation layer z
+forwardPass layer a (b, w) = (a', Cache z a b w)
+  where z = lForward layer a b w
+        a' = lActivation layer z
 
 
 -- | Implements backward propagation algorithm.
 propagateBackward (Topology _ layers) reg scores (cache:cacheList) y = gradientList
-  where cache' = Cache scores (cacheX cache) (cacheTheta cache)
+  where cache' = Cache scores (cacheX cache) (cacheB cache) (cacheW cache)
         cacheList' = cache':cacheList
         gradientList = snd $ foldl' f (y, []) $ zip cacheList' $ reverse layers
         f (da, grads) (cache, hl) =
-          let (da', grad') = backwardPass hl reg da cache
-          in (da', grad':grads)
+          let (da', db, dw) = backwardPass hl reg da cache
+          in (da', (db, dw):grads)
 
 
-backwardPass layer reg da cache = (da', grad')
+backwardPass layer reg da cache = (da', db, dw')
   where delta = lActivationGradient layer (cacheZ cache) da
-        (da', grad) = lBackward layer delta cache
-        grad' = grad + (backwardReg reg (cacheTheta cache))
+        (da', db, dw) = lBackward layer delta cache
+        dw' = dw + (backwardReg reg (cacheW cache))
 
-affineForward x theta = x <> LA.tr theta
+affineForward :: Matrix -> Matrix -> Matrix -> Matrix
+affineForward x b w = (x <> LA.tr w) + b
 
 
-affineBackward delta (Cache _ x theta) = (da, grad)
-  where theta' = ML.removeBiasDimension theta
-        m = fromIntegral $ LA.rows x
-        grad = (LA.tr delta <> x)/m
-        da = delta <> theta'
+affineBackward delta (Cache _ x b w) = (da, db, dw)
+  where m = fromIntegral $ LA.rows x
+        da = delta <> w
+        db = (sumByCols delta)/m
+        dw = (LA.tr delta <> x)/m
 
 
 sigmoidLoss reg x thetaList y = (LA.sumElements $ (-y) * log(tau + x) - (1-y) * log ((1+tau)-x))/m + r
   where tau = 1e-7
         m = fromIntegral $ LA.rows x
         r = forwardReg reg thetaList
+
+sumByCols :: Matrix -> Matrix
+sumByCols x = LA.asRow . LA.vector $ map V.sum $ LA.toColumns x
+
+
+listOfTuplesToList [] = []
+listOfTuplesToList ((a, b):xs) = a : b : listOfTuplesToList xs
+
+
+sequenceTuple :: (Monad m) => (m a, m b) -> m (a, b)
+sequenceTuple (a, b) = return (,) `ap` a `ap` b
