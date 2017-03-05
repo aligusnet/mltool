@@ -33,6 +33,7 @@ library
                      , MachineLearning.NeuralNetwork.Regularization
                      , MachineLearning.NeuralNetwork.Sigmoid
                      , MachineLearning.NeuralNetwork.Topology
+                     , MachineLearning.NeuralNetwork.WeightInitialization
                      , MachineLearning.PCA
                      , MachineLearning.Clustering
                      , MachineLearning.TerminalProgress
@@ -130,6 +131,7 @@ test-suite mltool-test
                      , mltool
                      , vector
                      , hmatrix
+                     , hmatrix-gsl-stats
                      , random
                      , MonadRandom
                      , test-framework
