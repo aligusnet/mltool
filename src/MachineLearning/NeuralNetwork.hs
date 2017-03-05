@@ -38,20 +38,18 @@ newtype NeuralNetworkModel = NeuralNetwork T.Topology
 
 
 instance Model NeuralNetworkModel where
-  hypothesis (NeuralNetwork topology) x theta = predictions'
+  hypothesis (NeuralNetwork topology) x theta = predictions
     where thetaList = T.unflatten topology theta
-          predictions = LA.toRows $ calcScores topology x thetaList
-          predictions' = LA.vector $ map (fromIntegral . LA.maxIndex) predictions
+          scores = LA.toRows $ calcScores topology x thetaList
+          predictions = LA.vector $ map (fromIntegral . LA.maxIndex) scores
 
-  cost (NeuralNetwork topology) lambda x y theta = 
-    let ys = LA.fromColumns $ MLC.processOutputOneVsAll (T.numberOutputs topology) y
-        thetaList = T.unflatten topology theta
+  cost (NeuralNetwork topology) lambda x y theta =
+    let (ys, thetaList) = processParams topology y theta
         scores = calcScores topology x thetaList
     in T.loss topology (L2 lambda) scores thetaList ys
 
   gradient (NeuralNetwork topology) lambda x y theta =
-    let ys = LA.fromColumns $ MLC.processOutputOneVsAll (T.numberOutputs topology) y
-        thetaList = T.unflatten topology theta
+    let (ys, thetaList) = processParams topology y theta
         (scores, cacheList) = T.propagateForward topology x thetaList
         grad = T.flatten $ T.propagateBackward topology (L2 lambda) scores cacheList ys
     in grad
@@ -60,3 +58,11 @@ instance Model NeuralNetworkModel where
 -- | Score function. Takes a topology, X and theta list.
 calcScores :: T.Topology -> Matrix -> [(Matrix, Matrix)] -> Matrix
 calcScores topology x thetaList = fst $ T.propagateForward topology x thetaList
+
+
+processParams :: T.Topology -> Vector -> Vector -> (Matrix, [(Matrix, Matrix)])
+processParams topology y theta =
+  let nOutputs = T.numberOutputs topology
+      ys = LA.fromColumns $ MLC.processOutputOneVsAll nOutputs y
+      thetaList = T.unflatten topology theta
+  in (ys, thetaList)
