@@ -24,6 +24,7 @@ import qualified Data.Vector.Storable as V
 
 import qualified MachineLearning as ML
 import MachineLearning.Types (R, Vector, Matrix)
+import MachineLearning.Utils (sumByRows)
 import MachineLearning.Model
 import MachineLearning.Classification.MultiClass
 
@@ -66,7 +67,3 @@ instance Classifier MultiSvmModel where
      in dw + reg
 
   cnumClasses (MultiSvm _ nLabels) = nLabels
-
-
-sumByRows :: Matrix -> Matrix
-sumByRows x = LA.asColumn . LA.vector $ map V.sum $ LA.toRows x

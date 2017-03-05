@@ -33,6 +33,7 @@ import qualified Control.Monad.Random as RndM
 import qualified Data.Vector.Storable as V
 import qualified Numeric.LinearAlgebra as LA
 import MachineLearning.Types (R, Vector, Matrix)
+import MachineLearning.Utils (listOfTuplesToList)
 import MachineLearning.NeuralNetwork.Layer (Layer(..), Cache(..))
 import MachineLearning.NeuralNetwork.Regularization (Regularization, forwardReg, backwardReg)
 
@@ -148,9 +149,3 @@ unflatten (Topology sizes _ _) v =
       ms = zipWith (\o (r, c) -> (LA.reshape r (slice o r), LA.reshape c (slice (o+r) (r*c)))) offsets sizes
       slice o n = V.slice o n v
   in ms
-
-
--- | Converts list of tuples into list.
-listOfTuplesToList :: [(a, a)] -> [a]
-listOfTuplesToList [] = []
-listOfTuplesToList ((a, b):xs) = a : b : listOfTuplesToList xs

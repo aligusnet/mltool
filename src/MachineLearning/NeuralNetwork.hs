@@ -22,10 +22,9 @@ module MachineLearning.NeuralNetwork
 
 where
 
-import Data.List (foldl')
 import qualified Numeric.LinearAlgebra as LA
 import MachineLearning.Types (R, Vector, Matrix)
-import qualified MachineLearning as ML
+import MachineLearning.Utils (reduceByRowsV)
 import qualified MachineLearning.Classification.Internal as MLC
 import MachineLearning.Model (Model(..))
 import qualified MachineLearning.NeuralNetwork.Topology as T
@@ -40,8 +39,8 @@ newtype NeuralNetworkModel = NeuralNetwork T.Topology
 instance Model NeuralNetworkModel where
   hypothesis (NeuralNetwork topology) x theta = predictions
     where thetaList = T.unflatten topology theta
-          scores = LA.toRows $ calcScores topology x thetaList
-          predictions = LA.vector $ map (fromIntegral . LA.maxIndex) scores
+          scores = calcScores topology x thetaList
+          predictions = reduceByRowsV (fromIntegral . LA.maxIndex) scores
 
   cost (NeuralNetwork topology) lambda x y theta =
     let (ys, thetaList) = processParams topology y theta

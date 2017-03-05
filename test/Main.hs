@@ -16,6 +16,7 @@ import qualified MachineLearning.NeuralNetwork.TopologyTest as NeuralNetwork.Top
 import qualified MachineLearning.PCATest as PCA
 import qualified MachineLearning.ClusteringTest as Clustering
 import qualified MachineLearning.RandomTest as Random
+import qualified MachineLearning.UtilsTest as Utils
 
 main = defaultMain tests
 
@@ -35,4 +36,5 @@ tests = [
   , testGroup "MachineLearning.PCA" PCA.tests
   , testGroup "MachineLearning.Clustering" Clustering.tests
   , testGroup "MachineLearning.Random" Random.tests
+  , testGroup "MachineLearning.Utils" Utils.tests
   ]

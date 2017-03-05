@@ -23,7 +23,7 @@ where
 
 
 import MachineLearning.Types (R, Matrix)
-import qualified Data.Vector.Storable as V
+import MachineLearning.Utils (sumByColumns)
 import qualified Numeric.LinearAlgebra as LA
 import Numeric.LinearAlgebra ((<>))
 import qualified Control.Monad.Random as RndM
@@ -54,9 +54,5 @@ affineForward x b w = (x <> LA.tr w) + b
 affineBackward delta (Cache _ x b w) = (dx, db, dw)
   where m = fromIntegral $ LA.rows x
         dx = delta <> w
-        db = (sumByCols delta)/m
+        db = (sumByColumns delta)/m
         dw = (LA.tr delta <> x)/m
-
-
-sumByCols :: Matrix -> Matrix
-sumByCols x = LA.asRow . LA.vector $ map V.sum $ LA.toColumns x
