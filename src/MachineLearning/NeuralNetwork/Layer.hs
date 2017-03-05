@@ -1,3 +1,4 @@
+{-# LANGUAGE RankNTypes #-}
 {-|
 Module: MachineLearning.NeuralNetwork.Layer
 Description: Neural Network's Layer
@@ -25,6 +26,7 @@ import MachineLearning.Types (R, Matrix)
 import qualified Data.Vector.Storable as V
 import qualified Numeric.LinearAlgebra as LA
 import Numeric.LinearAlgebra ((<>))
+import qualified Control.Monad.Random as RndM
 
 
 data Cache = Cache {
@@ -36,10 +38,12 @@ data Cache = Cache {
 
 
 data Layer = Layer {
-  lForward :: Matrix -> Matrix -> Matrix -> Matrix
+  lUnits :: Int
+  , lForward :: Matrix -> Matrix -> Matrix -> Matrix
   , lBackward :: Matrix -> Cache -> (Matrix, Matrix, Matrix)
   , lActivation :: Matrix -> Matrix
   , lActivationGradient :: Matrix -> Matrix -> Matrix
+  , lInitializeThetaM :: forall g. RndM.RandomGen g => (Int, Int) -> RndM.Rand g (Matrix, Matrix)
   }
 
 

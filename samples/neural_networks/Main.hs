@@ -21,7 +21,7 @@ main = do
   let nnt = Sigmoid.makeTopology (LA.cols x) 10 [100, 100]
       model = NN.NeuralNetwork nnt
   -- Step 3. Initialize theta with randon values.
-      initTheta = Sigmoid.initializeTheta 5191711 nnt
+      initTheta = NN.initializeTheta 5191711 nnt
 
       lambda = 5 / (fromIntegral $ LA.rows x)
 
