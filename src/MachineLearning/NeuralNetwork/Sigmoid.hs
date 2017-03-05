@@ -11,46 +11,26 @@ Sigmoid
 
 module MachineLearning.NeuralNetwork.Sigmoid
 (
-    makeTopology
+    LM.sigmoid
+    , gradient
+    , loss
+    , outputGradient
 )
 
 where
 
 
-import qualified Data.Vector.Storable as V
 import qualified Numeric.LinearAlgebra as LA
-import MachineLearning.Types (R, Vector, Matrix)
+import MachineLearning.Types (R, Matrix)
 import qualified MachineLearning.LogisticModel as LM
-import qualified MachineLearning.NeuralNetwork.Topology as T
-import MachineLearning.NeuralNetwork.Layer (Layer(..), affineForward, affineBackward)
-import MachineLearning.NeuralNetwork.WeightInitialization (nguyen)
 
 
--- | Creates toplogy. Takes number of inputs, number of outputs and list of hidden layers.
-makeTopology :: Int -> Int -> [Int] -> T.Topology
-makeTopology nInputs nOutputs hlUnits = T.makeTopology nInputs hiddenLayers outputLayer loss
-  where hiddenLayers = map mkAffineSigmoidLayer hlUnits
-        outputLayer = mkSigmoidOutputLayer nOutputs
+gradient :: Matrix -> Matrix -> Matrix
+gradient z da = da * LM.sigmoidGradient z
 
 
-mkAffineSigmoidLayer nUnits = Layer {
-  lUnits = nUnits
-  , lForward = affineForward
-  , lActivation = LM.sigmoid
-  , lBackward = affineBackward
-  , lActivationGradient = \z da -> da * LM.sigmoidGradient z
-  , lInitializeThetaM = nguyen
-  }
-
-
-mkSigmoidOutputLayer nUnits = Layer {
-  lUnits = nUnits
-  , lForward = affineForward
-  , lActivation = LM.sigmoid
-  , lBackward = affineBackward
-  , lActivationGradient = \scores y -> scores - y
-  , lInitializeThetaM = nguyen
-  }
+outputGradient :: Matrix -> Matrix -> Matrix
+outputGradient scores y = scores - y
 
 
 -- Sigmoid Loss function
