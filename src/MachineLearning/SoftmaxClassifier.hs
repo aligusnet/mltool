@@ -24,6 +24,7 @@ import qualified Data.Vector.Storable as V
 
 import qualified MachineLearning as ML
 import MachineLearning.Types (R, Vector, Matrix)
+import MachineLearning.Utils (reduceByRows, sumByRows)
 import MachineLearning.Model
 import MachineLearning.Classification.MultiClass
 
@@ -43,7 +44,7 @@ instance Classifier SoftmaxClassifier where
   ccost m lambda x y theta =
     let nSamples = fromIntegral $ LA.rows x
         scores = cscore m x theta
-        sum_probs = reduceByRows V.sum $ exp scores
+        sum_probs = sumByRows $ exp scores
         loss = LA.sumElements $ (log sum_probs) - remap scores y
         thetaReg = ML.removeBiasDimension theta
         reg = (LA.norm_2 thetaReg) * 0.5 * lambda
@@ -53,7 +54,7 @@ instance Classifier SoftmaxClassifier where
     let nSamples = fromIntegral $ LA.rows x
         ys = processOutput m y
         scores = cscore m x theta
-        sum_probs = reduceByRows V.sum $ exp scores
+        sum_probs = sumByRows $ exp scores
         probs = (exp scores) / sum_probs
         probs' = probs - ys
         dw =  (LA.tr probs') <> x
@@ -68,8 +69,4 @@ remap :: Matrix -> Vector -> Matrix
 remap m v = LA.remap cols rows m
   where cols = LA.asColumn $ V.fromList [0..(fromIntegral $ LA.rows m)-1]
         rows = LA.toInt $ LA.asColumn v
-
-
-reduceByRows :: (Vector -> R) -> Matrix -> Matrix
-reduceByRows f = LA.asColumn . LA.vector . map f . LA.toRows
 
