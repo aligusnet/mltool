@@ -12,9 +12,9 @@ import Test.HUnit.Approx
 import Test.HUnit.Plus
 import qualified Numeric.LinearAlgebra as LA
 import MachineLearning.NeuralNetwork.Topology
-import qualified MachineLearning.NeuralNetwork.Sigmoid as Sigmoid
+import qualified MachineLearning.NeuralNetwork.TopologyMaker as TM
 
-nnt = Sigmoid.makeTopology 15 2 [10]
+nnt = TM.makeTopology TM.ASigmoid TM.LSigmoid 15 2 [10]
 
 flattenTest = do
   theta <- initializeThetaIO nnt

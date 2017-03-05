@@ -19,20 +19,19 @@ import qualified MachineLearning as ML
 import qualified MachineLearning.Optimization as Opt
 import MachineLearning.Model
 import MachineLearning.NeuralNetwork
-import qualified MachineLearning.NeuralNetwork.Sigmoid as Sigmoid
+import qualified MachineLearning.NeuralNetwork.TopologyMaker as TM
 
 (x, y) = ML.splitToXY dataset2
 
-nnt = Sigmoid.makeTopology (LA.cols x) 2 [10]
-model = NeuralNetwork nnt
-
 gradientCheckingEps = 0.1
 
-checkGradientTest lambda = do
-  let thetas = initializeTheta 1511197 nnt
+checkGradientTest eps activation loss lambda = do
+  let nnt = TM.makeTopology activation loss (LA.cols x) 2 [10]
+      model = NeuralNetwork nnt
+      thetas = initializeTheta 1511197 nnt
       diffs = take 5 $ map (\e -> Opt.checkGradient model lambda x y thetas e) [0.005, 0.0051 ..]
       diff = minimum $ filter (not . isNaN) diffs
-  assertApproxEqual (show thetas) gradientCheckingEps 0 diff
+  assertApproxEqual (show thetas) eps 0 diff
 
 
 xPredict = LA.matrix 2 [ -0.5, 0.5
@@ -42,10 +41,10 @@ xPredict = LA.matrix 2 [ -0.5, 0.5
                        , 0, 0]
 yExpected = LA.vector [1, 1, 0, 0, 1]
 
-learnTest minMethod =
+learnTest activation loss minMethod =
   let lambda = 0.5 / (fromIntegral $ LA.rows x)
       x1 = ML.mapFeatures 2 x
-      nnt = Sigmoid.makeTopology (LA.cols x1) 2 [10]
+      nnt = TM.makeTopology activation loss (LA.cols x1) 2 [10]
       model = NeuralNetwork nnt
       xPredict1 = ML.mapFeatures 2 xPredict
       initTheta = initializeTheta 5191711 nnt
@@ -57,10 +56,13 @@ learnTest minMethod =
 
 
 tests = [ testGroup "gradient checking" [
-            testCase "non-zero lambda" $ checkGradientTest 0.01
-            , testCase "zero lambda" $ checkGradientTest 0
+            testCase "Sigmoid: non-zero lambda" $ checkGradientTest 0.1 TM.ASigmoid TM.LSigmoid 0.01
+            , testCase "Sigmoid: zero lambda" $ checkGradientTest 0.1 TM.ASigmoid TM.LSigmoid 0
+            , testCase "ReLU - Softmax: non-zero lambda" $ checkGradientTest 12 TM.ARelu TM.LSoftmax 0.01
+            , testCase "ReLU - Softmax: zero lambda" $ checkGradientTest 12 TM.ARelu TM.LSoftmax 0
               ]
         , testGroup "learn" [
-            testCase "BFGS" $ learnTest (Opt.BFGS2 0.01 0.7)
+            testCase "Sigmoid: BFGS" $ learnTest TM.ASigmoid TM.LSigmoid (Opt.BFGS2 0.01 0.7)
+            , testCase "ReLU - Softmax: BFGS" $ learnTest TM.ARelu TM.LSoftmax (Opt.BFGS2 0.1 0.2)
             ]
         ]

@@ -31,8 +31,11 @@ library
                      , MachineLearning.NeuralNetwork
                      , MachineLearning.NeuralNetwork.Layer
                      , MachineLearning.NeuralNetwork.Regularization
+                     , MachineLearning.NeuralNetwork.ReluActivation
+                     , MachineLearning.NeuralNetwork.SoftmaxLoss
                      , MachineLearning.NeuralNetwork.Sigmoid
                      , MachineLearning.NeuralNetwork.Topology
+                     , MachineLearning.NeuralNetwork.TopologyMaker
                      , MachineLearning.NeuralNetwork.WeightInitialization
                      , MachineLearning.PCA
                      , MachineLearning.Clustering
