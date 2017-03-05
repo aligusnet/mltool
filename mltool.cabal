@@ -29,6 +29,10 @@ library
                      , MachineLearning.Classification.OneVsAll
                      , MachineLearning.Classification.MultiClass
                      , MachineLearning.NeuralNetwork
+                     , MachineLearning.NeuralNetwork.Layer
+                     , MachineLearning.NeuralNetwork.Regularization
+                     , MachineLearning.NeuralNetwork.Sigmoid
+                     , MachineLearning.NeuralNetwork.Topology
                      , MachineLearning.PCA
                      , MachineLearning.Clustering
                      , MachineLearning.TerminalProgress

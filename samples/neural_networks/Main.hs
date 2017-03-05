@@ -4,6 +4,7 @@ import qualified Numeric.LinearAlgebra as LA
 import qualified MachineLearning as ML
 import qualified MachineLearning.Optimization as Opt
 import qualified MachineLearning.NeuralNetwork as NN
+import qualified MachineLearning.NeuralNetwork.Sigmoid as Sigmoid
 import qualified MachineLearning.TerminalProgress as TP
 
 
@@ -17,10 +18,10 @@ main = do
   (xTest, yTest) <- pure ML.splitToXY <*> LA.loadMatrix "samples/digits_classification/optdigits.tes"
 
   -- Step 2. Initialize Neural Network.
-  let nnt = NN.makeTopology (LA.cols x) 10 [100, 100]
+  let nnt = Sigmoid.makeTopology (LA.cols x) 10 [100, 100]
       model = NN.NeuralNetwork nnt
   -- Step 3. Initialize theta with randon values.
-      initTheta = NN.initializeTheta 5191711 nnt
+      initTheta = Sigmoid.initializeTheta 5191711 nnt
 
       lambda = 5 / (fromIntegral $ LA.rows x)
 
