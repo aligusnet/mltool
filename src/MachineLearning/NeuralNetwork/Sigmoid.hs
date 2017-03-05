@@ -19,12 +19,11 @@ where
 
 import qualified Data.Vector.Storable as V
 import qualified Numeric.LinearAlgebra as LA
-import qualified Control.Monad.Random as RndM
 import MachineLearning.Types (R, Vector, Matrix)
 import qualified MachineLearning.LogisticModel as LM
-import MachineLearning.Random (getRandomRMatrixM)
 import qualified MachineLearning.NeuralNetwork.Topology as T
 import MachineLearning.NeuralNetwork.Layer (Layer(..), affineForward, affineBackward)
+import MachineLearning.NeuralNetwork.WeightInitialization (nguyen)
 
 
 -- | Creates toplogy. Takes number of inputs, number of outputs and list of hidden layers.
@@ -40,7 +39,7 @@ mkAffineSigmoidLayer nUnits = Layer {
   , lActivation = LM.sigmoid
   , lBackward = affineBackward
   , lActivationGradient = \z da -> da * LM.sigmoidGradient z
-  , lInitializeThetaM = initializeThetaM
+  , lInitializeThetaM = nguyen
   }
 
 
@@ -50,16 +49,8 @@ mkSigmoidOutputLayer nUnits = Layer {
   , lActivation = LM.sigmoid
   , lBackward = affineBackward
   , lActivationGradient = \scores y -> scores - y
-  , lInitializeThetaM = initializeThetaM
+  , lInitializeThetaM = nguyen
   }
-
-
-initializeThetaM :: RndM.RandomGen g => (Int, Int) -> RndM.Rand g (Matrix, Matrix)
-initializeThetaM (r, c) = do
-  let b = LA.konst 0 (1, r)
-      eps = (sqrt 6) / (sqrt . fromIntegral $ r + c)
-  w <- getRandomRMatrixM r c (-eps, eps)
-  return (b, w)
 
 
 -- Sigmoid Loss function

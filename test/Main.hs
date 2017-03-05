@@ -13,6 +13,7 @@ import qualified MachineLearning.Optimization.GradientDescentTest as GradientDes
 import qualified MachineLearning.Optimization.MinibatchGradientDescentTest as MinibatchGradientDescent
 import qualified MachineLearning.NeuralNetworkTest as NeuralNetwork
 import qualified MachineLearning.NeuralNetwork.TopologyTest as NeuralNetwork.Topology
+import qualified MachineLearning.NeuralNetwork.WeightInitializationTest as NeuralNetwork.WeightInitialization
 import qualified MachineLearning.PCATest as PCA
 import qualified MachineLearning.ClusteringTest as Clustering
 import qualified MachineLearning.RandomTest as Random
@@ -33,6 +34,7 @@ tests = [
   , testGroup "MachineLearning.Optimization.MinibatchGradientDescent" MinibatchGradientDescent.tests
   , testGroup "MachineLearning.NeuralNetwork" NeuralNetwork.tests
   , testGroup "MachineLearning.NeuralNetwork.Topology" NeuralNetwork.Topology.tests
+  , testGroup "MachineLearning.NeuralNetwork.WeightInitialization" NeuralNetwork.WeightInitialization.tests
   , testGroup "MachineLearning.PCA" PCA.tests
   , testGroup "MachineLearning.Clustering" Clustering.tests
   , testGroup "MachineLearning.Random" Random.tests
