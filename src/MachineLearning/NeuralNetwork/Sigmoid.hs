@@ -12,10 +12,6 @@ Sigmoid
 module MachineLearning.NeuralNetwork.Sigmoid
 (
     makeTopology
-  , initializeTheta
-  , initializeThetaIO
-  , initializeThetaM
-
 )
 
 where
@@ -23,76 +19,47 @@ where
 
 import qualified Data.Vector.Storable as V
 import qualified Numeric.LinearAlgebra as LA
-import System.Random (RandomGen)
 import qualified Control.Monad.Random as RndM
 import MachineLearning.Types (R, Vector, Matrix)
 import qualified MachineLearning.LogisticModel as LM
-import MachineLearning.Random
-import MachineLearning.NeuralNetwork.Topology (Topology(..))
+import MachineLearning.Random (getRandomRMatrixM)
+import qualified MachineLearning.NeuralNetwork.Topology as T
 import MachineLearning.NeuralNetwork.Layer (Layer(..), affineForward, affineBackward)
 
 
 -- | Creates toplogy. Takes number of inputs, number of outputs and list of hidden layers.
-makeTopology :: Int -> Int -> [Int] -> Topology
-makeTopology nInputs nOutputs hlUnits = Topology sizes layers loss
-  where hiddenLayers = take (length hlUnits) $ repeat mkAffineSigmoidLayer
-        outputLayer = mkSigmoidOutputLayer
-        layers = hiddenLayers ++ [outputLayer]
-        layerSizes = nInputs : (hlUnits ++ [nOutputs])
-        sizes = getThetaSizes layerSizes
+makeTopology :: Int -> Int -> [Int] -> T.Topology
+makeTopology nInputs nOutputs hlUnits = T.makeTopology nInputs hiddenLayers outputLayer loss
+  where hiddenLayers = map mkAffineSigmoidLayer hlUnits
+        outputLayer = mkSigmoidOutputLayer nOutputs
 
 
-mkAffineSigmoidLayer = Layer {
-  lForward = affineForward
+mkAffineSigmoidLayer nUnits = Layer {
+  lUnits = nUnits
+  , lForward = affineForward
   , lActivation = LM.sigmoid
   , lBackward = affineBackward
   , lActivationGradient = \z da -> da * LM.sigmoidGradient z
+  , lInitializeThetaM = initializeThetaM
   }
 
 
-mkSigmoidOutputLayer = Layer {
-  lForward = affineForward
+mkSigmoidOutputLayer nUnits = Layer {
+  lUnits = nUnits
+  , lForward = affineForward
   , lActivation = LM.sigmoid
   , lBackward = affineBackward
   , lActivationGradient = \scores y -> scores - y
+  , lInitializeThetaM = initializeThetaM
   }
 
 
--- | Create and initialize weights vector with random values
--- for given neural network topology.
--- Takes a seed to initialize generator of random numbers as a first parameter.
-initializeTheta :: Int -> Topology -> Vector
-initializeTheta seed topology = RndM.evalRand (initializeThetaM topology) gen
-  where gen = RndM.mkStdGen seed
-
-
--- | Create and initialize weights vector with random values
--- for given neural network topology inside IO Monad.
-initializeThetaIO :: Topology -> IO Vector
-initializeThetaIO = RndM.evalRandIO . initializeThetaM
-
-
--- | Create and initialize weights vector with random values
--- for given neural network topology inside RandomMonad.
-initializeThetaM :: RandomGen g => Topology -> RndM.Rand g Vector
-initializeThetaM topology = V.concat <$> initializeThetaListM topology
-
-
--- | Create and initialize list of weights matrices with random values
--- for given neural network topology.
-initializeThetaListM :: RandomGen g => Topology -> RndM.Rand g [Vector]
-initializeThetaListM (Topology sizes _ _) = concat <$> mapM initTheta sizes
-  where initTheta (r, c) = do
-          let b :: Vector
-              b = LA.konst 0 r
-              eps = calcEps r c
-          sequence [return b, getRandomRVectorM (r*c) (-eps, eps)]
-        calcEps r c = (sqrt 6) / (sqrt . fromIntegral $ r + c)
-
-
--- | Returns dimensions of weight matrices for given neural network topology
-getThetaSizes :: [Int] -> [(Int, Int)]
-getThetaSizes nn = zipWith (\r c -> (r, c)) (tail nn) nn
+initializeThetaM :: RndM.RandomGen g => (Int, Int) -> RndM.Rand g (Matrix, Matrix)
+initializeThetaM (r, c) = do
+  let b = LA.konst 0 (1, r)
+      eps = (sqrt 6) / (sqrt . fromIntegral $ r + c)
+  w <- getRandomRMatrixM r c (-eps, eps)
+  return (b, w)
 
 
 -- Sigmoid Loss function

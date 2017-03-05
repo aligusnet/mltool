@@ -29,17 +29,10 @@ model = NeuralNetwork nnt
 gradientCheckingEps = 0.1
 
 checkGradientTest lambda = do
-  let thetas = Sigmoid.initializeTheta 1511197 nnt
+  let thetas = initializeTheta 1511197 nnt
       diffs = take 5 $ map (\e -> Opt.checkGradient model lambda x y thetas e) [0.005, 0.0051 ..]
       diff = minimum $ filter (not . isNaN) diffs
   assertApproxEqual (show thetas) gradientCheckingEps 0 diff
-
-
-flattenTest = do
-  theta <- Sigmoid.initializeThetaIO nnt
-  let theta' = flatten $ unflatten nnt theta
-      norm = LA.norm_2 (theta - theta')
-  assertApproxEqual "flatten" 1e-10 0 norm
 
 
 xPredict = LA.matrix 2 [ -0.5, 0.5
@@ -55,7 +48,7 @@ learnTest minMethod =
       nnt = Sigmoid.makeTopology (LA.cols x1) 2 [10]
       model = NeuralNetwork nnt
       xPredict1 = ML.mapFeatures 2 xPredict
-      initTheta = Sigmoid.initializeTheta 5191711 nnt
+      initTheta = initializeTheta 5191711 nnt
       (theta, optPath) = Opt.minimize minMethod model 1e-7 100 lambda x1 y initTheta
       yPredicted = hypothesis model xPredict1 theta
       js = (LA.toColumns optPath) !! 1
@@ -67,9 +60,6 @@ tests = [ testGroup "gradient checking" [
             testCase "non-zero lambda" $ checkGradientTest 0.01
             , testCase "zero lambda" $ checkGradientTest 0
               ]
-        , testGroup "flatten" [
-            testCase "flatten" flattenTest
-            ]
         , testGroup "learn" [
             testCase "BFGS" $ learnTest (Opt.BFGS2 0.01 0.7)
             ]
