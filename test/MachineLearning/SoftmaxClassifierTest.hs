@@ -54,7 +54,7 @@ gradientCheckingEps = 3e-2
 eps = 0.000001
 
 initialTheta = LA.konst 0.001 (2 * LA.cols x2)
-(thetaGD, optPathGD) = minimize (GradientDescent 0.0005) model eps 200 1 x2 y initialTheta
+(thetaGD, optPathGD) = minimize (GradientDescent 0.0005) model eps 150 1 x2 y initialTheta
 (thetaCGFR, optPathCGFR) = minimize (ConjugateGradientFR 0.05 0.2) model eps 30 1 x2 y initialTheta
 (thetaCGPR, optPathCGPR) = minimize (ConjugateGradientPR 0.05 0.3) model eps 30 1 x2 y initialTheta
 
