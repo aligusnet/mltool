@@ -41,14 +41,14 @@ xPredict = LA.matrix 2 [ -0.5, 0.5
                        , 0, 0]
 yExpected = LA.vector [1, 1, 0, 0, 1]
 
-learnTest activation loss minMethod =
+learnTest activation loss minMethod nIters =
   let lambda = 0.5 / (fromIntegral $ LA.rows x)
       x1 = ML.mapFeatures 2 x
       nnt = TM.makeTopology activation loss (LA.cols x1) 2 [10]
       model = NeuralNetwork nnt
       xPredict1 = ML.mapFeatures 2 xPredict
       initTheta = initializeTheta 5191711 nnt
-      (theta, optPath) = Opt.minimize minMethod model 1e-7 100 lambda x1 y initTheta
+      (theta, optPath) = Opt.minimize minMethod model 1e-7 nIters lambda x1 y initTheta
       yPredicted = hypothesis model xPredict1 theta
       js = (LA.toColumns optPath) !! 1
   in do
@@ -62,7 +62,8 @@ tests = [ testGroup "gradient checking" [
             , testCase "ReLU - Softmax: zero lambda" $ checkGradientTest 12 TM.ARelu TM.LSoftmax 0
               ]
         , testGroup "learn" [
-            testCase "Sigmoid: BFGS" $ learnTest TM.ASigmoid TM.LSigmoid (Opt.BFGS2 0.01 0.7)
-            , testCase "ReLU - Softmax: BFGS" $ learnTest TM.ARelu TM.LSoftmax (Opt.BFGS2 0.1 0.2)
+            testCase "Sigmoid: BFGS" $ learnTest TM.ASigmoid TM.LSigmoid (Opt.BFGS2 0.01 0.7) 50
+            , testCase "ReLU - Softmax: BFGS" $ learnTest TM.ARelu TM.LSoftmax (Opt.BFGS2 0.1 0.1) 50
+            , testCase "Tanh - Softmax: BFGS" $ learnTest TM.ATanh TM.LSoftmax (Opt.BFGS2 0.1 0.1) 50
             ]
         ]

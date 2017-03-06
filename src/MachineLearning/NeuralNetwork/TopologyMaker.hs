@@ -23,11 +23,12 @@ import qualified MachineLearning.NeuralNetwork.Topology as T
 import MachineLearning.NeuralNetwork.Layer (Layer(..), affineForward, affineBackward)
 import MachineLearning.NeuralNetwork.WeightInitialization (nguyen)
 import qualified MachineLearning.NeuralNetwork.ReluActivation as Relu
+import qualified MachineLearning.NeuralNetwork.TanhActivation as Tanh
 import qualified MachineLearning.NeuralNetwork.SoftmaxLoss as Softmax
 import qualified MachineLearning.NeuralNetwork.Sigmoid as Sigmoid
 
 
-data Activation = ASigmoid | ARelu
+data Activation = ASigmoid | ARelu | ATanh
 
 data Loss = LSigmoid | LSoftmax
 
@@ -61,10 +62,12 @@ mkOutputLayer l nUnits = Layer {
 
 hiddenActivation ASigmoid = Sigmoid.sigmoid
 hiddenActivation ARelu = Relu.relu
+hiddenActivation ATanh = Tanh.tanh
 
 
 hiddenGradient ASigmoid = Sigmoid.gradient
 hiddenGradient ARelu = Relu.gradient
+hiddenGradient ATanh = Tanh.gradient
 
 
 outputActivation LSigmoid = Sigmoid.sigmoid

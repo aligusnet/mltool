@@ -32,6 +32,7 @@ library
                      , MachineLearning.NeuralNetwork.Layer
                      , MachineLearning.NeuralNetwork.Regularization
                      , MachineLearning.NeuralNetwork.ReluActivation
+                     , MachineLearning.NeuralNetwork.TanhActivation
                      , MachineLearning.NeuralNetwork.SoftmaxLoss
                      , MachineLearning.NeuralNetwork.Sigmoid
                      , MachineLearning.NeuralNetwork.Topology
