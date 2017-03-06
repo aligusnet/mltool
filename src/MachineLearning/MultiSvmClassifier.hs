@@ -24,7 +24,7 @@ import qualified Data.Vector.Storable as V
 
 import qualified MachineLearning as ML
 import MachineLearning.Types (R, Vector, Matrix)
-import MachineLearning.Utils (sumByRows)
+import MachineLearning.Utils (sumByRows, reduceByRowsV)
 import MachineLearning.Model
 import MachineLearning.Classification.MultiClass
 
@@ -36,10 +36,9 @@ data MultiSvmModel = MultiSvm R Int
 instance Classifier MultiSvmModel where
   cscore _ x theta = x <> (LA.tr theta)
 
-  chypothesis m x theta = LA.vector predictions
+  chypothesis m x theta = predictions
     where scores = cscore m x theta
-          scores' = LA.toRows scores
-          predictions = map (fromIntegral . LA.maxIndex) scores'
+          predictions = reduceByRowsV (fromIntegral . LA.maxIndex) scores
 
   ccost m@(MultiSvm d _) lambda x y theta =
     let nSamples = fromIntegral $ LA.rows x

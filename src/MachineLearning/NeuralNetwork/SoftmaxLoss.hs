@@ -35,7 +35,8 @@ gradient scores y =
 
 -- Softmax Loss function
 loss :: Matrix -> [(Matrix, Matrix)] -> Matrix -> R
-loss scores thetaList y = LA.sumElements $ (log sum_probs) - t
+loss scores thetaList y = loss / m
   where m = fromIntegral $ LA.rows scores
         sum_probs = sumByRows $ exp scores
         t = sumByRows $ scores * y
+        loss = LA.sumElements $ (log sum_probs) - t
