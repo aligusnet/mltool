@@ -16,11 +16,11 @@
 
 ##### Classification Problem
 
-* Logistic Regression;
-
 * Softmax Classifier;
 
 * Multi SVM Classifier;
+
+* Logistic Regression;
 
 * Neural Networks, please see the details below.
 
@@ -34,7 +34,7 @@
 
 * Activations: ReLu, Tanh, Sigmoid;
 
-* Loss Functions: Softmax, Multi SVM, Sigmoid.
+* Loss Functions: Softmax, Multi SVM, Logistic (Sigmoid).
 
 ### Build the project
 
