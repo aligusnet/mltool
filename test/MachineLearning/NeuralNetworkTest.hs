@@ -58,12 +58,14 @@ learnTest activation loss minMethod nIters =
 tests = [ testGroup "gradient checking" [
             testCase "Sigmoid: non-zero lambda" $ checkGradientTest 0.1 TM.ASigmoid TM.LSigmoid 0.01
             , testCase "Sigmoid: zero lambda" $ checkGradientTest 0.1 TM.ASigmoid TM.LSigmoid 0
-            , testCase "ReLU - Softmax: non-zero lambda" $ checkGradientTest 12 TM.ARelu TM.LSoftmax 0.01
-            , testCase "ReLU - Softmax: zero lambda" $ checkGradientTest 12 TM.ARelu TM.LSoftmax 0
-              ]
+            , testCase "ReLU - Softmax: non-zero lambda" $ checkGradientTest 0.1 TM.ARelu TM.LSoftmax 0.01
+            , testCase "ReLU - Softmax: zero lambda" $ checkGradientTest 0.1 TM.ARelu TM.LSoftmax 0
+            , testCase "Tanh - MultiSvm: non-zero lambda" $ checkGradientTest 0.1 TM.ATanh TM.LMultiSvm 0.01
+            , testCase "Tanh - MultiSvm: zero lambda" $ checkGradientTest 0.1 TM.ATanh TM.LMultiSvm 0
+            ]
         , testGroup "learn" [
             testCase "Sigmoid: BFGS" $ learnTest TM.ASigmoid TM.LSigmoid (Opt.BFGS2 0.01 0.7) 50
             , testCase "ReLU - Softmax: BFGS" $ learnTest TM.ARelu TM.LSoftmax (Opt.BFGS2 0.1 0.1) 50
-            , testCase "Tanh - Softmax: BFGS" $ learnTest TM.ATanh TM.LSoftmax (Opt.BFGS2 0.1 0.1) 50
+            , testCase "Tanh - MultiSvm: BFGS" $ learnTest TM.ATanh TM.LMultiSvm (Opt.BFGS2 0.1 0.1) 50
             ]
         ]
