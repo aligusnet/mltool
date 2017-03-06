@@ -48,6 +48,6 @@ loss scores thetaList y =
   let nSamples = fromIntegral $ LA.rows scores
       correct_scores = sumByRows $ scores*(LA.step y)
       margins = scores - (correct_scores - (LA.scalar svmD))
-      margins' = LA.cmap (\e -> max 0 e) margins
-      loss = LA.sumElements(margins') - nSamples * svmD
+      margins' = margins * (LA.step margins)
+      loss = LA.sumElements margins' - nSamples * svmD
   in loss / nSamples

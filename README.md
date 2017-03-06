@@ -8,19 +8,33 @@
 
 #### Supervised Learning
 
-* Normal Equation (Regression problem);
+##### Regression Problem
 
-* Linear Regression using Least Squares approach (Regression problem);
+* Normal Equation;
 
-* Logistic Regression (Classification problem);
+* Linear Regression using Least Squares approach.
 
-* Neural Networks (Classification problem).
+##### Classification Problem
+
+* Logistic Regression;
+
+* Softmax Classifier;
+
+* Multi SVM Classifier;
+
+* Neural Networks, please see the details below.
 
 #### Unsupervised Learning
 
-* Principal Component Analysis (Dimensionality reduction problem).
+* Principal Component Analysis (Dimensionality reduction problem);
 
 * K-Means (Clustering).
+
+#### Neural Networks
+
+* Activations: ReLu, Tanh, Sigmoid;
+
+* Loss Functions: Softmax, Multi SVM, Sigmoid.
 
 ### Build the project
 
