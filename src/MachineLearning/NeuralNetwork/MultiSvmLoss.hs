@@ -35,8 +35,7 @@ scores = id
 
 gradient :: Matrix -> Matrix -> Matrix
 gradient scores y =
-    let nSamples = fromIntegral $ LA.rows scores
-        correct_scores = sumByRows $ scores*(LA.step y)
+    let correct_scores = sumByRows $ scores*(LA.step y)
         margins = scores - (correct_scores - (LA.scalar svmD))
         margins' = (1-y)*(LA.step margins)
         k = sumByRows margins'

@@ -35,6 +35,7 @@ eps = 0.0001
 thetaNE = normalEquation x1 y
 thetaNE_p = normalEquation_p x1 y
 (thetaGD, _) = minimize (GradientDescent 0.01) LeastSquares eps 5000 RegNone x1 y zeroTheta
+(thetaMBGD, _) = minimize (MinibatchGradientDescent 11711 64 0.05) LeastSquares eps 5000 RegNone x1 y zeroTheta
 (thetaCGFR, _) = minimize (ConjugateGradientFR 0.1 0.1) LeastSquares eps 1500 RegNone x1 y zeroTheta
 (thetaCGPR, _) = minimize (ConjugateGradientPR 0.1 0.1) LeastSquares eps 1500 RegNone x1 y zeroTheta
 (thetaBFGS, _) = minimize (BFGS2 0.1 0.1) LeastSquares eps 1500 RegNone x1 y zeroTheta
@@ -44,6 +45,7 @@ tests = [ testGroup "minimize" [
             testCase "Normal Equation" $ assertVector "" 0.01 yExpected (hypothesis LeastSquares xPredict1 thetaNE)
             , testCase "Normal Equation using pseudo inverse" $ assertVector "" 0.01 yExpected (hypothesis LeastSquares xPredict1 thetaNE_p)
             , testCase "Gradient Descent" $ assertVector "" 0.01 yExpected (hypothesis LeastSquares xPredict1 thetaGD)
+            , testCase "Minibatch Gradient Descent" $ assertVector "" 1100 yExpected (hypothesis LeastSquares xPredict1 thetaMBGD)
             , testCase "BFGS" $ assertVector "" 0.01 yExpected (hypothesis LeastSquares xPredict1 thetaBFGS)
             , testCase "Conjugate Gradient FR" $ assertVector "" 0.01 yExpected (hypothesis LeastSquares xPredict1 thetaCGFR)
             , testCase "Conjugate Gradient PR" $ assertVector "" 0.01 yExpected (hypothesis LeastSquares xPredict1 thetaCGPR)

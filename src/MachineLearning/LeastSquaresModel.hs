@@ -31,7 +31,6 @@ instance Model LeastSquaresModel where
 
   cost _ lambda x y theta = 
     let m = x #> theta - y
-        nFeatures = V.length theta
         nExamples = fromIntegral $ LA.rows x
         regTerm = R.costReg lambda theta
     in (LA.sumElements (m * m) * 0.5 + regTerm) / nExamples
