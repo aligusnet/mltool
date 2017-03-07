@@ -18,6 +18,7 @@ import qualified MachineLearning as ML
 import MachineLearning.Optimization (checkGradient)
 import MachineLearning.Model
 import MachineLearning.LogisticModel
+import MachineLearning.Regularization (Regularization(..))
 
 (x, y) = ML.splitToXY dataset2
 
@@ -52,18 +53,21 @@ tests = [ testGroup "sigmoid" [
               , testCase "small negative value" $ assertApproxEqual "" 1e-2 0.2 (sigmoidGradient $ -1) 
               ]
           , testGroup "model" [
-              testCase "cost, lambda = 0" $ assertApproxEqual "" 1e-3 2.020 (cost Logistic 0 x1 y onesTheta)
-              , testCase "cost, lambda = 1" $ assertApproxEqual "" 1e-3 2.135 (cost Logistic 1 x1 y onesTheta)
-              , testCase "cost, lambda = 1000" $ assertApproxEqual "" 1e-3 116.427 (cost Logistic 1000 x1 y onesTheta)
-              , testCase "gradient, lambda = 0" $ assertVector "" 1e-5 gradient_l0 (gradient Logistic 0 x1 y onesTheta)
-              , testCase "gradient, lambda = 1" $ assertVector "" 1e-5 gradient_l1 (gradient Logistic 1 x1 y onesTheta)
-              , testCase "gradient, lambda = 1000" $ assertVector "" 1e-5 gradient_l1000 (gradient Logistic 1000 x1 y onesTheta)
+              testCase "cost, lambda = 0" $ assertApproxEqual "" 1e-3 2.020 (cost Logistic (L2 0) x1 y onesTheta)
+              , testCase "cost, lambda = 1" $ assertApproxEqual "" 1e-3 2.135 (cost Logistic (L2 1) x1 y onesTheta)
+              , testCase "cost, lambda = 1000" $ assertApproxEqual "" 1e-3 116.427 (cost Logistic (L2 1000) x1 y onesTheta)
+              , testCase "gradient, lambda = 0" $ assertVector "" 1e-5 gradient_l0 (gradient Logistic (L2 0) x1 y onesTheta)
+              , testCase "gradient, lambda = 1" $ assertVector "" 1e-5 gradient_l1 (gradient Logistic (L2 1) x1 y onesTheta)
+              , testCase "gradient, lambda = 1000" $ assertVector "" 1e-5 gradient_l1000 (gradient Logistic (L2 1000) x1 y onesTheta)
               ]
           , testGroup "gradient checking" [
-              testCase "non-zero theta, non-zero lambda" $ checkGradientTest 2 onesTheta
-              , testCase "zero theta, non-zero lambda" $ checkGradientTest 2 zeroTheta
-              , testCase "non-zero theta, zero lambda" $ checkGradientTest 0 onesTheta
-              , testCase "zero theta, zero lambda" $ checkGradientTest 0 zeroTheta
+              testCase "non-zero theta, non-zero lambda" $ checkGradientTest (L2 2) onesTheta
+              , testCase "zero theta, non-zero lambda" $ checkGradientTest (L2 2) zeroTheta
+              , testCase "non-zero theta, zero lambda" $ checkGradientTest (L2 0) onesTheta
+              , testCase "zero theta, zero lambda" $ checkGradientTest (L2 0) zeroTheta
+              , testCase "non-zero theta, no reg" $ checkGradientTest RegNone onesTheta
+              , testCase "zero theta, no reg" $ checkGradientTest RegNone zeroTheta
+
               ]
         ]
 

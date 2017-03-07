@@ -42,7 +42,7 @@ xPredict = LA.matrix 2 [ -0.5, 0.5
 yExpected = LA.vector [1, 1, 0, 0, 1]
 
 learnTest activation loss minMethod nIters =
-  let lambda = 0.5 / (fromIntegral $ LA.rows x)
+  let lambda = L2 $ 0.5 / (fromIntegral $ LA.rows x)
       x1 = ML.mapFeatures 2 x
       nnt = TM.makeTopology activation loss (LA.cols x1) 2 [10]
       model = NeuralNetwork nnt
@@ -56,12 +56,13 @@ learnTest activation loss minMethod nIters =
 
 
 tests = [ testGroup "gradient checking" [
-            testCase "Sigmoid - Logistic: non-zero lambda" $ checkGradientTest 0.1 TM.ASigmoid TM.LLogistic 0.01
-            , testCase "Sigmoid - Logistic: zero lambda" $ checkGradientTest 0.1 TM.ASigmoid TM.LLogistic 0
-            , testCase "ReLU - Softmax: non-zero lambda" $ checkGradientTest 0.1 TM.ARelu TM.LSoftmax 0.01
-            , testCase "ReLU - Softmax: zero lambda" $ checkGradientTest 0.1 TM.ARelu TM.LSoftmax 0
-            , testCase "Tanh - MultiSvm: non-zero lambda" $ checkGradientTest 0.1 TM.ATanh TM.LMultiSvm 0.01
-            , testCase "Tanh - MultiSvm: zero lambda" $ checkGradientTest 0.1 TM.ATanh TM.LMultiSvm 0
+            testCase "Sigmoid - Logistic: non-zero lambda" $ checkGradientTest 0.1 TM.ASigmoid TM.LLogistic (L2 0.01)
+            , testCase "Sigmoid - Logistic: zero lambda" $ checkGradientTest 0.1 TM.ASigmoid TM.LLogistic (L2 0)
+            , testCase "ReLU - Softmax: non-zero lambda" $ checkGradientTest 0.1 TM.ARelu TM.LSoftmax (L2 0.01)
+            , testCase "ReLU - Softmax: zero lambda" $ checkGradientTest 0.1 TM.ARelu TM.LSoftmax (L2 0)
+            , testCase "Tanh - MultiSvm: non-zero lambda" $ checkGradientTest 0.1 TM.ATanh TM.LMultiSvm (L2 0.01)
+            , testCase "Tanh - MultiSvm: zero lambda" $ checkGradientTest 0.1 TM.ATanh TM.LMultiSvm (L2 0)
+            , testCase "Tanh - MultiSvm: no reg" $ checkGradientTest 0.1 TM.ATanh TM.LMultiSvm RegNone
             ]
         , testGroup "learn" [
             testCase "Sigmoid - Logistic: BFGS" $ learnTest TM.ASigmoid TM.LLogistic (Opt.BFGS2 0.01 0.7) 50

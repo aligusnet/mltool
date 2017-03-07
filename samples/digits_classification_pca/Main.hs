@@ -31,7 +31,7 @@ main = do
       initialTheta = LA.konst 0 (LA.cols x1)
       initialThetas = replicate numLabels initialTheta
   -- Step 4. Learning.
-      (thetas, optPath) = OVA.learn (OVA.BFGS2 0.1 0.5) 0.0001 30 30 numLabels x1 y initialThetas
+      (thetas, optPath) = OVA.learn (OVA.BFGS2 0.1 0.5) 0.0001 30 (OVA.L2 30) numLabels x1 y initialThetas
   -- Step 5. Prediction and checking accuracy
       accuracyTrain = calcAccuracy x1 y thetas
       accuracyTest = calcAccuracy (reduceDims $ processFeatures xTest) yTest thetas

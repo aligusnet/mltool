@@ -18,16 +18,21 @@ module MachineLearning.NeuralNetwork.Regularization
 
 where
 
+
 import MachineLearning.Types (R, Matrix)
 import qualified Numeric.LinearAlgebra as LA
+import MachineLearning.Regularization (Regularization(..))
 
 
-data Regularization = L2 Double
-
-
+-- | Calcaulates regularization for forward propagation.
+-- It takes regularization parameter and theta list.
 forwardReg :: Regularization -> [(Matrix, Matrix)] -> R
+forwardReg RegNone _ = 0
 forwardReg (L2 lambda) thetaList = 0.5 * lambda * (sum $ map LA.norm_2 $ snd $ unzip thetaList)
 
 
+-- | Calculates regularization for step of backward propagation.
+-- It takes regularization parameter and theta.
 backwardReg :: Regularization -> Matrix -> Matrix
+backwardReg RegNone _ = 0
 backwardReg (L2 lambda) w = w * (LA.scalar lambda)

@@ -18,6 +18,7 @@ module MachineLearning.NeuralNetwork
   , T.initializeTheta
   , T.initializeThetaIO
   , T.initializeThetaM
+  , Regularization(..)
 )
 
 where
@@ -28,7 +29,7 @@ import MachineLearning.Utils (reduceByRowsV)
 import qualified MachineLearning.Classification.Internal as MLC
 import MachineLearning.Model (Model(..))
 import qualified MachineLearning.NeuralNetwork.Topology as T
-import MachineLearning.NeuralNetwork.Regularization (Regularization(L2))
+import MachineLearning.Regularization (Regularization(..))
 
 
 -- | Neural Network Model.
@@ -45,12 +46,12 @@ instance Model NeuralNetworkModel where
   cost (NeuralNetwork topology) lambda x y theta =
     let (ys, thetaList) = processParams topology y theta
         scores = calcScores topology x thetaList
-    in T.loss topology (L2 lambda) scores thetaList ys
+    in T.loss topology lambda scores thetaList ys
 
   gradient (NeuralNetwork topology) lambda x y theta =
     let (ys, thetaList) = processParams topology y theta
         (scores, cacheList) = T.propagateForward topology x thetaList
-        grad = T.flatten $ T.propagateBackward topology (L2 lambda) scores cacheList ys
+        grad = T.flatten $ T.propagateBackward topology lambda scores cacheList ys
     in grad
 
 

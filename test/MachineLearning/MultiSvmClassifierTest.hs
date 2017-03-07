@@ -51,10 +51,10 @@ gradientCheckingEps = 1e-3
 eps = 0.0001
 
 zeroTheta2 = LA.konst 0 (2 * LA.cols x2)
-(thetaGD, _) = minimize (GradientDescent 0.001) model eps 150 1 x2 y zeroTheta2
-(thetaCGFR, _) = minimize (ConjugateGradientFR 0.1 0.1) model eps 30 0.5 x2 y zeroTheta2
-(thetaCGPR, _) = minimize (ConjugateGradientPR 0.1 0.1) model eps 30 0.5 x2 y zeroTheta2
-(thetaBFGS, _) = minimize (BFGS2 0.1 0.1) model eps 30 0.5 x2 y zeroTheta2
+(thetaGD, _) = minimize (GradientDescent 0.001) model eps 150 (L2 1) x2 y zeroTheta2
+(thetaCGFR, _) = minimize (ConjugateGradientFR 0.1 0.1) model eps 30 (L2 0.5) x2 y zeroTheta2
+(thetaCGPR, _) = minimize (ConjugateGradientPR 0.1 0.1) model eps 30 (L2 0.5) x2 y zeroTheta2
+(thetaBFGS, _) = minimize (BFGS2 0.1 0.1) model eps 30 (L2 0.5) x2 y zeroTheta2
 
 
 checkGradientTest lambda theta eps = do
@@ -64,10 +64,12 @@ checkGradientTest lambda theta eps = do
 
 
 tests = [  testGroup "gradient checking" [
-            testCase "non-zero theta, non-zero lambda" $ checkGradientTest 2 onesTheta 3e-2
-              , testCase "zero theta, non-zero lambda" $ checkGradientTest 2 zeroTheta gradientCheckingEps
-              , testCase "non-zero theta, zero lambda" $ checkGradientTest 0 onesTheta gradientCheckingEps
-              , testCase "zero theta, zero lambda" $ checkGradientTest 0 zeroTheta gradientCheckingEps
+            testCase "non-zero theta, non-zero lambda" $ checkGradientTest (L2 2) onesTheta 3e-2
+              , testCase "zero theta, non-zero lambda" $ checkGradientTest (L2 2) zeroTheta gradientCheckingEps
+              , testCase "non-zero theta, zero lambda" $ checkGradientTest (L2 0) onesTheta gradientCheckingEps
+              , testCase "zero theta, zero lambda" $ checkGradientTest (L2 0) zeroTheta gradientCheckingEps
+              , testCase "non-zero theta, no reg" $ checkGradientTest RegNone onesTheta gradientCheckingEps
+              , testCase "zero theta, no reg" $ checkGradientTest RegNone zeroTheta gradientCheckingEps
               ]
         , testGroup "learn" [
             testCase "Gradient Descent" $ assertVector "" 0.01 yExpected (hypothesis model xPredict2 thetaGD)

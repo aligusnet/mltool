@@ -28,7 +28,7 @@ main = do
       initialTheta = LA.konst 0 (LA.cols x1)
       initialThetas = replicate numLabels initialTheta
   -- Step 3. Learning.
-  (thetas, optPath) <- TP.learnOneVsAllWithProgressBar (CB.learn (OVA.BFGS2 0.01 0.1) 0.001 30 30 x1) y initialThetas 1
+  (thetas, optPath) <- TP.learnOneVsAllWithProgressBar (CB.learn (OVA.BFGS2 0.01 0.1) 0.001 30 (CB.L2 30) x1) y initialThetas 1
 
   -- Step 4. Prediction and checking accuracy
   let accuracyTrain = calcAccuracy x1 y thetas

@@ -15,7 +15,7 @@ module MachineLearning.Regression
   , Optimization.minimize
   , normalEquation
   , normalEquation_p
-
+  , Regularization(..)
 )
 
 where
@@ -24,6 +24,7 @@ import MachineLearning.Types (Vector, Matrix)
 import MachineLearning.Optimization as Optimization
 import MachineLearning.Model as Model
 import MachineLearning.LeastSquaresModel as LeastSquares
+import MachineLearning.Regularization (Regularization(..))
 
 import qualified Numeric.LinearAlgebra as LA
 import Numeric.LinearAlgebra ((<>), (#>))

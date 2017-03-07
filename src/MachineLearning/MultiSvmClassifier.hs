@@ -47,8 +47,7 @@ instance Classifier MultiSvmModel where
         margins = scores - (correct_scores - (LA.scalar d))
         margins' = LA.cmap (\e -> max 0 e) margins
         loss = LA.sumElements(margins') / nSamples - d
-        thetaReg = ML.removeBiasDimension theta
-        reg = (LA.norm_2 thetaReg) * 0.5 * lambda / nSamples
+        reg = (ccostReg lambda theta) / nSamples
     in loss + reg
 
   cgradient m@(MultiSvm d _) lambda x y theta =
@@ -61,8 +60,7 @@ instance Classifier MultiSvmModel where
         k = sumByRows margins'
         margins'' = margins' - (ys * k)
         dw = ((LA.tr margins'') <> x) / nSamples
-        thetaReg = 0 ||| (ML.removeBiasDimension theta)
-        reg = ((LA.scalar lambda) * thetaReg) / nSamples
+        reg = (cgradientReg lambda theta) / nSamples
      in dw + reg
 
   cnumClasses (MultiSvm _ nLabels) = nLabels

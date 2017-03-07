@@ -44,9 +44,9 @@ eps = 0.0001
 
 -- Binary
 
-(thetaCGFR, optPathCGFR) = learn (ConjugateGradientFR 0.1 0.1) eps 50 0.5 x1 y zeroTheta
-(thetaCGPR, optPathCGPR) = learn (ConjugateGradientPR 0.1 0.1) eps 50 0.5 x1 y zeroTheta
-(thetaBFGS, optPathBFGS) = learn (BFGS2 0.1 0.1) eps 50 0.5 x1 y zeroTheta
+(thetaCGFR, optPathCGFR) = learn (ConjugateGradientFR 0.1 0.1) eps 50 (L2 0.5) x1 y zeroTheta
+(thetaCGPR, optPathCGPR) = learn (ConjugateGradientPR 0.1 0.1) eps 50 (L2 0.5) x1 y zeroTheta
+(thetaBFGS, optPathBFGS) = learn (BFGS2 0.1 0.1) eps 50 (L2 0.5) x1 y zeroTheta
 
 
 isInDescendingOrder :: V.Vector Double -> Bool
