@@ -14,7 +14,7 @@ import qualified Numeric.LinearAlgebra as LA
 import MachineLearning.NeuralNetwork.Topology
 import qualified MachineLearning.NeuralNetwork.TopologyMaker as TM
 
-nnt = TM.makeTopology TM.ASigmoid TM.LSigmoid 15 2 [10]
+nnt = TM.makeTopology TM.ASigmoid TM.LLogistic 15 2 [10]
 
 flattenTest = do
   theta <- initializeThetaIO nnt

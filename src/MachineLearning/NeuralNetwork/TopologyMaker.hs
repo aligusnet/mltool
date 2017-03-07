@@ -24,14 +24,15 @@ import MachineLearning.NeuralNetwork.Layer (Layer(..), affineForward, affineBack
 import MachineLearning.NeuralNetwork.WeightInitialization (nguyen)
 import qualified MachineLearning.NeuralNetwork.ReluActivation as Relu
 import qualified MachineLearning.NeuralNetwork.TanhActivation as Tanh
+import qualified MachineLearning.NeuralNetwork.SigmoidActivation as Sigmoid
 import qualified MachineLearning.NeuralNetwork.SoftmaxLoss as Softmax
 import qualified MachineLearning.NeuralNetwork.MultiSvmLoss as MultiSvm
-import qualified MachineLearning.NeuralNetwork.Sigmoid as Sigmoid
+import qualified MachineLearning.NeuralNetwork.LogisticLoss as Logistic
 
 
 data Activation = ASigmoid | ARelu | ATanh
 
-data Loss = LSigmoid | LSoftmax | LMultiSvm
+data Loss = LLogistic | LSoftmax | LMultiSvm
 
 
 -- | Creates toplogy. Takes number of inputs, number of outputs and list of hidden layers.
@@ -71,16 +72,16 @@ hiddenGradient ARelu = Relu.gradient
 hiddenGradient ATanh = Tanh.gradient
 
 
-outputActivation LSigmoid = Sigmoid.sigmoid
+outputActivation LLogistic = Logistic.scores
 outputActivation LSoftmax = Softmax.scores
 outputActivation LMultiSvm = MultiSvm.scores
 
 
-outputGradient LSigmoid = Sigmoid.outputGradient
+outputGradient LLogistic = Logistic.gradient
 outputGradient LSoftmax = Softmax.gradient
 outputGradient LMultiSvm = MultiSvm.gradient
 
 
-loss LSigmoid = Sigmoid.loss
+loss LLogistic = Logistic.loss
 loss LSoftmax = Softmax.loss
 loss LMultiSvm = MultiSvm.loss
