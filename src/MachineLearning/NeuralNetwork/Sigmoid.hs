@@ -34,7 +34,7 @@ outputGradient scores y = scores - y
 
 
 -- Sigmoid Loss function
-loss :: Matrix -> [(Matrix, Matrix)] -> Matrix -> R
-loss x thetaList y = (LA.sumElements $ (-y) * log(tau + x) - (1-y) * log ((1+tau)-x))/m
+loss :: Matrix -> Matrix -> R
+loss x y = (LA.sumElements $ (-y) * log(tau + x) - (1-y) * log ((1+tau)-x))/m
   where tau = 1e-7
         m = fromIntegral $ LA.rows x

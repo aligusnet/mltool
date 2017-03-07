@@ -43,8 +43,8 @@ gradient scores y =
     in margins' - (y * k)
 
 
-loss :: Matrix -> [(Matrix, Matrix)] -> Matrix -> R
-loss scores thetaList y = 
+loss :: Matrix -> Matrix -> R
+loss scores y = 
   let nSamples = fromIntegral $ LA.rows scores
       correct_scores = sumByRows $ scores*(LA.step y)
       margins = scores - (correct_scores - (LA.scalar svmD))
