@@ -13,7 +13,7 @@ module MachineLearning.MultiSvmClassifier
 (
   module MachineLearning.Model
   , module MachineLearning.Classification.MultiClass
-  , MultiSvmModel(..)
+  , MultiSvmClassifier(..)
 )
 
 where
@@ -30,11 +30,11 @@ import MachineLearning.Classification.MultiClass
 
 
 -- | Multiclass SVM Classifier, takes delta and number of futures. Delta = 1.0 is good for all cases.
-data MultiSvmModel = MultiSvm R Int
+data MultiSvmClassifier = MultiSvm R Int
 
 
-instance Classifier MultiSvmModel where
-  cscore _ x theta = x <> (LA.tr theta)
+instance Classifier MultiSvmClassifier where
+  cscore (MultiSvm _ _) x theta = x <> (LA.tr theta)
 
   chypothesis m x theta = predictions
     where scores = cscore m x theta

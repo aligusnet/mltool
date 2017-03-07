@@ -44,7 +44,6 @@ instance Model LogisticModel where
 
   cost m lambda x y theta =
     let h = hypothesis m x theta
-        nFeatures = V.length theta
         nExamples = fromIntegral $ LA.rows x
         tau = 1e-7
         jPositive = log(tau + h) <.> (-y)

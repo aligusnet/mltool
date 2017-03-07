@@ -33,7 +33,7 @@ import MachineLearning.Classification.MultiClass
 data SoftmaxClassifier = Softmax Int
 
 instance Classifier SoftmaxClassifier where
-  cscore _ x theta = scores - reduceByRows V.maximum scores
+  cscore (Softmax _) x theta = scores - reduceByRows V.maximum scores
     where scores = x <> (LA.tr theta)
 
   chypothesis m x theta = V.fromList predictions
