@@ -25,13 +25,17 @@ assertDistribution eps x mu e = do
 
 
 generateData algo n sz = do
-   rndList <- replicateM n $ RndM.evalRandIO (snd <$> algo sz)
-   return . LA.flatten $ LA.fromBlocks [rndList]
+   rndList <- replicateM n $ RndM.evalRandIO (algo sz)
+   let (bs, ws) = unzip rndList
+       b = LA.flatten $ LA.fromBlocks [bs]
+       w = LA.flatten $ LA.fromBlocks [ws]
+   return (b, w)
 
 
 testWeightInitAlgo eps algo n sz mu e = do
-  m <- generateData algo n sz
-  assertDistribution eps m mu e
+  (b, w) <- generateData algo n sz
+  assertDistribution eps b 0 0
+  assertDistribution eps w mu e
 
 
 heEps (r, c) = sqrt (2/(fromIntegral $ r + c))
