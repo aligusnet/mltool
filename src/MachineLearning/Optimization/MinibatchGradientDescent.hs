@@ -17,6 +17,7 @@ module MachineLearning.Optimization.MinibatchGradientDescent
 where
 
 import MachineLearning.Types (R, Vector, Matrix)
+import MachineLearning.Regularization (Regularization)
 import qualified Data.Vector.Storable as V
 import qualified Numeric.LinearAlgebra as LA
 import Numeric.LinearAlgebra ((?))
@@ -32,7 +33,7 @@ minibatchGradientDescent :: Model.Model a
                             -> a                -- ^ model to learn
                             -> R                -- ^ epsilon
                             -> Int              -- ^ max number of iters
-                            -> R                -- ^ regularization parameter, lambda
+                            -> Regularization   -- ^ regularization parameter, lambda
                             -> Matrix           -- ^ matrix of features, X
                             -> Vector           -- ^ output vector, y
                             -> Vector           -- ^ vector of initial weights, theta or w
@@ -49,7 +50,7 @@ minibatchGradientDescentM :: (Model.Model a, RndM.RandomGen g)
                              -> a                -- ^ model to learn
                              -> R                -- ^ epsilon
                              -> Int              -- ^ max number of iters
-                             -> R                -- ^ regularization parameter, lambda
+                             -> Regularization   -- ^ regularization parameter, lambda
                              -> Matrix           -- ^ matrix of features, X
                              -> Vector           -- ^ output vector, y
                              -> Vector           -- ^ vector of initial weights, theta or w

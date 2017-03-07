@@ -43,6 +43,7 @@ library
                      , MachineLearning.PCA
                      , MachineLearning.Clustering
                      , MachineLearning.TerminalProgress
+                     , MachineLearning.Regularization
                      , MachineLearning.Random
                      , MachineLearning.Types
                      , MachineLearning.Utils

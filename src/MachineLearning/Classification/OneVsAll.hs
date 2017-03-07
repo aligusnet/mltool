@@ -17,11 +17,13 @@ module MachineLearning.Classification.OneVsAll
   , predict
   , learn
   , MLC.calcAccuracy
+  , Regularization(..)
 )
 
 where
 
 import MachineLearning.Types (R, Vector, Matrix)
+import MachineLearning.Regularization (Regularization(..))
 import qualified MachineLearning.Optimization as Opt
 import qualified MachineLearning.LogisticModel as Log
 import qualified MachineLearning.Model as Model
@@ -44,7 +46,7 @@ predict x thetas = predictions'
 learn :: Opt.MinimizeMethod -- ^ (e.g. BFGS2 0.1 0.1)
          -> R                  -- ^ epsilon, desired precision of the solution;
          -> Int                -- ^ maximum number of iterations allowed;
-         -> R                  -- ^ regularization parameter lambda;
+         -> Regularization     -- ^ regularization parameter lambda;
          -> Int                -- ^ number of labels
          -> Matrix             -- ^ matrix X;
          -> Vector             -- ^ vector y

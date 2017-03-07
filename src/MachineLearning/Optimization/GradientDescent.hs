@@ -16,13 +16,14 @@ module MachineLearning.Optimization.GradientDescent
 where
 
 import MachineLearning.Types (R, Vector, Matrix)
+import MachineLearning.Regularization (Regularization)
 import qualified Data.Vector.Storable as V
 import qualified Numeric.LinearAlgebra as LA
 
 import qualified MachineLearning.Model as Model
 
 -- | Gradient Descent method implementation. See "MachineLearning.Regression" for usage details.
-gradientDescent :: Model.Model a => R-> a -> R -> Int -> R -> Matrix -> Vector -> Vector -> (Vector, Matrix)
+gradientDescent :: Model.Model a => R-> a -> R -> Int -> Regularization -> Matrix -> Vector -> Vector -> (Vector, Matrix)
 gradientDescent alpha model eps maxIters lambda x y theta = helper theta maxIters []
   where gradient = Model.gradient model lambda
         cost = Model.cost model lambda

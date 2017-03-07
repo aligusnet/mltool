@@ -17,11 +17,13 @@ module MachineLearning.Classification.Binary
   , predict
   , learn
   , MLC.calcAccuracy
+  , Regularization(..)
 )
 
 where
 
 import MachineLearning.Types (R, Vector, Matrix)
+import MachineLearning.Regularization (Regularization(..))
 import qualified MachineLearning.Optimization as Opt
 import qualified MachineLearning.LogisticModel as Log
 import qualified MachineLearning.Model as Model
@@ -42,7 +44,7 @@ predict x theta = V.map (\r -> if r >= 0.5 then 1 else 0) h
 learn :: Opt.MinimizeMethod -- ^ (e.g. BFGS2 0.1 0.1)
          -> R                  -- ^ epsilon, desired precision of the solution;
          -> Int                -- ^ maximum number of iterations allowed;
-         -> R                  -- ^ regularization parameter lambda;
+         -> Regularization     -- ^ regularization parameter lambda;
          -> Matrix             -- ^ matrix X;
          -> Vector             -- ^ binary vector y;
          -> Vector             -- ^ initial Theta;

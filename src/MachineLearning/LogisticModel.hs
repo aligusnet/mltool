@@ -23,6 +23,7 @@ import Numeric.LinearAlgebra((<>), (#>), (<.>))
 import qualified Data.Vector.Storable as V
 
 import MachineLearning.Model
+import qualified MachineLearning.Regularization as R
 
 data LogisticModel = Logistic
 
@@ -48,12 +49,10 @@ instance Model LogisticModel where
         tau = 1e-7
         jPositive = log(tau + h) <.> (-y)
         jNegative = log((1 + tau) - h) <.> (1-y)
-        thetaReg = V.slice 1 (nFeatures-1) theta
-        regTerm = (thetaReg <.> thetaReg) * lambda * 0.5
+        regTerm = R.costReg lambda theta
     in (jPositive - jNegative + regTerm) / nExamples
 
   gradient m lambda x y theta = (((LA.tr x) #> (h  - y)) + regTerm) / nExamples
     where h = hypothesis m x theta
           nExamples = fromIntegral $ LA.rows x
-          thetaReg = theta V.// [(0, 0)]
-          regTerm = (LA.scalar lambda) * thetaReg
+          regTerm = R.gradientReg lambda theta

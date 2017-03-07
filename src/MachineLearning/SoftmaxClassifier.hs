@@ -46,8 +46,7 @@ instance Classifier SoftmaxClassifier where
         scores = cscore m x theta
         sum_probs = sumByRows $ exp scores
         loss = LA.sumElements $ (log sum_probs) - remap scores y
-        thetaReg = ML.removeBiasDimension theta
-        reg = (LA.norm_2 thetaReg) * 0.5 * lambda
+        reg = ccostReg lambda theta
     in (loss + reg) / nSamples 
 
   cgradient m lambda x y theta =
@@ -58,8 +57,7 @@ instance Classifier SoftmaxClassifier where
         probs = (exp scores) / sum_probs
         probs' = probs - ys
         dw =  (LA.tr probs') <> x
-        thetasReg = 0 ||| (ML.removeBiasDimension theta)
-        reg = ((LA.scalar lambda) * thetasReg)
+        reg = cgradientReg lambda theta
     in (dw + reg)/ nSamples
 
   cnumClasses (Softmax nLabels) = nLabels

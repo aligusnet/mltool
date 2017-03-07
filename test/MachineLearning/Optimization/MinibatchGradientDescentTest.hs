@@ -16,6 +16,7 @@ import qualified Numeric.LinearAlgebra as LA
 
 import MachineLearning.Types (Vector)
 import qualified MachineLearning as ML
+import MachineLearning.Regularization (Regularization(..))
 import MachineLearning.LeastSquaresModel (LeastSquaresModel(..))
 import MachineLearning.Optimization.MinibatchGradientDescent
 
@@ -36,7 +37,7 @@ isInDescendingOrder :: [Double] -> Bool
 isInDescendingOrder lst = and . snd . unzip $ scanl (\(prev, _) current -> (current, prev >= current)) (1/0, True) lst
 
 testMinibatchGradientDescent model expectedTheta = do
-  let (theta, optPath) = minibatchGradientDescent 0 16 0.01 model eps 5000 0 x1 y initialTheta
+  let (theta, optPath) = minibatchGradientDescent 0 16 0.01 model eps 5000 RegNone x1 y initialTheta
       js = V.toList $ (LA.toColumns optPath) !! 1
   assertVector "theta" 0.01 expectedTheta theta
   assertBool "non-increasing errors" $ isInDescendingOrder js

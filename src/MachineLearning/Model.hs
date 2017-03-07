@@ -18,6 +18,7 @@ module MachineLearning.Model
 where
 
 import MachineLearning.Types (R, Vector, Matrix)
+import MachineLearning.Regularization (Regularization)
 
 class Model a where
   -- | Hypothesis function, a.k.a. score function (for lassifition problem)
@@ -25,11 +26,11 @@ class Model a where
   hypothesis :: a -> Matrix -> Vector -> Vector
   
   -- | Cost function J(Theta), a.k.a. loss function.
-  -- It takes regularizarion parameter lambda, matrix X (m x n), vector y (m x 1) and vector theta (n x 1).
-  cost :: a -> R -> Matrix -> Vector -> Vector -> R
+  -- It takes regularizarion parameter, matrix X (m x n), vector y (m x 1) and vector theta (n x 1).
+  cost :: a -> Regularization -> Matrix -> Vector -> Vector -> R
 
   -- | Gradient function.
-  -- It takes regularizarion parameter lambda, X (m x n), y (m x 1) and theta (n x 1).
+  -- It takes regularizarion parameter, X (m x n), y (m x 1) and theta (n x 1).
   -- Returns vector of gradients (n x 1).
-  gradient :: a -> R -> Matrix -> Vector -> Vector -> Vector
+  gradient :: a -> Regularization -> Matrix -> Vector -> Vector -> Vector
 

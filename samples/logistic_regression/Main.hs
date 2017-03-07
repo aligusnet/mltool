@@ -22,7 +22,7 @@ main = do
 
   -- Step 4. Learning
       zeroTheta = LA.konst 0 (LA.cols x1)
-      (theta, _) = BC.learn (BC.BFGS2 0.1 0.1) 0.0001 1500 1 x1 y zeroTheta
+      (theta, _) = BC.learn (BC.BFGS2 0.1 0.1) 0.0001 1500 (BC.L2 1) x1 y zeroTheta
 
   -- Step 5. Prediction and checking accuracy
       accuracy = calcAccuracy x1 y theta
