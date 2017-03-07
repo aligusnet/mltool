@@ -33,9 +33,10 @@ library
                      , MachineLearning.NeuralNetwork.Regularization
                      , MachineLearning.NeuralNetwork.ReluActivation
                      , MachineLearning.NeuralNetwork.TanhActivation
+                     , MachineLearning.NeuralNetwork.SigmoidActivation
                      , MachineLearning.NeuralNetwork.MultiSvmLoss
                      , MachineLearning.NeuralNetwork.SoftmaxLoss
-                     , MachineLearning.NeuralNetwork.Sigmoid
+                     , MachineLearning.NeuralNetwork.LogisticLoss
                      , MachineLearning.NeuralNetwork.Topology
                      , MachineLearning.NeuralNetwork.TopologyMaker
                      , MachineLearning.NeuralNetwork.WeightInitialization

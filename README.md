@@ -34,7 +34,7 @@
 
 * Activations: ReLu, Tanh, Sigmoid;
 
-* Loss Functions: Softmax, Multi SVM, Logistic (Sigmoid).
+* Loss Functions: Softmax, Multi SVM, Logistic.
 
 ### Build the project
 

@@ -18,7 +18,7 @@ main = do
   (xTest, yTest) <- pure ML.splitToXY <*> LA.loadMatrix "samples/digits_classification/optdigits.tes"
 
   -- Step 2. Initialize Neural Network.
-  let nnt = TM.makeTopology TM.ASigmoid TM.LSigmoid (LA.cols x) 10 [100, 100]
+  let nnt = TM.makeTopology TM.ASigmoid TM.LLogistic (LA.cols x) 10 [100, 100]
       model = NN.NeuralNetwork nnt
   -- Step 3. Initialize theta with randon values.
       initTheta = NN.initializeTheta 5191711 nnt

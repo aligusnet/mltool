@@ -1,20 +1,19 @@
 {-|
-Module: MachineLearning.NeuralNetwork.Sigmoid
-Description: Sigmoid
+Module: MachineLearning.NeuralNetwork.LogisticLoss
+Description: Multi SVM Loss.
 Copyright: (c) Alexander Ignatyev, 2017
 License: BSD-3
 Stability: experimental
 Portability: POSIX
 
-Sigmoid
+Logistic Loss.
 -}
 
-module MachineLearning.NeuralNetwork.Sigmoid
+module MachineLearning.NeuralNetwork.LogisticLoss
 (
-    LM.sigmoid
-    , gradient
-    , loss
-    , outputGradient
+  scores
+  , gradient
+  , loss
 )
 
 where
@@ -25,15 +24,15 @@ import MachineLearning.Types (R, Matrix)
 import qualified MachineLearning.LogisticModel as LM
 
 
+scores :: Matrix -> Matrix
+scores = LM.sigmoid
+
+
 gradient :: Matrix -> Matrix -> Matrix
-gradient z da = da * LM.sigmoidGradient z
+gradient scores y = scores - y
 
 
-outputGradient :: Matrix -> Matrix -> Matrix
-outputGradient scores y = scores - y
-
-
--- Sigmoid Loss function
+-- Logistic Loss function
 loss :: Matrix -> Matrix -> R
 loss x y = (LA.sumElements $ (-y) * log(tau + x) - (1-y) * log ((1+tau)-x))/m
   where tau = 1e-7
