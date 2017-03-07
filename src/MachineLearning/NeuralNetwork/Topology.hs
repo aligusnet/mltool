@@ -40,7 +40,7 @@ import MachineLearning.NeuralNetwork.Regularization (Regularization, forwardReg,
 
 -- | Loss function's type.
 -- Takes x, weights and y.
-type LossFunc = Matrix -> [(Matrix, Matrix)] -> Matrix -> R
+type LossFunc = Matrix -> Matrix -> R
 
 
 -- | Neural network topology has at least 2 elements: numver of input and number of outputs.
@@ -62,7 +62,7 @@ makeTopology nInputs hiddenLayers outputLayer lossFunc =
 -- Takes topology, regularization, x, weights, y.
 loss :: Topology -> Regularization -> Matrix -> [(Matrix, Matrix)] -> Matrix -> R
 loss (Topology _ _ lf) reg x weights y =
-  let lossValue = lf x weights y
+  let lossValue = lf x y
       regValue = forwardReg reg weights
   in lossValue + regValue
 
