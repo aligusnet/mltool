@@ -32,7 +32,6 @@ import qualified Control.Monad.Random as RndM
 data Cache = Cache {
   cacheZ :: Matrix
   , cacheX :: Matrix
-  , cacheB :: Matrix
   , cacheW :: Matrix
   };
 
@@ -51,7 +50,7 @@ affineForward :: Matrix -> Matrix -> Matrix -> Matrix
 affineForward x b w = (x <> LA.tr w) + b
 
 
-affineBackward delta (Cache _ x b w) = (dx, db, dw)
+affineBackward delta (Cache _ x w) = (dx, db, dw)
   where m = fromIntegral $ LA.rows x
         dx = delta <> w
         db = (sumByColumns delta)/m
