@@ -77,7 +77,7 @@ propagateForward (Topology _ layers _) x thetaList = foldl' f (x, []) $ zip thet
 
 -- | Makes one forward step for the given layer.
 forwardPass :: Layer -> Matrix -> (Matrix, Matrix) -> (Matrix, Cache)
-forwardPass layer a (b, w) = (a', Cache z a b w)
+forwardPass layer a (b, w) = (a', Cache z a w)
   where z = lForward layer a b w
         a' = lActivation layer z
 
@@ -85,7 +85,7 @@ forwardPass layer a (b, w) = (a', Cache z a b w)
 -- | Implementation of backward propagation algorithm.
 propagateBackward :: Topology -> Regularization -> Matrix -> [Cache] -> Matrix -> [(Matrix, Matrix)]
 propagateBackward (Topology _ layers _) reg scores (cache:cacheList) y = gradientList
-  where cache' = Cache scores (cacheX cache) (cacheB cache) (cacheW cache)
+  where cache' = Cache scores (cacheX cache) (cacheW cache)
         cacheList' = cache':cacheList
         gradientList = snd $ foldl' f (y, []) $ zip cacheList' $ reverse layers
         f (da, grads) (cache, hl) =
