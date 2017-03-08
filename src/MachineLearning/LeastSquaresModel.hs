@@ -27,14 +27,14 @@ import MachineLearning.Model
 data LeastSquaresModel = LeastSquares
 
 instance Model LeastSquaresModel where
-  hypothesis _ x theta = x #> theta
+  hypothesis LeastSquares x theta = x #> theta
 
-  cost _ lambda x y theta = 
+  cost LeastSquares lambda x y theta = 
     let m = x #> theta - y
         nExamples = fromIntegral $ LA.rows x
         regTerm = R.costReg lambda theta
     in (LA.sumElements (m * m) * 0.5 + regTerm) / nExamples
 
-  gradient _ lambda x y theta = ((LA.tr x) #> (x #> theta - y) + regTerm) / nExamples
+  gradient LeastSquares lambda x y theta = ((LA.tr x) #> (x #> theta - y) + regTerm) / nExamples
     where nExamples = fromIntegral $ LAD.rows x
           regTerm = R.gradientReg lambda theta
