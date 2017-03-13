@@ -1,6 +1,6 @@
 {-|
 Module: MachineLearning.NeuralNetwork.LogisticLoss
-Description: Multi SVM Loss.
+Description: Logistic Loss.
 Copyright: (c) Alexander Ignatyev, 2017
 License: BSD-3
 Stability: experimental

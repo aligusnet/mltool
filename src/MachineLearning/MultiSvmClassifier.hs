@@ -45,7 +45,7 @@ instance Classifier MultiSvmClassifier where
         scores = cscore m x theta
         correct_scores = LA.remap (LA.asColumn $ V.fromList [0..(fromIntegral $ LA.rows x)-1]) (LA.toInt $ LA.asColumn y) scores
         margins = scores - (correct_scores - (LA.scalar d))
-        margins' = LA.cmap (\e -> max 0 e) margins
+        margins' = margins * LA.step margins
         loss = LA.sumElements(margins') / nSamples - d
         reg = (ccostReg lambda theta) / nSamples
     in loss + reg
