@@ -13,7 +13,7 @@ import MachineLearning.SoftmaxClassifier
 
 featuresMapParameter = 2
 
-processFeatures :: T.Matrix -> T.Matrix
+-- processFeatures :: T.Matrix -> T.Matrix
 processFeatures muSigma = ML.addBiasDimension . ML.featureNormalization muSigma . ML.mapFeatures featuresMapParameter
 
 calcAccuracy :: (Model a) => a -> T.Matrix -> T.Vector -> T.Vector -> Double
@@ -67,9 +67,6 @@ main = do
 
   putStrLn $ "Softmax: Accuracy on train set (%): " ++ show (accuracyTrainSm*100)
   putStrLn $ "Softmax: Accuracy on test set (%): " ++ show (accuracyTestSm*100)
-
-  let r = LA.rows optPathSm
-  LA.dispShort 150 8 8 $ optPathSm LA.? [r-151 .. r-1]
 
   let accuracyTrainSmGD = calcAccuracy softmax x1 y thetaSmGD
       accuracyTestSmGD = calcAccuracy softmax xTest1 yTest thetaSmGD

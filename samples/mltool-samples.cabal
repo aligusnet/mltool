@@ -1,4 +1,4 @@
-name:                mltool
+name:                mltool-samples
 version:             0.1.0.0
 synopsis:            Machine Learning Toolbox
 description:         Please see README.md
@@ -10,7 +10,6 @@ maintainer:          ignatyev.alexander@gmail.com
 copyright:           Alexander Ignatyev
 category:            math
 build-type:          Simple
-extra-source-files:  README.md
 cabal-version:       >=1.10
 
 executable linreg
