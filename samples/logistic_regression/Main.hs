@@ -12,7 +12,7 @@ calcAccuracy x y theta = BC.calcAccuracy y yPredicted
 
 main = do
   -- Step 1. Data loading.
-  m <- LA.loadMatrix "samples/logistic_regression/data.txt"
+  m <- LA.loadMatrix "logistic_regression/data.txt"
   let (x, y) = ML.splitToXY m
   -- Step 2. Feature normalization (skipped - we don't need feature normalization if we use BFGS2).
   -- See Linear Regression sample app for dedails.

@@ -10,7 +10,7 @@ main = do
   putStrLn "\n=== K-Means Sample Application ===\n"
   -- Step 1. Data loading.
   -- Step 1.1 Training Data loading.
-  x <- LA.loadMatrix "samples/linear_regression/data.txt"
+  x <- LA.loadMatrix "linear_regression/data.txt"
   -- Step 2. Learning
   let numIters = 25
       numClusters = 3

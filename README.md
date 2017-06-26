@@ -36,23 +36,47 @@
 
 * Loss Functions: Softmax, Multi SVM, Logistic.
 
-### Build the project
+### Usage
+
+#### Build the project
 
     stack build
 
-### Run samples app
+#### Run samples app
 
 Please run sample app from root dir (because paths to training data sets are hardcoded).
 
-    stack exec linreg      # Linear Regression Sample App
-    stack exec logreg      # Logistic Regression (Classification) Sample App
-    stack exec digits      # Muticlass Classification Sample App
-                           # (Recognition of Handwritten Digitts
-    stack exec digits-pca  # Apply PCA dimensionaly reduction to digits sample app
-    stack exec nn          # Neural Network Sample App
-                           # (Recognition of Handwritten Digits)
-    stack kmeans           # Clustering Sample App
+```bash
+cd samples
+stack build
+stack exec linreg      # Linear Regression Sample App
+stack exec logreg      # Logistic Regression (Classification) Sample App
+stack exec digits      # Muticlass Classification Sample App
+                       # (Recognition of Handwritten Digitts
+stack exec digits-pca  # Apply PCA dimensionaly reduction to digits sample app
+stack exec digits-svm  # Support Vector Machines
+stack exec nn          # Neural Network Sample App
+                       # (Recognition of Handwritten Digits)
+stack exec kmeans      # Clustering Sample App
+```
 
-### Run unit tests
+#### Run unit tests
 
     stack test
+
+
+### Examples
+
+* Linear Regression: [source code](https://github.com/Alexander-Ignatyev/mltool/blob/master/samples/linear_regression/Main.hs);
+
+* Logistic Regression: [source code](https://github.com/Alexander-Ignatyev/mltool/blob/master/samples/logistic_regression/Main.hs);
+
+* Multiclass Logistic Regression: [source code](https://github.com/Alexander-Ignatyev/mltool/blob/master/samples/digits_classification/Main.hs);
+
+* Multiclass Logistic Regression with PCA: [source code](https://github.com/Alexander-Ignatyev/mltool/blob/master/samples/digits_classification_pca/Main.hs);
+
+* Multiclass Support Vector Machine: [source code](https://github.com/Alexander-Ignatyev/mltool/blob/master/samples/digits_classification_svm/Main.hs);
+
+* Neural Networks: [source code](https://github.com/Alexander-Ignatyev/mltool/blob/master/samples/neural_networks/Main.hs);
+
+* K-Means: [source code](https://github.com/Alexander-Ignatyev/mltool/blob/master/samples/kmeans/Main.hs).
