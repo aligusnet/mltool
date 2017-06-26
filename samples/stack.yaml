@@ -1,0 +1,9 @@
+resolver: lts-7.14
+
+extra-deps: [mltool-0.1.0.0]
+
+flags: {}
+
+extra-package-dbs: []
+
+extra-lib-dirs: [/usr/lib]

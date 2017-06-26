@@ -19,9 +19,9 @@ calcAccuracy x y thetas = OVA.calcAccuracy y yPredicted
 main = do
   -- Step 1. Data loading.
   -- Step 1.1 Training Data loading.
-  (x, y) <- pure ML.splitToXY <*> LA.loadMatrix "samples/digits_classification/optdigits.tra"
+  (x, y) <- pure ML.splitToXY <*> LA.loadMatrix "digits_classification/optdigits.tra"
   -- Step 1.1 Testing Data loading.
-  (xTest, yTest) <- pure ML.splitToXY <*> LA.loadMatrix "samples/digits_classification/optdigits.tes"
+  (xTest, yTest) <- pure ML.splitToXY <*> LA.loadMatrix "digits_classification/optdigits.tes"
 
   -- Step 2. Outputs and features preprocessing.
   let numLabels = 10

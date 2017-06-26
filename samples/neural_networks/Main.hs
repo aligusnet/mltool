@@ -13,12 +13,12 @@ main = do
 
   -- Step 1. Data loading.
   -- Step 1.1 Training Data loading.
-  (x, y) <- pure ML.splitToXY <*> LA.loadMatrix "samples/digits_classification/optdigits.tra"
+  (x, y) <- pure ML.splitToXY <*> LA.loadMatrix "digits_classification/optdigits.tra"
   -- Step 1.1 Testing Data loading.
-  (xTest, yTest) <- pure ML.splitToXY <*> LA.loadMatrix "samples/digits_classification/optdigits.tes"
+  (xTest, yTest) <- pure ML.splitToXY <*> LA.loadMatrix "digits_classification/optdigits.tes"
 
   -- Step 2. Initialize Neural Network.
-  let nnt = TM.makeTopology TM.ASigmoid TM.LLogistic (LA.cols x) 10 [100, 100]
+  let nnt = TM.makeTopology TM.ARelu TM.LSoftmax (LA.cols x) 10 [100, 100]
       model = NN.NeuralNetwork nnt
   -- Step 3. Initialize theta with randon values.
       initTheta = NN.initializeTheta 5191711 nnt

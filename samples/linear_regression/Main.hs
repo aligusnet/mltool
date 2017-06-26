@@ -6,7 +6,7 @@ import qualified MachineLearning.Regression as MLR
 
 main = do
   -- Step 1. Data loading
-  m <- LA.loadMatrix "samples/linear_regression/data.txt"
+  m <- LA.loadMatrix "linear_regression/data.txt"
   let (x, y) = ML.splitToXY m
 
   -- Step 2. Feature Normalization
