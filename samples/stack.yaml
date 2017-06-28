@@ -1,6 +1,6 @@
 resolver: lts-7.14
 
-extra-deps: [mltool-0.1.0.0]
+extra-deps: [mltool-0.1.0.1]
 
 flags: {}
 
