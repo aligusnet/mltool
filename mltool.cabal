@@ -1,7 +1,12 @@
 name:                mltool
-version:             0.1.0.0
+version:             0.1.0.1
 synopsis:            Machine Learning Toolbox
-description:         Please see README.md
+description:
+    Haskell Machine Learning Toolkit
+    includes various methods of supervised learning:
+    linear regression, logistic regression, SVN, neural networks, etc.
+    as well as some methods of unsupervised methods: K-Means and PCA.
+
 homepage:            https://github.com/alexander-ignatyev/mltool
 license:             BSD3
 license-file:        LICENSE
@@ -49,14 +54,14 @@ library
                      , MachineLearning.Utils
   other-modules:       MachineLearning.Classification.Internal
   build-depends:       base >= 4.7 && < 5
-                     , vector
-                     , hmatrix
-                     , hmatrix-gsl
-                     , hmatrix-gsl-stats
-                     , ascii-progress
+                     , vector >= 0.11
+                     , hmatrix >= 0.17.0.1
+                     , hmatrix-gsl >= 0.17
+                     , hmatrix-gsl-stats >= 0.4.1.3
+                     , ascii-progress >= 0.3.3.0
                      , deepseq
-                     , random
-                     , MonadRandom
+                     , random >= 1.1
+                     , MonadRandom >= 0.4.2.3
   default-language:    Haskell2010
 
 
@@ -86,16 +91,15 @@ test-suite mltool-test
                      , Test.HUnit.Plus
   build-depends:       base
                      , mltool
-                     , vector
-                     , hmatrix
-                     , hmatrix-gsl-stats
-                     , random
-                     , MonadRandom
-                     , test-framework
-                     , test-framework-hunit
-                     , test-framework-quickcheck2
-                     , HUnit
-                     , QuickCheck > 2.0
+                     , vector >= 0.11
+                     , hmatrix >= 0.17.0.1
+                     , hmatrix-gsl-stats >= 0.4.1.3
+                     , random >= 1.1
+                     , MonadRandom >= 0.4.2.3
+                     , test-framework >= 0.8.1.1
+                     , test-framework-hunit >= 0.3.0.2
+                     , test-framework-quickcheck2 >= 0.3.0.3
+                     , HUnit >= 1.3.1.1
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 
