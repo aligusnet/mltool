@@ -1,7 +1,7 @@
-name:                mltool-samples
+name:                mltool-examples
 version:             0.1.0.0
-synopsis:            Machine Learning Toolbox
-description:         Please see README.md
+synopsis:            mltool examples
+description:         Machine Learning Toolbox Examples
 homepage:            https://github.com/alexander-ignatyev/mltool
 license:             BSD3
 license-file:        LICENSE
