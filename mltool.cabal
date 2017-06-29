@@ -1,5 +1,5 @@
 name:                mltool
-version:             0.1.0.1
+version:             0.1.0.2
 synopsis:            Machine Learning Toolbox
 description:
     Haskell Machine Learning Toolkit
@@ -12,7 +12,7 @@ license:             BSD3
 license-file:        LICENSE
 author:              Alexander Ignatyev
 maintainer:          ignatyev.alexander@gmail.com
-copyright:           Alexander Ignatyev
+copyright:           (c) 2016-2017 Alexander Ignatyev
 category:            math
 build-type:          Simple
 extra-source-files:  README.md
