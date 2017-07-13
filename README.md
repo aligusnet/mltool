@@ -39,6 +39,22 @@
 
 ### Usage
 
+#### OS X/macOS prerequisites setup
+
+* Using [Homebrew](https://brew.sh/):
+
+```
+brew install pkg-config gsl
+```
+
+or 
+
+* Using [MacPorts](https://www.macports.org/):
+
+```
+sudo port install pkgconfig gsl
+```
+
 #### Build the project
 
     stack build
