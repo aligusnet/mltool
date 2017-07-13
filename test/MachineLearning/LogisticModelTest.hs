@@ -32,7 +32,7 @@ gradientCheckingEps = 1e-3
 
 checkGradientTest lambda theta = do
   let diffs = take 5 $ map (\e -> checkGradient Logistic lambda x1 y theta e) [1e-3, 1.1e-3 ..]
-      diff = minimum $ filter (not . isNaN) diffs
+      diff = minimum diffs
   assertApproxEqual (show theta) gradientCheckingEps 0 diff
 
 

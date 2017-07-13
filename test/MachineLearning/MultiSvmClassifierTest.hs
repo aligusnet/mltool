@@ -59,7 +59,7 @@ zeroTheta2 = LA.konst 0 (2 * LA.cols x2)
 
 checkGradientTest lambda theta eps = do
   let diffs = take 5 $ map (\e -> checkGradient model lambda x1 y theta e) [1e-3, 1.1e-3 ..]
-      diff = minimum $ filter (not . isNaN) diffs
+      diff = minimum diffs
   assertApproxEqual "" eps 0 diff
 
 

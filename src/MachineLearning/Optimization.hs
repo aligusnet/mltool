@@ -75,10 +75,13 @@ checkGradient model reg x y theta eps = LA.norm_2 $ grad1 - grad2
   where theta_m = LA.asColumn theta
         eps_v = V.replicate (V.length theta) eps
         eps_m = LA.diag eps_v
-        theta_m1 = theta_m + eps_m
-        theta_m2 = theta_m - eps_m
+        -- +/- eps_m in case of zero theta
+        theta_m1 = theta_m * (1 + eps_m) + eps_m
+        theta_m2 = theta_m * (1 - eps_m) - eps_m
         cost1 = LA.vector $ map (cost model reg x y) $ LA.toColumns theta_m1
         cost2 = LA.vector $ map (cost model reg x y) $ LA.toColumns theta_m2
-        grad1 = (cost1 - cost2) / (LA.scalar $ 2*eps)
+        eps_v1 = LA.takeDiag $ theta_m1 - theta_m
+        eps_v2 = LA.takeDiag $ theta_m - theta_m2
+        grad1 = (cost1 - cost2) / (eps_v1 + eps_v2)
         grad2 = gradient model reg x y theta
 
