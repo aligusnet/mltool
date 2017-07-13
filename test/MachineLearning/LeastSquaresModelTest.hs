@@ -39,11 +39,11 @@ tests = [ testGroup "model" [
             , testCase "gradient, lambda = 1000" $ assertVector "" 1e-5 gradient_l1000 (gradient LeastSquares (L2 1000) x1 y initialTheta)
             ]
           , testGroup "gradient checking" [
-              testCase "non-zero theta, no reg" $ assertBool "" $ (checkGradient LeastSquares RegNone x1 y initialTheta 1e-4) < 10
-              , testCase "non-zero theta, non-zero lambda" $ assertBool "" $ (checkGradient LeastSquares (L2 2) x1 y initialTheta 1e-4) < 10
-              , testCase "zero theta, non-zero lambda" $ assertBool "" $ (checkGradient LeastSquares (L2 2) x1 y zeroTheta 1e-4) < 1
-              , testCase "non-zero theta, zero lambda" $ assertBool "" $ (checkGradient LeastSquares (L2 0) x1 y initialTheta 1e-4) < 5
-              , testCase "zero theta, zero lambda" $ assertBool "" $ (checkGradient LeastSquares (L2 0) x1 y zeroTheta 1e-4) < 1
+              testCase "non-zero theta, no reg" $ assertApproxEqual "" 1 0 (checkGradient LeastSquares RegNone x1 y initialTheta 1e-4)
+              , testCase "non-zero theta, non-zero lambda" $ assertApproxEqual "" 1 0 (checkGradient LeastSquares (L2 2) x1 y initialTheta 1e-4)
+              , testCase "zero theta, non-zero lambda" $ assertApproxEqual "" 1 0 (checkGradient LeastSquares (L2 2) x1 y zeroTheta 1e-4) 
+              , testCase "non-zero theta, zero lambda" $ assertApproxEqual "" 1 0 (checkGradient LeastSquares (L2 0) x1 y initialTheta 1e-4)
+              , testCase "zero theta, zero lambda" $ assertApproxEqual "" 1 0(checkGradient LeastSquares (L2 0) x1 y zeroTheta 1e-4)
               ]
         ]
 

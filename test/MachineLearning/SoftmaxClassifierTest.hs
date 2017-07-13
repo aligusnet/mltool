@@ -44,7 +44,7 @@ xPredict2 = processX muSigma xPredict
 yExpected = LA.vector [1, 1, 0, 0, 1, 0]
 
 
-checkSoftmaxGradient theta eps lambda = minimum . take 5 . filter (not . isNaN) $ map check [eps, eps+0.001 ..]
+checkSoftmaxGradient theta eps lambda = minimum . take 5 $ map check [eps, eps+0.001 ..]
   where check e = checkGradient model lambda x1 y theta e
   
 
