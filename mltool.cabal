@@ -55,7 +55,7 @@ library
   other-modules:       MachineLearning.Classification.Internal
   build-depends:       base >= 4.7 && < 5
                      , vector >= 0.11
-                     , hmatrix >= 0.17.0.1
+                     , hmatrix >= 0.18.0.0
                      , hmatrix-gsl >= 0.17
                      , hmatrix-morpheus >= 0.1.1.0
                      , ascii-progress >= 0.3.3.0
@@ -92,7 +92,7 @@ test-suite mltool-test
   build-depends:       base
                      , mltool
                      , vector >= 0.11
-                     , hmatrix >= 0.17.0.1
+                     , hmatrix >= 0.18.0.0
                      , hmatrix-morpheus >= 0.1.1.0
                      , random >= 1.1
                      , MonadRandom >= 0.4.2.3

@@ -12,10 +12,11 @@ addons:
 
 env:
   matrix:
-  - ARGS="--resolver lts-6.17" GHCVER=7.10.3 PUBLISH_DOCS=false
-  - ARGS="--resolver lts-7.14" GHCVER=8.0.1 PUBLISH_DOCS=true
+  - ARGS="--resolver lts-9.1" GHCVER=8.0.2 PUBLISH_DOCS=true
+  - ARGS="--resolver nightly-2017-08-25" GHCVER=8.2.1 PUBLISH_DOCS=false
   global:
   - SHCVER=0.0.4.0
+  - SHC_GHCVER=8.0.1
   - secure: "yN3nC3elw/fbdktDPA4G6Cn7gB8bmAPV2QSnNxy13cJ+hpHmpyFxXp1H+gD/1r3j+U4rzoXA0fDjz92GtmolwDUp1DExxhf6OeIezx30O1wuexrIVmsbZj9/xMkV05BuYmRPl1a+TqaMig89/lcrjBLRcq4JaIRmejmQCsXZ9f5DbTVm1qIBysA2GWqgAvvD6czYk7yPA6w6eknALkx4OgTuCuF/LWeVOpcOZi2fOtSxQTylE6xQkPVSBxF4oXaYrKs77L85UYtMefuhcbiyiMCqEMsnxXzBzX7NjqhKM+TPOn0D5HD8tOBkN2gCyX4HuDQJSODXhp9/McEx798x4ueDQPALKdrQ6jJCMS4skc51uyek5ZEcnrfSiAvnqMeuAXCJMDlpHx5nGrbJ9KvJ0Rahqvg4arYE1pav6XXnuNCZPXB/Hn3Mbiou5vuTzZweaMBzk5J/bohMDiygAvkWVAzujBwChlVWDqE3W/rFOpgFIVtMzza5ZaVuDJB/PFdLTSQ4dyy0qMcNuIMG+lcvN01qF7HT+sMD4dS6lNhsY6uMmbwZm21Yf+Gd6a2+7o/oLxWoxmDcmMrFbyPLolsNWtoJDYDatBuC6/GpE+lPpXAAozvIhvOT0fReFoP4wGb4SPr1TsN+owzxVsLLRMGpKMTW7SwneFNCPSn8TAQOJNQ="
 
 before_install:
@@ -34,7 +35,7 @@ script:
 
 after_success:
 - rake publish_docs
-- travis_retry curl -L https://github.com/rubik/stack-hpc-coveralls/releases/download/v$SHCVER/shc-linux-x64-$GHCVER.tar.bz2 | tar -xj
+- travis_retry curl -L https://github.com/rubik/stack-hpc-coveralls/releases/download/v$SHCVER/shc-linux-x64-$SHC_GHCVER.tar.bz2 | tar -xj
 - ./shc mltool mltool-test
 
 
