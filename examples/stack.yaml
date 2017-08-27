@@ -1,6 +1,9 @@
 resolver: lts-8.20
 
-extra-deps: [mltool-0.1.0.1]
+packages:
+- '..'
+
+extra-deps: [hmatrix-morpheus-0.1.1.0]
 
 flags: {}
 
