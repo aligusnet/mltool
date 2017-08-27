@@ -29,7 +29,7 @@ xNorm = ML.featureNormalization muSigma x
 x1 = ML.addBiasDimension xNorm
 initialTheta :: Vector
 initialTheta = LA.konst 0 (LA.cols x1)
-lsExpectedTheta = LA.vector [325009.354,113890.981,6876.935]
+lsExpectedTheta = LA.vector [325010.120,113889.649,5234.404]
 eps = 1e-3
 
 

@@ -24,7 +24,7 @@ where
 import MachineLearning.Types (Vector, Matrix)
 import qualified Numeric.LinearAlgebra as LA
 import Numeric.LinearAlgebra((|||), (??))
-import qualified Numeric.GSL.Statistics as Stat
+import qualified Numeric.Morpheus.Statistics as Stat
 
 import Control.Monad (replicateM, mfilter, MonadPlus)
 import Data.List (sort, group, foldl')
@@ -44,11 +44,9 @@ removeBiasDimension x = x ?? (LA.All, LA.Drop 1)
 -- | Caclulates mean and stddev values of every feature.
 -- Takes feature matrix X, returns pair of vectors of means and stddevs.
 meanStddev x =
-  let cols = LA.toColumns x
-      means = map Stat.mean cols
-      stddevs = zipWith (\m col -> Stat.stddev_m m col) means cols
-      stddevs' = map (\s -> if s < 2 then 1 else s) stddevs
-  in (LA.row means, LA.row stddevs')
+  let means = Stat.columnMean x
+      stddevs = Stat.columnStddev_m means x
+  in (LA.asRow means, LA.asRow stddevs)
 
 
 featureNormalization (means, stddevs) x = (x - means) / stddevs
@@ -64,7 +62,7 @@ mapFeatures degree x = LA.fromColumns $ cols ++ (foldl' (\l d -> (terms d) ++ l)
         makeTerm = foldl' (\c (index, power) -> c * (vv V.! index) ^ power) 1
         terms :: Int -> [Vector]
         terms d = foldl' (\l x -> (makeTerm x) : l) [] $ polynomialTerms d [ncols-1, ncols-2 .. 0]
-        
+
 
 polynomialTerms :: Ord a => Int -> [a] -> [[(a, Int)]]
 polynomialTerms degree terms =

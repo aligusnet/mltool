@@ -13,7 +13,7 @@ import Test.HUnit.Plus
 import Control.Monad (replicateM)
 import qualified Data.Vector.Storable as V
 import qualified Numeric.LinearAlgebra as LA
-import qualified Numeric.GSL.Statistics as Stat
+import qualified Numeric.Morpheus.Statistics as Stat
 import qualified Control.Monad.Random as RndM
 import MachineLearning.NeuralNetwork.WeightInitialization
 
