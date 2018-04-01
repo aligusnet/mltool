@@ -25,7 +25,7 @@ main = do
 
       lambda = NN.L2 $ 5 / (fromIntegral $ LA.rows x)
 
-  -- Step 4. Learn the Neural Network.
+  -- Step 4. Train the Neural Network.
   (thetaNN, optPath) <- TP.learnWithProgressBar (Opt.minimize (Opt.BFGS2 0.03 0.7) model 1e-7 5 lambda x y) initTheta 20
 
   -- Step 5. Making predictions and checking accuracy on training and test sets.
