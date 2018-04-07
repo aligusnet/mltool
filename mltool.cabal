@@ -12,7 +12,7 @@ license:             BSD3
 license-file:        LICENSE
 author:              Alexander Ignatyev
 maintainer:          ignatyev.alexander@gmail.com
-copyright:           (c) 2016-2017 Alexander Ignatyev
+copyright:           (c) 2016-2018 Alexander Ignatyev
 category:            math
 build-type:          Simple
 extra-source-files:  README.md

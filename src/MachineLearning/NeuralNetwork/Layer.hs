@@ -2,7 +2,7 @@
 {-|
 Module: MachineLearning.NeuralNetwork.Layer
 Description: Neural Network's Layer
-Copyright: (c) Alexander Ignatyev, 2017
+Copyright: (c) Alexander Ignatyev, 2017-2018.
 License: BSD-3
 Stability: experimental
 Portability: POSIX
@@ -22,6 +22,7 @@ module MachineLearning.NeuralNetwork.Layer
 where
 
 
+import Prelude hiding ((<>))
 import MachineLearning.Types (R, Matrix)
 import MachineLearning.Utils (sumByColumns)
 import qualified Numeric.LinearAlgebra as LA
