@@ -1,9 +1,10 @@
-resolver: lts-9.1
+resolver: lts-11.3
 
 packages:
+- '.'
 - '..'
 
-extra-deps: [hmatrix-morpheus-0.1.1.0]
+extra-deps: []
 
 flags: {}
 

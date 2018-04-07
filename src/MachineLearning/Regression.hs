@@ -1,7 +1,7 @@
 {-|
 Module: MachineLearning.Regression
 Description: Regression
-Copyright: (c) Alexander Ignatyev, 2016-2017
+Copyright: (c) Alexander Ignatyev, 2016-2018.
 License: BSD-3
 Stability: experimental
 Portability: POSIX
@@ -20,6 +20,7 @@ module MachineLearning.Regression
 
 where
 
+import Prelude hiding ((<>))
 import MachineLearning.Types (Vector, Matrix)
 import MachineLearning.Optimization as Optimization
 import MachineLearning.Model as Model

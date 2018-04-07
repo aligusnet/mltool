@@ -1,7 +1,7 @@
 {-|
 Module: MachineLearning.PCA
 Description: Principal Component Analysis.
-Copyright: (c) Alexander Ignatyev, 2017
+Copyright: (c) Alexander Ignatyev, 2017-2018.
 License: BSD-3
 Stability: experimental
 Portability: POSIX
@@ -18,6 +18,7 @@ module MachineLearning.PCA
 
 where
 
+import Prelude hiding ((<>))
 import Data.Maybe (fromMaybe)
 import qualified Data.Vector.Storable as V
 import qualified Numeric.LinearAlgebra as LA

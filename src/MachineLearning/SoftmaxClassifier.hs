@@ -1,7 +1,7 @@
 {-|
 Module: MachineLearning.SoftmaxClassifier
 Description: Softmax Classifier.
-Copyright: (c) Alexander Ignatyev, 2017.
+Copyright: (c) Alexander Ignatyev, 2017-2018.
 License: BSD-3
 Stability: experimental
 Portability: POSIX
@@ -18,6 +18,7 @@ module MachineLearning.SoftmaxClassifier
 
 where
 
+import Prelude hiding ((<>))
 import qualified Numeric.LinearAlgebra as LA
 import Numeric.LinearAlgebra((<>), (<.>), (|||))
 import qualified Data.Vector.Storable as V
