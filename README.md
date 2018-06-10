@@ -1,8 +1,8 @@
 ## Machine Learning Toolbox
 
-[![Build Status](https://travis-ci.org/Alexander-Ignatyev/mltool.svg?branch=master)](https://travis-ci.org/Alexander-Ignatyev/mltool)
-[![Coverage Status](https://coveralls.io/repos/github/Alexander-Ignatyev/mltool/badge.svg)](https://coveralls.io/github/Alexander-Ignatyev/mltool)
-[![Documentation](https://img.shields.io/badge/mltool-documentation-blue.svg)](https://alexander-ignatyev.github.io/mltool-docs/doc/index.html)
+[![Build Status](https://travis-ci.org/aligusnet/mltool.svg?branch=master)](https://travis-ci.org/aligusnet/mltool)
+[![Coverage Status](https://coveralls.io/repos/github/aligusnet/mltool/badge.svg)](https://coveralls.io/github/aligusnet/mltool)
+[![Documentation](https://img.shields.io/badge/mltool-documentation-blue.svg)](https://aligusnet.github.io/mltool-docs/doc/index.html)
 [![Hackage](https://img.shields.io/hackage/v/mltool.svg)](https://hackage.haskell.org/package/mltool)
 
 ### Supported Methods and Problems
@@ -84,16 +84,16 @@ stack exec kmeans      # Clustering Sample App
 
 ### Examples
 
-* Linear Regression: [source code](https://github.com/Alexander-Ignatyev/mltool/blob/master/examples/linear_regression/Main.hs);
+* Linear Regression: [source code](https://github.com/aligusnet/mltool/blob/master/examples/linear_regression/Main.hs);
 
-* Logistic Regression: [source code](https://github.com/Alexander-Ignatyev/mltool/blob/master/examples/logistic_regression/Main.hs);
+* Logistic Regression: [source code](https://github.com/aligusnet/mltool/blob/master/examples/logistic_regression/Main.hs);
 
-* Multiclass Logistic Regression: [source code](https://github.com/Alexander-Ignatyev/mltool/blob/master/examples/digits_classification/Main.hs);
+* Multiclass Logistic Regression: [source code](https://github.com/aligusnet/mltool/blob/master/examples/digits_classification/Main.hs);
 
-* Multiclass Logistic Regression with PCA: [source code](https://github.com/Alexander-Ignatyev/mltool/blob/master/examples/digits_classification_pca/Main.hs);
+* Multiclass Logistic Regression with PCA: [source code](https://github.com/aligusnet/mltool/blob/master/examples/digits_classification_pca/Main.hs);
 
-* Multiclass Support Vector Machine: [source code](https://github.com/Alexander-Ignatyev/mltool/blob/master/examples/digits_classification_svm/Main.hs);
+* Multiclass Support Vector Machine: [source code](https://github.com/aligusnet/mltool/blob/master/examples/digits_classification_svm/Main.hs);
 
-* Neural Networks: [source code](https://github.com/Alexander-Ignatyev/mltool/blob/master/examples/neural_networks/Main.hs);
+* Neural Networks: [source code](https://github.com/aligusnet/mltool/blob/master/examples/neural_networks/Main.hs);
 
-* K-Means: [source code](https://github.com/Alexander-Ignatyev/mltool/blob/master/examples/kmeans/Main.hs).
+* K-Means: [source code](https://github.com/aligusnet/mltool/blob/master/examples/kmeans/Main.hs).

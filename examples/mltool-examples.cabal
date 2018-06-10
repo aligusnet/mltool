@@ -2,7 +2,7 @@ name:                mltool-examples
 version:             0.1.0.0
 synopsis:            mltool examples
 description:         Machine Learning Toolbox Examples
-homepage:            https://github.com/alexander-ignatyev/mltool
+homepage:            https://github.com/aligusnet/mltool
 license:             BSD3
 license-file:        LICENSE
 author:              Alexander Ignatyev
@@ -97,4 +97,4 @@ executable numerical-issues
 
 source-repository head
   type:     git
-  location: https://github.com/alexander-ignatyev/mltool
+  location: https://github.com/aligusnet/mltool.git

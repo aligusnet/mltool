@@ -7,7 +7,7 @@ description:
     linear regression, logistic regression, SVN, neural networks, etc.
     as well as some methods of unsupervised methods: K-Means and PCA.
 
-homepage:            https://github.com/alexander-ignatyev/mltool
+homepage:            https://github.com/aligusnet/mltool
 license:             BSD3
 license-file:        LICENSE
 author:              Alexander Ignatyev
@@ -105,4 +105,4 @@ test-suite mltool-test
 
 source-repository head
   type:     git
-  location: https://github.com/alexander-ignatyev/mltool
+  location: https://github.com/aligusnet/mltool.git
